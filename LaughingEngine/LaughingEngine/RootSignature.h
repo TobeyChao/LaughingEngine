@@ -1,5 +1,4 @@
 #pragma once
-
 #include "PCH.h"
 
 class RootParameter
@@ -76,8 +75,12 @@ class RootSignature
 public:
 
 	RootSignature() = default;
-
 	~RootSignature() = default;
+
+	void Destroy()
+	{
+		m_RootSignature.Reset();
+	}
 
 	void Reset(UINT NumRootParams, UINT NumStaticSamplers = 0)
 	{

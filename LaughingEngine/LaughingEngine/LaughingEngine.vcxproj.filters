@@ -81,6 +81,9 @@
     <ClCompile Include="GraphicsCommon.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="CommandContextManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h">
@@ -150,6 +153,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsCommon.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandContextManager.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GpuResource.h"
 
 class PixelBuffer : public GpuResource
@@ -12,7 +11,6 @@ public:
 		m_ArraySize(0),
 		m_Format(DXGI_FORMAT_UNKNOWN)
 	{
-
 	}
 	uint32_t GetWidth(void) const { return m_Width; }
 	uint32_t GetHeight(void) const { return m_Height; }

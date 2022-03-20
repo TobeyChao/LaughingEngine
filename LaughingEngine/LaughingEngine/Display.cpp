@@ -9,6 +9,7 @@
 #include "BufferManager.h"
 #include "RootSignature.h"
 #include "PipelineState.h"
+#include "CommandListManager.h"
 
 #include <cmath>
 
@@ -250,6 +251,10 @@ namespace Display
 		{
 			g_DisplayPlane[i].Destroy();
 		}
+
+		s_PresentRS.Destroy();
+		PresentSDRPS.Destroy();
+		PresentHDRPS.Destroy();
 	}
 
 	void Resize(uint32_t width, uint32_t height)

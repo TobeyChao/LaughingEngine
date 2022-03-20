@@ -2,10 +2,12 @@
 #include "GraphicsCommon.h"
 #include "CommandListManager.h"
 #include "CommandContext.h"
+#include "CommandContextManager.h"
 #include "Display.h"
 #include "BufferManager.h"
 
-#pragma comment(lib, "d3d12.lib") 
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxguid.lib")
 
 namespace Graphics
 {
@@ -36,7 +38,7 @@ namespace Graphics
 
 	void Initialize()
 	{
-		Microsoft::WRL::ComPtr<ID3D12Device> pDevice;
+		ComPtr<ID3D12Device> pDevice;
 		DWORD dxgiFactoryFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)
 		dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
@@ -102,11 +104,22 @@ namespace Graphics
 			debugInterface->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
 			debugInterface->Release();
 		}
-#endif
+
+#endif // defined(DEBUG) || defined(_DEBUG)
+
 		if (g_Device != nullptr)
 		{
 			g_Device->Release();
 			g_Device = nullptr;
 		}
+
+#if defined(DEBUG) || defined(_DEBUG)
+		IDXGIDebug1* dxgiDebug;
+		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug))))
+		{
+			dxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_FLAGS(DXGI_DEBUG_RLO_SUMMARY | DXGI_DEBUG_RLO_IGNORE_INTERNAL));
+			dxgiDebug->Release();
+		}
+#endif // defined(DEBUG) || defined(_DEBUG)
 	}
 }

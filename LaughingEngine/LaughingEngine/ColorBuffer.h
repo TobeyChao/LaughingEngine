@@ -18,6 +18,12 @@ public:
 		for (int i = 0; i < _countof(m_UAVHandle); ++i)
 			m_UAVHandle[i].ptr = -1;
 	}
+
+	/// <summary>
+	/// 从交换链创建Buffer
+	/// </summary>
+	/// <param name="name"></param>
+	/// <param name="baseResource"></param>
 	void CreateFromSwapChain(const std::wstring& name, ID3D12Resource* baseResource);
 	void Create(const std::wstring& name, uint32_t width, uint32_t height, uint32_t numMips, DXGI_FORMAT format);
 
@@ -26,6 +32,11 @@ public:
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_UAVHandle[0]; }
 
 	DirectX::XMVECTORF32 GetClearColor() const { return m_ClearColor; }
+
+	/// <summary>
+	/// 设置和资源创建的时候不同的颜色会导致Warning
+	/// </summary>
+	/// <param name="color"></param>
 	void SetClearColor(const DirectX::XMVECTORF32& color) { m_ClearColor = color; }
 
 private:

@@ -7,7 +7,6 @@ void PixelBuffer::AssociateWithResource(
 	D3D12_RESOURCE_STATES currentState)
 {
 	D3D12_RESOURCE_DESC resourceDesc = resource->GetDesc();
-
 	m_pResource.Attach(resource);
 	m_UsageState = currentState;
 	m_Width = (uint32_t)resourceDesc.Width;
@@ -16,7 +15,7 @@ void PixelBuffer::AssociateWithResource(
 	m_Format = resourceDesc.Format;
 #if defined(DEBUG) || defined(_DEBUG)
 	m_pResource->SetName(name.c_str());
-#endif //defined(DEBUG) || defined(_DEBUG)
+#endif // defined(DEBUG) || defined(_DEBUG)
 }
 
 D3D12_RESOURCE_DESC PixelBuffer::DescribeTex2D(

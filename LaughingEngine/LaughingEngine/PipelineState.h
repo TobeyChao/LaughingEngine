@@ -1,5 +1,4 @@
 #pragma once
-
 #include "PCH.h"
 
 class CommandContext;
@@ -16,6 +15,11 @@ public:
 	{
 	}
 
+	void Destroy()
+	{
+		m_PSO.Reset();
+	}
+
 	void SetRootSignature(const RootSignature& rootSignature)
 	{
 		m_RootSignature = &rootSignature;
@@ -23,13 +27,13 @@ public:
 
 	ID3D12PipelineState* GetPSO() const
 	{
-		return m_PSO;
+		return m_PSO.Get();
 	}
 
 protected:
 	std::wstring m_Name;
 	const RootSignature* m_RootSignature;
-	ID3D12PipelineState* m_PSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_PSO;
 };
 
 class GraphicsPiplelineState : public PipelineState
