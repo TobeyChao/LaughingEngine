@@ -24,7 +24,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Alloc(uint32_t count)
 	// 当前的handle就是未使用的第一个handle
 	D3D12_CPU_DESCRIPTOR_HANDLE ret = m_CurrentHandle;
 	// 将当前handle指针后移
-	m_CurrentHandle.ptr += m_DescriptorSize * count;
+	m_CurrentHandle.ptr += (SIZE_T)m_DescriptorSize * count;
 	// 更新剩余的handle数量
 	m_RemainingFreeHandles -= count;
 	return ret;

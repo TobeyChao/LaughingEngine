@@ -11,6 +11,6 @@ public:
 	virtual void Draw() override;
 	virtual void Shutdown() override;
 private:
-	D3D12_VIEWPORT m_MainViewport;
-	D3D12_RECT m_MainScissor;
+	CD3DX12_VIEWPORT m_MainViewport;
+	CD3DX12_RECT m_MainScissor;
 };

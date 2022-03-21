@@ -176,6 +176,7 @@
     <ClCompile Include="FileUtility.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="GpuBuffer.cpp" />
     <ClCompile Include="GpuResource.cpp" />
     <ClCompile Include="GraphicsCommon.cpp" />
     <ClCompile Include="GraphicsCore.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="FileUtility.h" />
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="GpuBuffer.h" />
     <ClInclude Include="GpuResource.h" />
     <ClInclude Include="GraphicsCommon.h" />
     <ClInclude Include="GraphicsCore.h" />

@@ -1,4 +1,7 @@
 #pragma once
-class Texture
+
+#include "GpuResource.h"
+
+class Texture : public GpuResource
 {
 };

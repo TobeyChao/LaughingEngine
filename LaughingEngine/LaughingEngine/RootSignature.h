@@ -74,7 +74,14 @@ class RootSignature
 {
 public:
 
-	RootSignature() = default;
+	RootSignature()
+		:
+		m_Finalized(FALSE),
+		m_NumParameters(0),
+		m_NumStaticSamplers(0)
+
+	{
+	};
 	~RootSignature() = default;
 
 	void Destroy()

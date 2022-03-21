@@ -7,7 +7,15 @@ using namespace Graphics;
 
 CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE Type)
 	:
-	m_Type(Type)
+	m_Type(Type),
+	m_Allocator(nullptr),
+	m_CommandList(nullptr),
+	m_GraphicsRootSignature(nullptr),
+	m_ComputeRootSignature(nullptr),
+	m_PipelineState(nullptr),
+	m_ResourceBarrier(),
+	m_NumBarriers(0),
+	m_DescriptorHeaps()
 {
 }
 
@@ -205,6 +213,24 @@ void GraphicsContext::SetRenderTargets(UINT NumRenderTargetDescriptors,
 		pRenderTargetDescriptors,
 		FALSE,
 		&DepthStencilDescriptor);
+}
+
+void GraphicsContext::SetViewport(FLOAT TopLeftX, FLOAT TopLeftY, FLOAT Width, FLOAT Height, FLOAT MinDepth, FLOAT MaxDepth)
+{
+	CD3DX12_VIEWPORT vp(TopLeftX, TopLeftY, Width, Height, MinDepth, MaxDepth);
+	SetViewport(vp);
+}
+
+void GraphicsContext::SetScissorRect(LONG left, LONG top, LONG right, LONG bottom)
+{
+	CD3DX12_RECT rect(left, top, right, bottom);
+	SetScissorRect(rect);
+}
+
+void GraphicsContext::SetViewportAndScissorRect(UINT x, UINT y, UINT w, UINT h)
+{
+	SetViewport((FLOAT)x, (FLOAT)y, (FLOAT)w, (FLOAT)h);
+	SetScissorRect(x, y, w, h);
 }
 
 void GraphicsContext::SetViewport(const D3D12_VIEWPORT& Viewport)

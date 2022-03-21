@@ -16,33 +16,27 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Core\GPUResource">
+      <UniqueIdentifier>{c6891b83-3379-4cd6-951e-f379e67e2ddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Pool">
+      <UniqueIdentifier>{aeffaa20-aa99-4975-87ec-1b98f04bfb38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Wrap">
+      <UniqueIdentifier>{543e1747-096c-4706-aa3c-78adb9f7243f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Utility">
+      <UniqueIdentifier>{ef4489a5-6339-4c32-80f0-29eae2167e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Misc">
+      <UniqueIdentifier>{c575a07b-851e-4599-b60d-f83cd9937b5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="BufferManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="DescriptorHeap.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="GpuResource.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsCore.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandContext.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineState.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="GameCore.cpp">
@@ -54,72 +48,63 @@
     <ClCompile Include="Display.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Utility.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandListManager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandAllocatorPool.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="GameTimer.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="PixelBuffer.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorBuffer.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="FileUtility.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="RootSignature.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsCommon.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="PixelBuffer.cpp">
+      <Filter>Core\GPUResource</Filter>
+    </ClCompile>
+    <ClCompile Include="GpuResource.cpp">
+      <Filter>Core\GPUResource</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorBuffer.cpp">
+      <Filter>Core\GPUResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Core\GPUResource</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandContext.cpp">
+      <Filter>Core\Wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorHeap.cpp">
+      <Filter>Core\Wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandAllocatorPool.cpp">
+      <Filter>Core\Pool</Filter>
+    </ClCompile>
     <ClCompile Include="CommandContextManager.cpp">
-      <Filter>Core</Filter>
+      <Filter>Core\Pool</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandListManager.cpp">
+      <Filter>Core\Pool</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineState.cpp">
+      <Filter>Core\Wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="RootSignature.cpp">
+      <Filter>Core\Wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Core\Pool</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferManager.cpp">
+      <Filter>Core\Pool</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Core\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="FileUtility.cpp">
+      <Filter>Core\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="GpuBuffer.cpp">
+      <Filter>Core\GPUResource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BufferManager.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="DescriptorHeap.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="GpuResource.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureManager.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="TSingleton.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsCore.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandContext.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="PCH.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="GameCore.h">
@@ -131,32 +116,68 @@
     <ClInclude Include="Display.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="CommandListManager.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandAllocatorPool.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="PixelBuffer.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="GameTimer.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorBuffer.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="FileUtility.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="RootSignature.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsCommon.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="PixelBuffer.h">
+      <Filter>Core\GPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="GpuResource.h">
+      <Filter>Core\GPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorBuffer.h">
+      <Filter>Core\GPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Core\GPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandContext.h">
+      <Filter>Core\Wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorHeap.h">
+      <Filter>Core\Wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandAllocatorPool.h">
+      <Filter>Core\Pool</Filter>
+    </ClInclude>
     <ClInclude Include="CommandContextManager.h">
-      <Filter>Core</Filter>
+      <Filter>Core\Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandListManager.h">
+      <Filter>Core\Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState.h">
+      <Filter>Core\Wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature.h">
+      <Filter>Core\Wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Core\Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferManager.h">
+      <Filter>Core\Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="FileUtility.h">
+      <Filter>Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="TSingleton.h">
+      <Filter>Core\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="PCH.h">
+      <Filter>Core\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Core\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GpuBuffer.h">
+      <Filter>Core\GPUResource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

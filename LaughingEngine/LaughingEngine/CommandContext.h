@@ -2,10 +2,7 @@
 #include "PCH.h"
 #include "PipelineState.h"
 #include "RootSignature.h"
-#include "PixelBuffer.h"
 #include "ColorBuffer.h"
-
-#include <string>
 
 class GraphicsContext;
 class ComputeContext;
@@ -84,6 +81,9 @@ public:
 	void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(1, &rtv, dsv); }
 	void SetDepthStencilTarget(D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(0, nullptr, dsv); }
 
+	void SetViewport(FLOAT TopLeftX, FLOAT TopLeftY, FLOAT Width, FLOAT Height, FLOAT MinDepth = 0.0f, FLOAT MaxDepth = 1.0f);
+	void SetScissorRect(LONG left, LONG top, LONG right, LONG bottom);
+	void SetViewportAndScissorRect(UINT x, UINT y, UINT w, UINT h);
 	void SetViewport(const D3D12_VIEWPORT& Viewport);
 	void SetScissorRect(const D3D12_RECT& Rect);
 	void SetViewportAndScissorRect(const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Rect);

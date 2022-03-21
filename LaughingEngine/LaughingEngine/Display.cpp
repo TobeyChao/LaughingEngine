@@ -60,9 +60,6 @@ namespace Graphics
 	// 显示分辨率就是DisplayPlane的大小
 	eResolution displayResolution = eResolution::k720p;
 
-	D3D12_VIEWPORT viewport;
-	D3D12_RECT scissor;
-
 	ColorBuffer g_DisplayPlane[SWAP_CHAIN_BUFFER_COUNT];
 
 	UINT g_CurrentBuffer = 0;
@@ -135,7 +132,7 @@ namespace Graphics
 		context.SetDescriptorTable(0, CommonHeap[0]);
 		context.TransitionResource(g_DisplayPlane[g_CurrentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET);
 		context.SetRenderTarget(g_DisplayPlane[g_CurrentBuffer].GetRTV());
-		context.SetViewportAndScissorRect(viewport, scissor);
+		context.SetViewportAndScissorRect(0, 0, g_DisplayWidth, g_DisplayHeight);
 		context.DrawInstanced(3, 1);
 		context.TransitionResource(g_DisplayPlane[g_CurrentBuffer], D3D12_RESOURCE_STATE_PRESENT);
 		context.Finish();
@@ -200,16 +197,6 @@ namespace Display
 			ThrowIfFailed(s_SwapChain1->GetBuffer(i, IID_PPV_ARGS(dispalyPlane.GetAddressOf())));
 			g_DisplayPlane[i].CreateFromSwapChain(L"Primary SwapChain Buffer", dispalyPlane.Detach());
 		}
-
-		viewport.Width = (float)g_DisplayWidth;
-		viewport.Height = (float)g_DisplayHeight;
-		viewport.MinDepth = 0.0f;
-		viewport.MaxDepth = 1.0f;
-
-		scissor.left = 0;
-		scissor.top = 0;
-		scissor.right = (LONG)g_DisplayWidth;
-		scissor.bottom = (LONG)g_DisplayHeight;
 
 		s_PresentRS.Reset(4, 0);
 		s_PresentRS[0].InitAsDescriptorTable(2, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0);
