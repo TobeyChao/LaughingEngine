@@ -32,3 +32,5 @@
 #include "Utility.h"
 #include "FileUtility.h"
 #include "TSingleton.h"
+
+#include "Common.h"

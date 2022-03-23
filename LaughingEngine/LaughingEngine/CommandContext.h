@@ -3,6 +3,7 @@
 #include "PipelineState.h"
 #include "RootSignature.h"
 #include "ColorBuffer.h"
+#include "GpuBuffer.h"
 
 class GraphicsContext;
 class ComputeContext;
@@ -17,6 +18,8 @@ public:
 
 	void Initialize();
 	void Reset();
+
+	static CommandContext& Begin(const std::wstring& id = L"");
 
 	uint64_t Flush(bool WaitForCompletion = false);
 	uint64_t Finish(bool WaitForCompletion = false);
@@ -34,6 +37,9 @@ public:
 	{
 		return m_CommandList;
 	}
+
+	static void InitializeBuffer(GpuBuffer& Dest, const void* Data, size_t NumBytes, size_t DestOffset = 0);
+	static void InitializeBuffer(GpuBuffer& Dest, const UploadBuffer& Src, size_t SrcOffset, size_t NumBytes = -1, size_t DestOffset = 0);
 
 	// ×ÊÔ´×ª»»
 	void TransitionResource(GpuResource& res, D3D12_RESOURCE_STATES targetState, bool immediate = false);
@@ -75,8 +81,8 @@ public:
 	void ClearColor(ColorBuffer& Target, const D3D12_RECT* Rect);
 	void SetRootSignature(const RootSignature& rootSignature);
 
-	void SetRenderTargets(UINT numRTVs, const D3D12_CPU_DESCRIPTOR_HANDLE rtv[]);
-	void SetRenderTargets(UINT numRTVs, const D3D12_CPU_DESCRIPTOR_HANDLE rtv[], D3D12_CPU_DESCRIPTOR_HANDLE dsv);
+	void SetRenderTargets(UINT NumRTVs, const D3D12_CPU_DESCRIPTOR_HANDLE RTV[]);
+	void SetRenderTargets(UINT NumRTVs, const D3D12_CPU_DESCRIPTOR_HANDLE RTV[], D3D12_CPU_DESCRIPTOR_HANDLE DSV);
 	void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv) { SetRenderTargets(1, &rtv); }
 	void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(1, &rtv, dsv); }
 	void SetDepthStencilTarget(D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(0, nullptr, dsv); }
