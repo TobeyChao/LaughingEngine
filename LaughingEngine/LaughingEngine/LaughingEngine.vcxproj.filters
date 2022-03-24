@@ -110,6 +110,7 @@
     </ClCompile>
     <ClCompile Include="DDSTextureLoader12.cpp">
       <Filter>Core\Misc</Filter>
+    </ClCompile>
     <ClCompile Include="UploadBuffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -195,6 +196,7 @@
     </ClInclude>
     <ClInclude Include="DDSTextureLoader12.h">
       <Filter>Core\Misc</Filter>
+    </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
