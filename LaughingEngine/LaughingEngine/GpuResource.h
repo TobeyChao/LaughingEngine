@@ -40,6 +40,11 @@ public:
 		return m_pResource.Get();
 	}
 
+	D3D12_GPU_VIRTUAL_ADDRESS GetGpuAddress() const
+	{
+		return m_GpuVirtualAddress;
+	}
+
 	inline void SetState(D3D12_RESOURCE_STATES state)
 	{
 		m_UsageState = state;

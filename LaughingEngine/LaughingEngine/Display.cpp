@@ -31,7 +31,7 @@ namespace
 	uint64_t s_FrameIndex = 0;
 	int64_t s_FrameStartTick = 0;
 
-	bool s_EnableVSync = false;
+	bool s_EnableVSync = true;
 }
 
 namespace Graphics

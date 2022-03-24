@@ -112,7 +112,10 @@
       <Filter>Core\Misc</Filter>
     </ClCompile>
     <ClCompile Include="UploadBuffer.cpp">
-      <Filter>Source</Filter>
+      <Filter>Core\GPUResource</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryAllocator.cpp">
+      <Filter>Core\Pool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="UploadBuffer.h">
       <Filter>Core\GPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryAllocator.h">
+      <Filter>Core\Pool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
