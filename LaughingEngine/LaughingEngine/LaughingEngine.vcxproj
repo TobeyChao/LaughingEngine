@@ -171,6 +171,7 @@
     <ClCompile Include="CommandContext.cpp" />
     <ClCompile Include="CommandListManager.cpp" />
     <ClCompile Include="CommandContextManager.cpp" />
+    <ClCompile Include="DDSTextureLoader12.cpp" />
     <ClCompile Include="DescriptorHeap.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="FileUtility.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="WICTextureLoader12.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
@@ -197,6 +199,7 @@
     <ClInclude Include="CommandListManager.h" />
     <ClInclude Include="CommandContextManager.h" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DDSTextureLoader12.h" />
     <ClInclude Include="DescriptorHeap.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="FileUtility.h" />
@@ -215,6 +218,7 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="WICTextureLoader12.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\ColorSpaceUtility.hlsli" />
@@ -223,11 +227,11 @@
   <ItemGroup>
     <FxCompile Include="Shaders\PresentSDRPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.6</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.3</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\ScreenQuadPresentVS.hlsl">
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.6</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.3</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>

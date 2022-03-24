@@ -9,7 +9,7 @@
 
 /// <summary>
 /// 描述符申请器
-/// ShaderVisible = false
+/// non shader-visible descriptor heap.
 /// 一种描述符申请器只能申请特定种类的描述符
 /// D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV
 /// D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER

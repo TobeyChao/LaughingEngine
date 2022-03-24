@@ -31,7 +31,7 @@ namespace
 	uint64_t s_FrameIndex = 0;
 	int64_t s_FrameStartTick = 0;
 
-	bool s_EnableVSync = true;
+	bool s_EnableVSync = false;
 }
 
 namespace Graphics
@@ -225,6 +225,12 @@ namespace Display
 		{
 			g_SceneColorBuffer.GetSRV()
 		};
+		// The SrcDescriptorRangeStart parameter must be in a non shader-visible descriptor heap.
+		// This is because shader-visible descriptor heaps may be created in WRITE_COMBINE memory or GPU local memory,
+		// which is prohibitively slow to read from. If your application manages descriptor heaps
+		// via copying the descriptors required for a given pass or frame from local "storage" descriptor heaps
+		// to the GPU-bound descriptor heap, then use shader-opaque heaps for the storage heaps and copy into the GPU-visible heap as required.
+		// https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12device-copydescriptorssimple
 		g_Device->CopyDescriptorsSimple(1, handle, SourceTextures[0], D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 

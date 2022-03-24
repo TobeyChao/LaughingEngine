@@ -102,6 +102,12 @@
     <ClCompile Include="GpuBuffer.cpp">
       <Filter>Core\GPUResource</Filter>
     </ClCompile>
+    <ClCompile Include="WICTextureLoader12.cpp">
+      <Filter>Core\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader12.cpp">
+      <Filter>Core\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsCore.h">
@@ -178,6 +184,12 @@
     </ClInclude>
     <ClInclude Include="GpuBuffer.h">
       <Filter>Core\GPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader12.h">
+      <Filter>Core\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader12.h">
+      <Filter>Core\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
