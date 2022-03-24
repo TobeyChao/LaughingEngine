@@ -31,6 +31,9 @@
     <Filter Include="Core\Misc">
       <UniqueIdentifier>{c575a07b-851e-4599-b60d-f83cd9937b5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Math">
+      <UniqueIdentifier>{4b776497-d68f-4120-8084-cebf82991e20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -107,6 +110,8 @@
     </ClCompile>
     <ClCompile Include="DDSTextureLoader12.cpp">
       <Filter>Core\Misc</Filter>
+    <ClCompile Include="UploadBuffer.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +195,11 @@
     </ClInclude>
     <ClInclude Include="DDSTextureLoader12.h">
       <Filter>Core\Misc</Filter>
+    <ClInclude Include="Common.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadBuffer.h">
+      <Filter>Core\GPUResource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

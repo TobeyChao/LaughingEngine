@@ -2,6 +2,7 @@
 #include "GraphicsCore.h"
 #include "CommandListManager.h"
 #include "CommandContextManager.h"
+#include "UploadBuffer.h"
 
 using namespace Graphics;
 
@@ -42,6 +43,13 @@ void CommandContext::Reset()
 	m_NumBarriers = 0;
 
 	BindDescriptorHeaps();
+}
+
+CommandContext& CommandContext::Begin(const std::wstring& id)
+{
+	CommandContext* NewContext = g_ContextManager.AllocateContext(D3D12_COMMAND_LIST_TYPE_DIRECT);
+	NewContext->SetID(id);
+	return *NewContext;
 }
 
 uint64_t CommandContext::Flush(bool WaitForCompletion)
@@ -93,6 +101,21 @@ uint64_t CommandContext::Finish(bool WaitForCompletion)
 	g_ContextManager.ReturnContext(this);
 
 	return fenceValue;
+}
+
+void CommandContext::InitializeBuffer(GpuBuffer& Dest, const void* Data, size_t NumBytes, size_t DestOffset)
+{
+
+}
+
+void CommandContext::InitializeBuffer(GpuBuffer& Dest, const UploadBuffer& Src, size_t SrcOffset, size_t NumBytes, size_t DestOffset)
+{
+	CommandContext& InitContext = CommandContext::Begin();
+	InitContext.TransitionResource(Dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
+	InitContext.m_CommandList->CopyBufferRegion(Dest.GetRes(), DestOffset,
+		const_cast<ID3D12Resource*>(Src.GetRes()), SrcOffset, NumBytes);
+	InitContext.TransitionResource(Dest, D3D12_RESOURCE_STATE_GENERIC_READ, true);
+	InitContext.Finish(true);
 }
 
 void CommandContext::TransitionResource(GpuResource& res, D3D12_RESOURCE_STATES targetState, bool immediate)
@@ -194,25 +217,14 @@ void GraphicsContext::ClearColor(ColorBuffer& Target, const D3D12_RECT* Rect)
 	m_CommandList->ClearRenderTargetView(Target.GetRTV(), Target.GetClearColor(), (Rect == nullptr) ? 0 : 1, Rect);
 }
 
-void GraphicsContext::SetRenderTargets(
-	UINT NumRenderTargetDescriptors,
-	const D3D12_CPU_DESCRIPTOR_HANDLE pRenderTargetDescriptors[])
+void GraphicsContext::SetRenderTargets(UINT NumRTVs, const D3D12_CPU_DESCRIPTOR_HANDLE RTV[])
 {
-	m_CommandList->OMSetRenderTargets(
-		NumRenderTargetDescriptors,
-		pRenderTargetDescriptors,
-		FALSE,
-		nullptr);
+	m_CommandList->OMSetRenderTargets(NumRTVs, RTV, FALSE, nullptr);
 }
 
-void GraphicsContext::SetRenderTargets(UINT NumRenderTargetDescriptors,
-	const D3D12_CPU_DESCRIPTOR_HANDLE pRenderTargetDescriptors[],
-	D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilDescriptor)
+void GraphicsContext::SetRenderTargets(UINT NumRTVs, const D3D12_CPU_DESCRIPTOR_HANDLE RTV[], D3D12_CPU_DESCRIPTOR_HANDLE DSV)
 {
-	m_CommandList->OMSetRenderTargets(NumRenderTargetDescriptors,
-		pRenderTargetDescriptors,
-		FALSE,
-		&DepthStencilDescriptor);
+	m_CommandList->OMSetRenderTargets(NumRTVs, RTV, FALSE, &DSV);
 }
 
 void GraphicsContext::SetViewport(FLOAT TopLeftX, FLOAT TopLeftY, FLOAT Width, FLOAT Height, FLOAT MinDepth, FLOAT MaxDepth)
