@@ -24,6 +24,14 @@ protected:
 		ID3D12Resource* resource,
 		D3D12_RESOURCE_STATES currentState);
 
+	D3D12_RESOURCE_DESC DescribeTex2D(
+		uint32_t width,
+		uint32_t height,
+		uint32_t depthOrArraySize,
+		uint32_t numMips,
+		DXGI_FORMAT format,
+		UINT flags);
+
 	void CreateTextureResource(
 		ID3D12Device* device,
 		const std::wstring& name,

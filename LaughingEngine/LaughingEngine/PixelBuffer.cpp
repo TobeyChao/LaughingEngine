@@ -18,6 +18,35 @@ void PixelBuffer::AssociateWithResource(
 #endif // defined(DEBUG) || defined(_DEBUG)
 }
 
+D3D12_RESOURCE_DESC PixelBuffer::DescribeTex2D(
+	uint32_t width,
+	uint32_t height,
+	uint32_t depthOrArraySize,
+	uint32_t numMips,
+	DXGI_FORMAT format,
+	UINT flags)
+{
+	m_Width = width;
+	m_Height = height;
+	m_ArraySize = depthOrArraySize;
+	m_Format = format;
+
+	D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(
+		m_Format,
+		m_Width,
+		m_Height,
+		m_ArraySize,
+		numMips,
+		1,
+		0,
+		(D3D12_RESOURCE_FLAGS)flags,
+		D3D12_TEXTURE_LAYOUT_UNKNOWN,
+		0
+	);
+
+	return desc;
+}
+
 void PixelBuffer::CreateTextureResource(
 	ID3D12Device* Device,
 	const std::wstring& Name,

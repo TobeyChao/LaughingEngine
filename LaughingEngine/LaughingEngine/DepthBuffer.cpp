@@ -3,8 +3,7 @@
 
 void DepthBuffer::Create(const std::wstring Name, uint32_t Width, uint32_t Height, DXGI_FORMAT Format)
 {
-	CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(
-		Format, Width, Height, 1, 1, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+	D3D12_RESOURCE_DESC desc = DescribeTex2D(Width, Height, 1, 1, Format, (UINT)D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
 	D3D12_CLEAR_VALUE clear;
 	ZeroMemory(&clear, sizeof(clear));

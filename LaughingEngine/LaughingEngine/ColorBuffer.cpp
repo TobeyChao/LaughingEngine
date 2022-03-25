@@ -15,7 +15,7 @@ void ColorBuffer::Create(const std::wstring& Name, uint32_t Width, uint32_t Heig
 
 	D3D12_RESOURCE_FLAGS flag = CombineResourceFlags();
 
-	CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(Format, Width, Height, 1, NumMips, m_FragmentCount, 0, flag);
+	D3D12_RESOURCE_DESC desc = DescribeTex2D(Width, Height, 1, NumMips, Format, (UINT)flag);
 
 	D3D12_CLEAR_VALUE clear;
 	ZeroMemory(&clear, sizeof(clear));
