@@ -31,7 +31,13 @@ namespace
 	uint64_t s_FrameIndex = 0;
 	int64_t s_FrameStartTick = 0;
 
-	bool s_EnableVSync = true;
+	bool s_EnableVSync = false;
+
+	uint64_t s_CurFrameFence = 0;
+	uint8_t s_NumFrameUploaded = 0;
+	uint8_t s_FrameResourceNumLimit = 10;
+	std::queue<uint64_t> s_FrameFenceQueue;
+	bool s_EnableFrameResourceNumLimit = true;
 }
 
 namespace Graphics
@@ -135,7 +141,8 @@ namespace Graphics
 		context.SetViewportAndScissorRect(0, 0, g_DisplayWidth, g_DisplayHeight);
 		context.DrawInstanced(3, 1);
 		context.TransitionResource(g_DisplayPlane[g_CurrentBuffer], D3D12_RESOURCE_STATE_PRESENT);
-		context.Finish();
+		s_CurFrameFence = context.Finish();
+		s_FrameFenceQueue.push(s_CurFrameFence);
 	}
 
 	void PreparePresentHDR()
@@ -253,6 +260,20 @@ namespace Display
 	void Resize(uint32_t width, uint32_t height)
 	{
 		Utility::Printf(L"width:%d height:%d\n", width, height);
+	}
+
+	void Update()
+	{
+		// 添加FrameResource预提交数量限制
+		if (s_EnableFrameResourceNumLimit)
+		{
+			if (s_FrameFenceQueue.size() >= s_FrameResourceNumLimit)
+			{
+				uint64_t fence = s_FrameFenceQueue.front();
+				g_CommandManager.WaitForFence(fence);
+				s_FrameFenceQueue.pop();
+			}
+		}
 	}
 
 	void Present()

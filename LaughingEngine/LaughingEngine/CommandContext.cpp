@@ -217,6 +217,12 @@ void GraphicsContext::ClearColor(ColorBuffer& Target, const D3D12_RECT* Rect)
 	m_CommandList->ClearRenderTargetView(Target.GetRTV(), Target.GetClearColor(), (Rect == nullptr) ? 0 : 1, Rect);
 }
 
+void GraphicsContext::ClearDepth(DepthBuffer& Target)
+{
+	FlushResourceBarrier();
+	m_CommandList->ClearDepthStencilView(Target.GetDSV(), D3D12_CLEAR_FLAG_DEPTH, 0, 0, 0, nullptr);
+}
+
 void GraphicsContext::SetRenderTargets(UINT NumRTVs, const D3D12_CPU_DESCRIPTOR_HANDLE RTV[])
 {
 	m_CommandList->OMSetRenderTargets(NumRTVs, RTV, FALSE, nullptr);

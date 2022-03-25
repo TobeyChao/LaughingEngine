@@ -4,6 +4,10 @@
 
 class GpuResource
 {
+	friend class CommandContext;
+	friend class GraphicsContext;
+	friend class ComputeContext;
+
 public:
 	GpuResource()
 		:

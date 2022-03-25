@@ -3,6 +3,7 @@
 #include "PipelineState.h"
 #include "RootSignature.h"
 #include "ColorBuffer.h"
+#include "DepthBuffer.h"
 #include "GpuBuffer.h"
 
 class GraphicsContext;
@@ -79,6 +80,8 @@ public:
 	static GraphicsContext& Begin(const std::wstring& id = L"");
 
 	void ClearColor(ColorBuffer& Target, const D3D12_RECT* Rect);
+	void ClearDepth(DepthBuffer& Target);
+
 	void SetRootSignature(const RootSignature& rootSignature);
 
 	void SetRenderTargets(UINT NumRTVs, const D3D12_CPU_DESCRIPTOR_HANDLE RTV[]);

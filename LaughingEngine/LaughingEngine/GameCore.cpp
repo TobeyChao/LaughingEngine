@@ -16,6 +16,8 @@ namespace Game
 
 	void UpdateApplication(IGameApp& game)
 	{
+		Display::Update();
+
 		game.Update();
 		game.Draw();
 

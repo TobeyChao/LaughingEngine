@@ -117,6 +117,12 @@
     <ClCompile Include="MemoryAllocator.cpp">
       <Filter>Core\Pool</Filter>
     </ClCompile>
+    <ClCompile Include="DepthBuffer.cpp">
+      <Filter>Core\GPUResource</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMapBuffer.cpp">
+      <Filter>Core\GPUResource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsCore.h">
@@ -208,6 +214,12 @@
     </ClInclude>
     <ClInclude Include="MemoryAllocator.h">
       <Filter>Core\Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthBuffer.h">
+      <Filter>Core\GPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMapBuffer.h">
+      <Filter>Core\GPUResource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

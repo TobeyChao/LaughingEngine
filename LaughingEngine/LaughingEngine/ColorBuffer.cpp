@@ -9,34 +9,26 @@ void ColorBuffer::CreateFromSwapChain(const std::wstring& name, ID3D12Resource* 
 	Graphics::g_Device->CreateRenderTargetView(baseResource, nullptr, m_RTVHandle);
 }
 
-void ColorBuffer::Create(const std::wstring& name, uint32_t width, uint32_t height, uint32_t numMips, DXGI_FORMAT format)
+void ColorBuffer::Create(const std::wstring& Name, uint32_t Width, uint32_t Height, uint32_t NumMips, DXGI_FORMAT Format)
 {
-	numMips = numMips == 0 ? ComputeNumMips(width, height) : numMips;
+	NumMips = NumMips == 0 ? ComputeNumMips(Width, Height) : NumMips;
 
 	D3D12_RESOURCE_FLAGS flag = CombineResourceFlags();
-	D3D12_RESOURCE_DESC desc = DescribeTex2D(
-		width,
-		height,
-		1,
-		numMips,
-		format,
-		flag
-	);
 
-	desc.SampleDesc.Count = m_FragmentCount;
-	desc.SampleDesc.Quality = 0;
+	CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(Format, Width, Height, 1, NumMips, m_FragmentCount, 0, flag);
 
-	D3D12_CLEAR_VALUE clear = {};
-	clear.Format = format;
+	D3D12_CLEAR_VALUE clear;
+	ZeroMemory(&clear, sizeof(clear));
+	clear.Format = Format;
 	memcpy(clear.Color, m_ClearColor, sizeof(float) * 4);
 
-	CreateTextureResource(Graphics::g_Device, name, desc, clear);
-	CreateDerivedViews(Graphics::g_Device, format, 1, numMips);
+	CreateTextureResource(Graphics::g_Device, Name, desc, clear);
+	CreateDerivedViews(Graphics::g_Device, Format, 1, NumMips);
 }
 
-void ColorBuffer::CreateDerivedViews(ID3D12Device* device, DXGI_FORMAT format, uint32_t arraySize, uint32_t numMips)
+void ColorBuffer::CreateDerivedViews(ID3D12Device* device, DXGI_FORMAT format, uint32_t ArraySize, uint32_t NumMips)
 {
-	m_NumMipMaps = numMips - 1;
+	m_NumMipMaps = NumMips - 1;
 
 	D3D12_RENDER_TARGET_VIEW_DESC RTVDesc = {};
 	D3D12_UNORDERED_ACCESS_VIEW_DESC UAVDesc = {};
@@ -53,7 +45,7 @@ void ColorBuffer::CreateDerivedViews(ID3D12Device* device, DXGI_FORMAT format, u
 	SRVDesc.Format = format;
 	SRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	SRVDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	SRVDesc.Texture2D.MipLevels = numMips;
+	SRVDesc.Texture2D.MipLevels = NumMips;
 	SRVDesc.Texture2D.MostDetailedMip = 0;
 
 	ID3D12Resource* res = m_pResource.Get();
@@ -78,7 +70,7 @@ void ColorBuffer::CreateDerivedViews(ID3D12Device* device, DXGI_FORMAT format, u
 		&SRVDesc,
 		m_SRVHandle);
 
-	for (uint32_t i = 0; i < numMips; i++)
+	for (uint32_t i = 0; i < NumMips; i++)
 	{
 		if (m_UAVHandle[i].ptr == -1)
 		{

@@ -64,7 +64,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE GpuBuffer::CreateConstanceBuffer(uint32_t Offset, ui
 	D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
 	desc.BufferLocation = m_GpuVirtualAddress + Offset;
-	desc.SizeInBytes = Math::AlignUp(SizeInBytes, 256);
+	desc.SizeInBytes = (UINT)Math::AlignUp(SizeInBytes, 256);
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	g_Device->CreateConstantBufferView(&desc, handle);
 	return handle;

@@ -2,6 +2,7 @@
 
 #include "BufferManager.h"
 #include "CommandContext.h"
+#include "CommandListManager.h"
 
 using namespace Graphics;
 
@@ -24,15 +25,13 @@ void MyGameApp::Update()
 
 void MyGameApp::Draw()
 {
-	GraphicsContext& context = GraphicsContext::Begin(L"Scene Render");
 	const D3D12_VIEWPORT& viewport = m_MainViewport;
 	const D3D12_RECT& scissor = m_MainScissor;
-
+	GraphicsContext& context = GraphicsContext::Begin(L"Scene Render");
 	context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 	context.SetRenderTarget(g_SceneColorBuffer.GetRTV());
 	context.SetViewportAndScissorRect(viewport, scissor);
 	context.ClearColor(g_SceneColorBuffer, &scissor);
-
 	context.Finish();
 }
 

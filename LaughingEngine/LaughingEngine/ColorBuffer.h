@@ -24,14 +24,14 @@ public:
 	/// </summary>
 	/// <param name="name"></param>
 	/// <param name="baseResource"></param>
-	void CreateFromSwapChain(const std::wstring& name, ID3D12Resource* baseResource);
-	void Create(const std::wstring& name, uint32_t width, uint32_t height, uint32_t numMips, DXGI_FORMAT format);
+	void CreateFromSwapChain(const std::wstring& Name, ID3D12Resource* BaseResource);
+	void Create(const std::wstring& Name, uint32_t Width, uint32_t Height, uint32_t NumMips, DXGI_FORMAT Format);
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const { return m_SRVHandle; }
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTV() const { return m_RTVHandle; }
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_UAVHandle[0]; }
 
-	DirectX::XMVECTORF32 GetClearColor() const { return m_ClearColor; }
+	const DirectX::XMVECTORF32& GetClearColor() const { return m_ClearColor; }
 
 	/// <summary>
 	/// 设置和资源创建的时候不同的颜色会导致Warning
@@ -50,17 +50,14 @@ private:
 		return D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | Flags;
 	}
 
-	static inline uint32_t ComputeNumMips(uint32_t width, uint32_t height)
+	static inline uint32_t ComputeNumMips(uint32_t Width, uint32_t Height)
 	{
-		uint32_t highBit;
-		_BitScanReverse((unsigned long*)&highBit, width | height);
+		uint32_t highBit = 0;
+		_BitScanReverse((unsigned long*)&highBit, Width | Height);
 		return highBit + 1;
 	}
 
-	void CreateDerivedViews(ID3D12Device* device,
-		DXGI_FORMAT format,
-		uint32_t arraySize,
-		uint32_t numMips = 1);
+	void CreateDerivedViews(ID3D12Device* Device, DXGI_FORMAT Format, uint32_t ArraySize, uint32_t NumMips = 1);
 
 private:
 	DirectX::XMVECTORF32 m_ClearColor;
