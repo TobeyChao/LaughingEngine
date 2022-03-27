@@ -1,5 +1,5 @@
 #include "MyGameApp.h"
-
+#include "TextureManager.h"
 #include "BufferManager.h"
 #include "CommandContext.h"
 #include "CommandListManager.h"
@@ -8,6 +8,8 @@ using namespace Graphics;
 
 void MyGameApp::Initialize()
 {
+	TextureRef ref = TextureManager::LoadDDSFromFile(L"../Assets/Textures/WoodCrate02.dds");
+	Utility::Printf("texture: %p", ref.Get());
 }
 
 void MyGameApp::Update()

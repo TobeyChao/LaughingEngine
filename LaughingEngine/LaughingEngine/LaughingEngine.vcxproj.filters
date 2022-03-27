@@ -229,6 +229,7 @@
     <None Include="Shaders\ColorSpaceUtility.hlsli">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PresentSDRPS.hlsl">
