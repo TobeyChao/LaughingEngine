@@ -3,11 +3,9 @@
 #include "CommandListManager.h"
 #include "CommandContext.h"
 #include "CommandContextManager.h"
+#include "DescriptorAllocator.h"
 #include "Display.h"
 #include "BufferManager.h"
-
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxguid.lib")
 
 namespace Graphics
 {
@@ -17,14 +15,6 @@ namespace Graphics
 	ID3D12Device* g_Device = nullptr;
 	CommandListManager g_CommandManager;
 	ContextManager g_ContextManager;
-
-	DescriptorAllocator g_DescriptorAllocator[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] =
-	{
-		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
-		D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
-		D3D12_DESCRIPTOR_HEAP_TYPE_DSV
-	};
 
 	void EnableShaderBasedValidation()
 	{

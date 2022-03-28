@@ -87,6 +87,5 @@ public:
 
 private:
 	ID3D12Device* m_Device;
-
 	CommandQueue m_GraphicsQueue;
 };

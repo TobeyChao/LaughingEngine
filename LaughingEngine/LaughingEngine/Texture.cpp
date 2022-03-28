@@ -1,6 +1,6 @@
 #include "Texture.h"
 #include "GraphicsCore.h"
-
+#include "DescriptorAllocator.h"
 #include "DDSTextureLoader12.h"
 
 void Texture::Create2D()
@@ -26,9 +26,9 @@ bool Texture::CreateDDSFromMemory(const void* Data, size_t Size, bool IssRGB)
 		return false;
 	}
 
-	if (m_hCpuDescriptorHandle.ptr == -1)
+	if (m_hSRV.ptr == -1)
 	{
-		m_hCpuDescriptorHandle = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_hSRV = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 
 	D3D12_RESOURCE_DESC desc = m_pResource->GetDesc();
@@ -36,7 +36,7 @@ bool Texture::CreateDDSFromMemory(const void* Data, size_t Size, bool IssRGB)
 	m_Height = desc.Height;
 	m_Depth = desc.DepthOrArraySize;
 
-	Graphics::g_Device->CreateShaderResourceView(m_pResource.Get(), nullptr, m_hCpuDescriptorHandle);
+	Graphics::g_Device->CreateShaderResourceView(m_pResource.Get(), nullptr, m_hSRV);
 
 	return true;
 }

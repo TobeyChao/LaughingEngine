@@ -13,8 +13,6 @@
 
 #include <cmath>
 
-#pragma comment(lib, "dxgi.lib") 
-
 extern "C" { __declspec(dllexport) extern const UINT D3D12SDKVersion = 600; }
 extern "C" { __declspec(dllexport) extern const char* D3D12SDKPath = ".\\D3D12\\"; }
 
@@ -37,7 +35,6 @@ namespace
 	bool s_EnableVSync = false;
 
 	uint64_t s_CurFrameFence = 0;
-	uint8_t s_NumFrameUploaded = 0;
 	uint8_t s_FrameResourceNumLimit = 3;
 	std::queue<uint64_t> s_FrameFenceQueue;
 	bool s_EnableFrameResourceNumLimit = true;

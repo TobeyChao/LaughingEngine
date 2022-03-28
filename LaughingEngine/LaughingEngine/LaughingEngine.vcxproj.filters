@@ -60,9 +60,6 @@
     <ClCompile Include="PixelBuffer.cpp">
       <Filter>Core\GPUResource</Filter>
     </ClCompile>
-    <ClCompile Include="GpuResource.cpp">
-      <Filter>Core\GPUResource</Filter>
-    </ClCompile>
     <ClCompile Include="ColorBuffer.cpp">
       <Filter>Core\GPUResource</Filter>
     </ClCompile>
@@ -122,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="ShadowMapBuffer.cpp">
       <Filter>Core\GPUResource</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorAllocator.cpp">
+      <Filter>Core\Pool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +220,9 @@
     </ClInclude>
     <ClInclude Include="ShadowMapBuffer.h">
       <Filter>Core\GPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorAllocator.h">
+      <Filter>Core\Pool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

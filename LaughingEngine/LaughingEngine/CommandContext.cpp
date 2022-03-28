@@ -8,7 +8,6 @@ using namespace Graphics;
 
 CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE Type)
 	:
-	m_Type(Type),
 	m_Allocator(nullptr),
 	m_CommandList(nullptr),
 	m_GraphicsRootSignature(nullptr),
@@ -16,7 +15,8 @@ CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE Type)
 	m_PipelineState(nullptr),
 	m_ResourceBarrier(),
 	m_NumBarriers(0),
-	m_DescriptorHeaps()
+	m_DescriptorHeaps(),
+	m_Type(Type)
 {
 }
 

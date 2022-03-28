@@ -1,12 +1,13 @@
 #include "ColorBuffer.h"
 #include "GraphicsCore.h"
+#include "DescriptorAllocator.h"
 
 void ColorBuffer::CreateFromSwapChain(const std::wstring& name, ID3D12Resource* baseResource)
 {
 	AssociateWithResource(Graphics::g_Device, name, baseResource, D3D12_RESOURCE_STATE_PRESENT);
 
-	m_RTVHandle = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	Graphics::g_Device->CreateRenderTargetView(baseResource, nullptr, m_RTVHandle);
+	m_hRTV = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	Graphics::g_Device->CreateRenderTargetView(baseResource, nullptr, m_hRTV);
 }
 
 void ColorBuffer::Create(const std::wstring& Name, uint32_t Width, uint32_t Height, uint32_t NumMips, DXGI_FORMAT Format)
@@ -50,37 +51,27 @@ void ColorBuffer::CreateDerivedViews(ID3D12Device* device, DXGI_FORMAT format, u
 
 	ID3D12Resource* res = m_pResource.Get();
 
-	if (m_SRVHandle.ptr == -1)
+	if (m_hSRV.ptr == -1)
 	{
-		m_SRVHandle = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_hSRV = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 
-	if (m_RTVHandle.ptr == -1)
+	if (m_hRTV.ptr == -1)
 	{
-		m_RTVHandle = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		m_hRTV = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	}
 
-	device->CreateRenderTargetView(
-		res,
-		&RTVDesc,
-		m_RTVHandle);
+	device->CreateRenderTargetView(res, &RTVDesc, m_hRTV);
 
-	device->CreateShaderResourceView(
-		res,
-		&SRVDesc,
-		m_SRVHandle);
+	device->CreateShaderResourceView(res, &SRVDesc, m_hSRV);
 
 	for (uint32_t i = 0; i < NumMips; i++)
 	{
-		if (m_UAVHandle[i].ptr == -1)
+		if (m_hUAV[i].ptr == -1)
 		{
-			m_UAVHandle[i] = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			m_hUAV[i] = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		}
 
-		device->CreateUnorderedAccessView(
-			res,
-			nullptr,
-			&UAVDesc,
-			m_UAVHandle[i]);
+		device->CreateUnorderedAccessView(res, nullptr, &UAVDesc, m_hUAV[i]);
 	}
 }

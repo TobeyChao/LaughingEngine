@@ -2,8 +2,8 @@
 
 CommandAllocatorPool::CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE Type)
 	:
-	m_Device(nullptr),
-	m_CommandListType(Type)
+	m_CommandListType(Type),
+	m_Device(nullptr)
 {
 }
 

@@ -1,5 +1,6 @@
 #include "GpuBuffer.h"
 #include "GraphicsCore.h"
+#include "DescriptorAllocator.h"
 
 using namespace Graphics;
 

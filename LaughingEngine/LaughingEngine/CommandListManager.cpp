@@ -4,9 +4,9 @@
 CommandQueue::CommandQueue(D3D12_COMMAND_LIST_TYPE type)
 	:
 	m_Type(type),
+	m_CommandAllocatorPool(type),
 	m_NextFenceValue((uint64_t)type << 56 | 1),
 	m_LastCompletedFenceValue((uint64_t)type << 56),
-	m_CommandAllocatorPool(type),
 	m_FenceEventHandle(NULL)
 {
 }
@@ -136,7 +136,12 @@ void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D
 {
 	switch (type)
 	{
-	case D3D12_COMMAND_LIST_TYPE_DIRECT: *allocator = m_GraphicsQueue.RequestAllocator(); break;
+	case D3D12_COMMAND_LIST_TYPE_DIRECT:
+		*allocator = m_GraphicsQueue.RequestAllocator();
+		break;
+	default:
+		*allocator = m_GraphicsQueue.RequestAllocator();
+		break;
 	}
 
 	ThrowIfFailed(m_Device->CreateCommandList(1, type, *allocator, nullptr, IID_PPV_ARGS(list)));

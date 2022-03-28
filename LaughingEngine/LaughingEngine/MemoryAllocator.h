@@ -1,6 +1,5 @@
 #pragma once
 #include "GpuResource.h"
-
 #include <vector>
 #include <queue>
 #include <mutex>
@@ -47,6 +46,10 @@ public:
 	{
 		m_GpuVirtualAddress = m_pResource->GetGPUVirtualAddress();
 		m_pResource->Map(0, nullptr, &CpuAddress);
+	}
+
+	~MemoryPage()
+	{
 	}
 
 	void Map()

@@ -11,7 +11,7 @@ public:
 		m_Height(0),
 		m_Depth(0)
 	{
-		m_hCpuDescriptorHandle.ptr = -1;
+		m_hSRV.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
 	}
 
 	Texture(D3D12_CPU_DESCRIPTOR_HANDLE Handle)
@@ -19,9 +19,8 @@ public:
 		m_Width(0),
 		m_Height(0),
 		m_Depth(0),
-		m_hCpuDescriptorHandle(Handle)
-	{
-	}
+		m_hSRV(Handle)
+	{}
 
 	void Create2D();
 
@@ -30,12 +29,12 @@ public:
 	virtual void Destroy() override
 	{
 		GpuResource::Destroy();
-		m_hCpuDescriptorHandle.ptr = -1;
+		m_hSRV.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
 	}
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const
 	{
-		return m_hCpuDescriptorHandle;
+		return m_hSRV;
 	}
 
 	uint32_t GetWidth() const { return m_Width; };
@@ -47,5 +46,5 @@ protected:
 	uint32_t m_Height;
 	uint32_t m_Depth;
 
-	D3D12_CPU_DESCRIPTOR_HANDLE m_hCpuDescriptorHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE m_hSRV;
 };

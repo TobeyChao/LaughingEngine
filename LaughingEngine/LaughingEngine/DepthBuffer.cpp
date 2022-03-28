@@ -1,5 +1,6 @@
 #include "DepthBuffer.h"
 #include "GraphicsCore.h"
+#include "DescriptorAllocator.h"
 
 void DepthBuffer::Create(const std::wstring Name, uint32_t Width, uint32_t Height, DXGI_FORMAT Format)
 {
@@ -24,11 +25,11 @@ void DepthBuffer::CreateDerivedViews(ID3D12Device* Device, DXGI_FORMAT Format)
 	DSVDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	DSVDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-	if (m_DSVHandle.ptr == -1)
+	if (m_hDSV.ptr == -1)
 	{
-		m_DSVHandle = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		m_hDSV = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	}
-	Device->CreateDepthStencilView(res, &DSVDesc, m_DSVHandle);
+	Device->CreateDepthStencilView(res, &DSVDesc, m_hDSV);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC SRVDesc;
 	ZeroMemory(&SRVDesc, sizeof(SRVDesc));
@@ -40,9 +41,9 @@ void DepthBuffer::CreateDerivedViews(ID3D12Device* Device, DXGI_FORMAT Format)
 	SRVDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 	SRVDesc.Texture2D.PlaneSlice = 0;
 
-	if (m_SRVHandle.ptr == -1)
+	if (m_hSRV.ptr == -1)
 	{
-		m_SRVHandle = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_hSRV = Graphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
-	Device->CreateShaderResourceView(res, &SRVDesc, m_SRVHandle);
+	Device->CreateShaderResourceView(res, &SRVDesc, m_hSRV);
 }

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "PCH.h"
 
 class GpuResource
@@ -11,23 +10,20 @@ class GpuResource
 public:
 	GpuResource()
 		:
-		m_GpuVirtualAddress(0),
 		m_UsageState(D3D12_RESOURCE_STATE_COMMON),
-		m_TransitioningState((D3D12_RESOURCE_STATES)-1)
-	{
-	}
+		m_TransitioningState((D3D12_RESOURCE_STATES)-1),
+		m_GpuVirtualAddress(D3D12_GPU_VIRTUAL_ADDRESS_NULL)
+	{}
 
-	GpuResource(ID3D12Resource* res,
-		D3D12_RESOURCE_STATES currentState)
+	GpuResource(ID3D12Resource* res, D3D12_RESOURCE_STATES currentState)
 		:
-		m_GpuVirtualAddress(0),
 		m_pResource(res),
 		m_UsageState(currentState),
-		m_TransitioningState((D3D12_RESOURCE_STATES)-1)
-	{
-	}
+		m_TransitioningState((D3D12_RESOURCE_STATES)-1),
+		m_GpuVirtualAddress(D3D12_GPU_VIRTUAL_ADDRESS_NULL)
+	{}
 
-	~GpuResource()
+	virtual ~GpuResource()
 	{
 		Destroy();
 	}
@@ -35,16 +31,16 @@ public:
 	virtual void Destroy()
 	{
 		m_pResource.Reset();
-		m_GpuVirtualAddress = 0;
+		m_GpuVirtualAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
 		++m_VersionID;
 	}
 
-	ID3D12Resource* GetRes() const
+	inline ID3D12Resource* GetRes() const
 	{
 		return m_pResource.Get();
 	}
 
-	D3D12_GPU_VIRTUAL_ADDRESS GetGpuAddress() const
+	inline D3D12_GPU_VIRTUAL_ADDRESS GetGpuAddress() const
 	{
 		return m_GpuVirtualAddress;
 	}

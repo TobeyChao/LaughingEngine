@@ -12,8 +12,7 @@ public:
 		m_Name(Name),
 		m_RootSignature(nullptr),
 		m_PSO(nullptr)
-	{
-	}
+	{}
 
 	void Destroy()
 	{

@@ -19,27 +19,27 @@ void PixelBuffer::AssociateWithResource(
 }
 
 D3D12_RESOURCE_DESC PixelBuffer::DescribeTex2D(
-	uint32_t width,
-	uint32_t height,
-	uint32_t depthOrArraySize,
-	uint32_t numMips,
-	DXGI_FORMAT format,
-	UINT flags)
+	uint32_t Width,
+	uint32_t Height,
+	uint32_t DepthOrArraySize,
+	uint32_t NumMips,
+	DXGI_FORMAT Format,
+	UINT Flags)
 {
-	m_Width = width;
-	m_Height = height;
-	m_ArraySize = depthOrArraySize;
-	m_Format = format;
+	m_Width = Width;
+	m_Height = Height;
+	m_ArraySize = DepthOrArraySize;
+	m_Format = Format;
 
 	D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(
 		m_Format,
 		m_Width,
 		m_Height,
 		m_ArraySize,
-		numMips,
+		NumMips,
 		1,
 		0,
-		(D3D12_RESOURCE_FLAGS)flags,
+		(D3D12_RESOURCE_FLAGS)Flags,
 		D3D12_TEXTURE_LAYOUT_UNKNOWN,
 		0
 	);
@@ -68,7 +68,7 @@ void PixelBuffer::CreateTextureResource(
 
 #if defined(DEBUG) || defined(_DEBUG)
 	m_pResource->SetName(Name.c_str());
-#endif defined(DEBUG) || defined(_DEBUG)
+#endif // defined(DEBUG) || defined(_DEBUG)
 }
 
 
