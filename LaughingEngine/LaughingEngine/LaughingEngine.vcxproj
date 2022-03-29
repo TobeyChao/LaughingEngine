@@ -169,6 +169,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BufferManager.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorBuffer.cpp" />
     <ClCompile Include="CommandAllocatorPool.cpp" />
     <ClCompile Include="CommandContext.cpp" />
@@ -200,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorBuffer.h" />
     <ClInclude Include="CommandAllocatorPool.h" />
     <ClInclude Include="CommandContext.h" />

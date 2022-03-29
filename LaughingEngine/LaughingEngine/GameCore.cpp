@@ -7,15 +7,54 @@ namespace Game
 {
 	using namespace Graphics;
 
+	const std::wstring m_MainWndCaption = L"MainWindow";
+
+	void CalculateFrameStats()
+	{
+		// Code computes the average frames per second, and also the 
+		// average time it takes to render one frame.  These stats 
+		// are appended to the window caption bar.
+
+		static int frameCnt = 0;
+		static float timeElapsed = 0.0f;
+
+		frameCnt++;
+
+		// Compute averages over one second period.
+		if ((GameTimer::TotalTime() - timeElapsed) >= 1.0f)
+		{
+			float fps = (float)frameCnt; // fps = frameCnt / 1
+			float mspf = 1000.0f / fps;
+
+			std::wstring fpsStr = std::to_wstring(fps);
+			std::wstring mspfStr = std::to_wstring(mspf);
+
+			std::wstring windowText = m_MainWndCaption +
+				L"    fps: " + fpsStr +
+				L"   mspf: " + mspfStr;
+
+			SetWindowText(g_hWnd, windowText.c_str());
+
+			// Reset for next average.
+			frameCnt = 0;
+			timeElapsed += 1.0f;
+		}
+	}
+
 	void InitializeApplication(IGameApp& game)
 	{
 		Graphics::Initialize();
 		GameTimer::Initialize();
 		game.Initialize();
+		GameTimer::Reset();
 	}
 
 	void UpdateApplication(IGameApp& game)
 	{
+		GameTimer::Tick();
+
+		CalculateFrameStats();
+
 		Display::Update();
 
 		game.Update();
@@ -28,6 +67,8 @@ namespace Game
 	{
 		game.Shutdown();
 		Graphics::Shutdown();
+
+		GameTimer::Stop();
 	}
 
 	HWND g_hWnd = nullptr;
@@ -59,7 +100,7 @@ namespace Game
 		RECT rc = { 0, 0, static_cast<LONG>(Graphics::g_DisplayWidth), static_cast<LONG>(Graphics::g_DisplayHeight) };
 		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
 
-		g_hWnd = CreateWindow(className, className, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+		g_hWnd = CreateWindow(className, m_MainWndCaption.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 			rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInst, nullptr);
 
 		InitializeApplication(app);

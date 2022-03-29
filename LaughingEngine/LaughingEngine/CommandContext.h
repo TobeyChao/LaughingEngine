@@ -5,6 +5,7 @@
 #include "ColorBuffer.h"
 #include "DepthBuffer.h"
 #include "GpuBuffer.h"
+#include "MemoryAllocator.h"
 
 class GraphicsContext;
 class ComputeContext;
@@ -39,6 +40,11 @@ public:
 		return m_CommandList;
 	}
 
+	MemoryHandle ReserveUploadMemory(size_t SizeInBytes)
+	{
+		return m_CpuMemoryAllocator.Allocate(SizeInBytes);
+	}
+
 	static void InitializeBuffer(GpuBuffer& Dest, const void* Data, size_t NumBytes, size_t DestOffset = 0);
 	static void InitializeBuffer(GpuBuffer& Dest, const UploadBuffer& Src, size_t SrcOffset, size_t NumBytes = -1, size_t DestOffset = 0);
 
@@ -69,6 +75,9 @@ protected:
 	UINT m_NumBarriers;
 
 	ID3D12DescriptorHeap* m_DescriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+
+	MemoryAllocator m_CpuMemoryAllocator;
+	MemoryAllocator m_GpuMemoryAllocator;
 
 	std::wstring m_ID;
 	D3D12_COMMAND_LIST_TYPE m_Type;
