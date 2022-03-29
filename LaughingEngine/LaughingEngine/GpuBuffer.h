@@ -12,8 +12,8 @@ public:
 		m_ElementCount(0),
 		m_ElementSize(0)
 	{
-		m_hUAV.ptr = -1;
-		m_hSRV.ptr = -1;
+		m_hUAV.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+		m_hSRV.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
 		m_ResourceFlags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 	}
 
@@ -35,6 +35,40 @@ public:
 
 	D3D12_GPU_VIRTUAL_ADDRESS RootConstantBufferView() const { return m_GpuVirtualAddress; };
 
+	size_t BufferSize() const { return m_BufferSize; };
+	uint32_t ElementCount() const { return m_ElementCount; };
+	uint32_t ElementSize() const { return m_ElementSize; };
+
+protected:
+	virtual void CreateDerivedViews() = 0;
+
+protected:
+	D3D12_CPU_DESCRIPTOR_HANDLE m_hUAV;
+	D3D12_CPU_DESCRIPTOR_HANDLE m_hSRV;
+
+	size_t m_BufferSize;
+	uint32_t m_ElementCount;
+	uint32_t m_ElementSize;
+
+	D3D12_RESOURCE_FLAGS m_ResourceFlags;
+};
+
+class IndexBuffer : public GpuBuffer
+{
+public:
+	// 索引IndexView
+	// 不需要放到描述符堆
+	D3D12_INDEX_BUFFER_VIEW IndexBufferView(size_t Offset, uint32_t SizeInBytes, bool Is32Bit) const;
+	D3D12_INDEX_BUFFER_VIEW IndexBufferView(size_t StartIndex) const
+	{
+		size_t Offset = StartIndex * m_ElementSize;
+		return IndexBufferView(Offset, (uint32_t)(m_BufferSize - Offset), m_ElementSize == 4);
+	}
+};
+
+class VertexBuffer : public GpuBuffer
+{
+public:
 	// 顶点VertexView
 	// 不需要放到描述符堆上
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView(size_t Offset, uint32_t SizeInBytes, uint32_t StrideInBytes) const;
@@ -44,31 +78,6 @@ public:
 		return VertexBufferView(Offset, (uint32_t)(m_BufferSize - Offset), m_ElementSize);
 	}
 
-	// 索引IndexView
-	// 不需要放到描述符堆
-	D3D12_INDEX_BUFFER_VIEW IndexBufferView(size_t Offset, uint32_t SizeInBytes, bool Is32Bit) const;
-	D3D12_INDEX_BUFFER_VIEW IndexBufferView(size_t StartIndex) const
-	{
-		size_t Offset = StartIndex * m_ElementSize;
-		return IndexBufferView(Offset, (uint32_t)(m_BufferSize - Offset), m_ElementSize == 4);
-	}
-
-	size_t BufferSize() const { return m_BufferSize; };
-	uint32_t ElementCount() const { return m_ElementCount; };
-	uint32_t ElementSize() const { return m_ElementSize; };
-
-protected:
-	virtual void CreateDerivedViews() = 0;
-
-private:
-	D3D12_CPU_DESCRIPTOR_HANDLE m_hUAV;
-	D3D12_CPU_DESCRIPTOR_HANDLE m_hSRV;
-
-	size_t m_BufferSize;
-	uint32_t m_ElementCount;
-	uint32_t m_ElementSize;
-
-	D3D12_RESOURCE_FLAGS m_ResourceFlags;
 };
 
 class ByteAddressBuffer : public GpuBuffer
@@ -86,11 +95,15 @@ public:
 class StructuredBuffer : public GpuBuffer
 {
 public:
-
+	virtual void CreateDerivedViews() override;
 };
 
 class TypedBuffer : public GpuBuffer
 {
 public:
+	TypedBuffer(DXGI_FORMAT Format) : m_DataFormat(Format) {}
+	virtual void CreateDerivedViews(void) override;
 
+protected:
+	DXGI_FORMAT m_DataFormat;
 };
