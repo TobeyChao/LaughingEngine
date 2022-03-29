@@ -9,7 +9,7 @@ using namespace Graphics;
 void MyGameApp::Initialize()
 {
 	TextureRef ref = TextureManager::LoadDDSFromFile(L"../Assets/Textures/WoodCrate02.dds");
-	Utility::Printf("texture: %p", ref.Get());
+	Utility::Printf("texture: %p\n", ref.Get());
 }
 
 void MyGameApp::Update()
