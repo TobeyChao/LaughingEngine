@@ -4,6 +4,8 @@
 
 namespace Graphics
 {
+	extern DXGI_FORMAT g_DefaultHdrColorFormat;
+
 	/// <summary>
 	/// äÖÈ¾Ä¿±ê
 	/// </summary>

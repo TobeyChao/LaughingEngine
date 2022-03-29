@@ -1,6 +1,7 @@
 #pragma once
 #include "GpuResource.h"
 
+class CommandContext;
 class UploadBuffer;
 
 class GpuBuffer : public GpuResource
@@ -33,8 +34,6 @@ public:
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_hUAV; }
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const { return m_hSRV; }
 
-	D3D12_GPU_VIRTUAL_ADDRESS RootConstantBufferView() const { return m_GpuVirtualAddress; };
-
 	size_t BufferSize() const { return m_BufferSize; };
 	uint32_t ElementCount() const { return m_ElementCount; };
 	uint32_t ElementSize() const { return m_ElementSize; };
@@ -64,6 +63,12 @@ public:
 		size_t Offset = StartIndex * m_ElementSize;
 		return IndexBufferView(Offset, (uint32_t)(m_BufferSize - Offset), m_ElementSize == 4);
 	}
+
+protected:
+	virtual void CreateDerivedViews()
+	{
+		// DO NOTHING.
+	};
 };
 
 class VertexBuffer : public GpuBuffer
@@ -78,31 +83,57 @@ public:
 		return VertexBufferView(Offset, (uint32_t)(m_BufferSize - Offset), m_ElementSize);
 	}
 
+protected:
+	virtual void CreateDerivedViews()
+	{
+		// DO NOTHING.
+	};
 };
 
 class ByteAddressBuffer : public GpuBuffer
 {
 public:
 	virtual void CreateDerivedViews() override;
+
 };
 
 class IndirectArgsBuffer : public ByteAddressBuffer
 {
 public:
-
 };
 
 class StructuredBuffer : public GpuBuffer
 {
 public:
+	virtual void Destroy() override
+	{
+		m_CounterBuffer.Destroy();
+		GpuBuffer::Destroy();
+	}
+
 	virtual void CreateDerivedViews() override;
+
+	ByteAddressBuffer& GetCounterBuffer()
+	{
+		return m_CounterBuffer;
+	}
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCounterSRV(CommandContext& Context);
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCounterUAV(CommandContext& Context);
+
+private:
+	ByteAddressBuffer m_CounterBuffer;
 };
 
 class TypedBuffer : public GpuBuffer
 {
 public:
-	TypedBuffer(DXGI_FORMAT Format) : m_DataFormat(Format) {}
-	virtual void CreateDerivedViews(void) override;
+	TypedBuffer(DXGI_FORMAT Format)
+		:
+		m_DataFormat(Format)
+	{}
+
+	virtual void CreateDerivedViews() override;
 
 protected:
 	DXGI_FORMAT m_DataFormat;

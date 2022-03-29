@@ -107,7 +107,14 @@ public:
 	void SetViewportAndScissorRect(const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Rect);
 	void SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY PrimitiveTopology);
 
+	void SetConstantBuffer(UINT RootIndex, D3D12_GPU_VIRTUAL_ADDRESS CBV);
+	void SetDynamicConstantBufferView(UINT RootIndex, size_t BufferSize, const void* BufferData);
+	void SetBufferSRV(UINT RootIndex, const GpuBuffer& SRV, UINT64 Offset = 0);
+	void SetBufferUAV(UINT RootIndex, const GpuBuffer& UAV, UINT64 Offset = 0);
 	void SetDescriptorTable(UINT RootIndex, D3D12_GPU_DESCRIPTOR_HANDLE FirstHandle);
+
+	void SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& IBView);
+	void SetVertexBuffer(UINT Slot, const D3D12_VERTEX_BUFFER_VIEW& VBView);
 
 	void DrawInstanced(UINT VertexCountPerInstance, UINT InstanceCount, UINT StartVertexLocation = 0, UINT StartInstanceLocation = 0);
 	void DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation, INT BaseVertexLocation, UINT StartInstanceLocation);
@@ -128,9 +135,41 @@ inline void GraphicsContext::SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY Primi
 	m_CommandList->IASetPrimitiveTopology(PrimitiveTopology);
 }
 
+inline void GraphicsContext::SetConstantBuffer(UINT RootIndex, D3D12_GPU_VIRTUAL_ADDRESS CBV)
+{
+	m_CommandList->SetGraphicsRootConstantBufferView(RootIndex, CBV);
+}
+
+inline void GraphicsContext::SetDynamicConstantBufferView(UINT RootIndex, size_t BufferSize, const void* BufferData)
+{
+	MemoryHandle cb = m_CpuMemoryAllocator.Allocate(BufferSize);
+	memcpy(cb.CpuAddress, BufferData, BufferSize);
+	m_CommandList->SetGraphicsRootConstantBufferView(RootIndex, cb.GpuAddress);
+}
+
+inline void GraphicsContext::SetBufferSRV(UINT RootIndex, const GpuBuffer& SRV, UINT64 Offset)
+{
+	m_CommandList->SetGraphicsRootConstantBufferView(RootIndex, SRV.GetGpuAddress() + Offset);
+}
+
+inline void GraphicsContext::SetBufferUAV(UINT RootIndex, const GpuBuffer& UAV, UINT64 Offset)
+{
+	m_CommandList->SetGraphicsRootUnorderedAccessView(RootIndex, UAV.GetGpuAddress() + Offset);
+}
+
 inline void GraphicsContext::SetDescriptorTable(UINT RootIndex, D3D12_GPU_DESCRIPTOR_HANDLE FirstHandle)
 {
 	m_CommandList->SetGraphicsRootDescriptorTable(RootIndex, FirstHandle);
+}
+
+inline void GraphicsContext::SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& IBView)
+{
+	m_CommandList->IASetIndexBuffer(&IBView);
+}
+
+inline void GraphicsContext::SetVertexBuffer(UINT Slot, const D3D12_VERTEX_BUFFER_VIEW& VBView)
+{
+	m_CommandList->IASetVertexBuffers(Slot, 1, &VBView);
 }
 
 inline void GraphicsContext::DrawInstanced(UINT VertexCountPerInstance, UINT InstanceCount, UINT StartVertexLocation, UINT StartInstanceLocation)

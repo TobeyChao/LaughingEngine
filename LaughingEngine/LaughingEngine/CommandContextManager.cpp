@@ -34,6 +34,7 @@ void ContextManager::ReturnContext(CommandContext* CommandContext)
 
 void ContextManager::DestroyAllContext()
 {
+	MemoryAllocator::DestroyAll();
 	for (uint32_t i = 0; i < 4; i++)
 	{
 		sm_ContextPool[i].clear();

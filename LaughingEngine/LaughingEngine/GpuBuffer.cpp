@@ -163,6 +163,18 @@ void StructuredBuffer::CreateDerivedViews()
 	g_Device->CreateUnorderedAccessView(m_pResource.Get(), nullptr, &uavDesc, m_hUAV);
 }
 
+const D3D12_CPU_DESCRIPTOR_HANDLE& StructuredBuffer::GetCounterSRV(CommandContext& Context)
+{
+	Context.TransitionResource(m_CounterBuffer, D3D12_RESOURCE_STATE_GENERIC_READ);
+	return m_CounterBuffer.GetSRV();
+}
+
+const D3D12_CPU_DESCRIPTOR_HANDLE& StructuredBuffer::GetCounterUAV(CommandContext& Context)
+{
+	Context.TransitionResource(m_CounterBuffer, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	return m_CounterBuffer.GetUAV();
+}
+
 void TypedBuffer::CreateDerivedViews(void)
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;

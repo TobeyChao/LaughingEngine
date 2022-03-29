@@ -48,8 +48,9 @@ public:
 		m_pResource->Map(0, nullptr, &CpuAddress);
 	}
 
-	~MemoryPage()
+	virtual ~MemoryPage()
 	{
+		Unmap();
 	}
 
 	void Map()

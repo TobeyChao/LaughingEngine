@@ -11,7 +11,7 @@ void UploadBuffer::Create(const std::wstring& name, size_t BufferSize)
 
 	CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(m_BufferSize);
 	m_UsageState = D3D12_RESOURCE_STATE_GENERIC_READ;
-	CD3DX12_HEAP_PROPERTIES HeapProps(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_HEAP_PROPERTIES HeapProps(D3D12_HEAP_TYPE_UPLOAD);
 	ThrowIfFailed(g_Device->CreateCommittedResource(
 		&HeapProps,
 		D3D12_HEAP_FLAG_NONE,
