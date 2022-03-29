@@ -22,8 +22,8 @@ public:
 		Destroy();
 	}
 
-	void Create(const std::wstring& name, uint32_t ElementSize, uint32_t ElementCount, const void* data);
-	void Create(const std::wstring& name, uint32_t ElementSize, uint32_t ElementCount, const UploadBuffer& buffer);
+	void Create(const std::wstring& name, uint32_t ElementSize, uint32_t ElementCount, const void* Data);
+	void Create(const std::wstring& name, uint32_t ElementSize, uint32_t ElementCount, const UploadBuffer& Buffer, uint32_t SrcOffset);
 
 	// 创建常量静态缓冲区
 	// 当作根常量缓冲区可以不需要描述符

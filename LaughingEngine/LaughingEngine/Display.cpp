@@ -28,9 +28,7 @@ DXGI_FORMAT SwapChainFormat = DXGI_FORMAT_R10G10B10A2_UNORM;
 
 namespace
 {
-	float s_FrameTime = 0.0f;
 	uint64_t s_FrameIndex = 0;
-	int64_t s_FrameStartTick = 0;
 
 	bool s_EnableVSync = false;
 
@@ -154,16 +152,6 @@ namespace Graphics
 	{
 		return s_FrameIndex;
 	}
-
-	float GetFrameTime()
-	{
-		return s_FrameTime;
-	}
-
-	float GetFrameRate()
-	{
-		return s_FrameTime == 0.0f ? 0.0f : 1.0f / s_FrameTime;
-	}
 }
 
 namespace Display
@@ -285,12 +273,6 @@ namespace Display
 		s_SwapChain1->Present(PresentInterval, 0);
 
 		g_CurrentBuffer = (g_CurrentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
-
-		int64_t CurrentTick = GameTimer::GetCurrentTick();
-
-		s_FrameTime = (float)GameTimer::DeltaTimeSeconds(s_FrameStartTick, CurrentTick);
-
-		s_FrameStartTick = CurrentTick;
 
 		++s_FrameIndex;
 	}

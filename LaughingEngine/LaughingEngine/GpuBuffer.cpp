@@ -1,6 +1,7 @@
 #include "GpuBuffer.h"
 #include "GraphicsCore.h"
 #include "DescriptorAllocator.h"
+#include "CommandContext.h"
 
 using namespace Graphics;
 
@@ -25,6 +26,11 @@ void GpuBuffer::Create(const std::wstring& name, uint32_t ElementSize, uint32_t 
 
 	m_GpuVirtualAddress = m_pResource->GetGPUVirtualAddress();
 
+	if (data)
+	{
+		CommandContext::InitializeBuffer(*this, data, m_BufferSize);
+	}
+
 #if defined(DEBUG) || defined(_DEBUG)
 	m_pResource->SetName(name.c_str());
 #endif // defined(DEBUG) || defined(_DEBUG)
@@ -32,7 +38,7 @@ void GpuBuffer::Create(const std::wstring& name, uint32_t ElementSize, uint32_t 
 	CreateDerivedViews();
 }
 
-void GpuBuffer::Create(const std::wstring& name, uint32_t ElementSize, uint32_t ElementCount, const UploadBuffer& buffer)
+void GpuBuffer::Create(const std::wstring& name, uint32_t ElementSize, uint32_t ElementCount, const UploadBuffer& Buffer, uint32_t SrcOffset)
 {
 	Destroy();
 
@@ -52,6 +58,8 @@ void GpuBuffer::Create(const std::wstring& name, uint32_t ElementSize, uint32_t 
 		IID_PPV_ARGS(m_pResource.GetAddressOf()));
 
 	m_GpuVirtualAddress = m_pResource->GetGPUVirtualAddress();
+
+	CommandContext::InitializeBuffer(*this, Buffer, SrcOffset);
 
 #if defined(DEBUG) || defined(_DEBUG)
 	m_pResource->SetName(name.c_str());

@@ -16,7 +16,9 @@ CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE Type)
 	m_ResourceBarrier(),
 	m_NumBarriers(0),
 	m_DescriptorHeaps(),
-	m_Type(Type)
+	m_Type(Type),
+	m_CpuMemoryAllocator(AllocatorType::Upload),
+	m_GpuMemoryAllocator(AllocatorType::Default)
 {
 }
 
@@ -93,6 +95,9 @@ uint64_t CommandContext::Finish(bool WaitForCompletion)
 	Queue.DiscardAllocator(fenceValue, m_Allocator);
 	m_Allocator = nullptr;
 
+	m_CpuMemoryAllocator.CleanupUsedPages(fenceValue);
+	m_GpuMemoryAllocator.CleanupUsedPages(fenceValue);
+
 	if (WaitForCompletion)
 	{
 		g_CommandManager.WaitForFence(fenceValue);
@@ -105,15 +110,27 @@ uint64_t CommandContext::Finish(bool WaitForCompletion)
 
 void CommandContext::InitializeBuffer(GpuBuffer& Dest, const void* Data, size_t NumBytes, size_t DestOffset)
 {
+	CommandContext& InitContext = CommandContext::Begin();
 
+	MemoryHandle mem = InitContext.ReserveUploadMemory(NumBytes);
+	memcpy(mem.CpuAddress, Data, NumBytes);
+
+	// copy data to the intermediate upload heap and then schedule a copy from the upload heap to the default texture
+	InitContext.TransitionResource(Dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
+	InitContext.m_CommandList->CopyBufferRegion(Dest.GetRes(), DestOffset, mem.Res.GetRes(), 0, NumBytes);
+	InitContext.TransitionResource(Dest, D3D12_RESOURCE_STATE_GENERIC_READ, true);
+
+	// Execute the command list and wait for it to finish so we can release the upload buffer
+	InitContext.Finish(true);
 }
 
 void CommandContext::InitializeBuffer(GpuBuffer& Dest, const UploadBuffer& Src, size_t SrcOffset, size_t NumBytes, size_t DestOffset)
 {
 	CommandContext& InitContext = CommandContext::Begin();
+	size_t MaxBytes = std::min<size_t>(Dest.BufferSize() - DestOffset, Src.GetBufferSize() - SrcOffset);
+	NumBytes = std::min<size_t>(MaxBytes, NumBytes);
 	InitContext.TransitionResource(Dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
-	InitContext.m_CommandList->CopyBufferRegion(Dest.GetRes(), DestOffset,
-		const_cast<ID3D12Resource*>(Src.GetRes()), SrcOffset, NumBytes);
+	InitContext.m_CommandList->CopyBufferRegion(Dest.GetRes(), DestOffset, const_cast<ID3D12Resource*>(Src.GetRes()), SrcOffset, NumBytes);
 	InitContext.TransitionResource(Dest, D3D12_RESOURCE_STATE_GENERIC_READ, true);
 	InitContext.Finish(true);
 }
