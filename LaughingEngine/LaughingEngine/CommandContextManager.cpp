@@ -32,7 +32,7 @@ void ContextManager::ReturnContext(CommandContext* CommandContext)
 	availableContexts.push(CommandContext);
 }
 
-void ContextManager::DestroyAllContext()
+void ContextManager::Shutdown()
 {
 	MemoryAllocator::DestroyAll();
 	for (uint32_t i = 0; i < 4; i++)

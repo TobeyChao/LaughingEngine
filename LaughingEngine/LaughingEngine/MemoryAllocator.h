@@ -42,8 +42,10 @@ class MemoryPage : public GpuResource
 public:
 	MemoryPage(ID3D12Resource* pRes, D3D12_RESOURCE_STATES State)
 		:
-		GpuResource(pRes, State)
+		GpuResource()
 	{
+		m_pResource.Attach(pRes);
+		m_UsageState = State;
 		m_GpuVirtualAddress = m_pResource->GetGPUVirtualAddress();
 		m_pResource->Map(0, nullptr, &CpuAddress);
 	}
@@ -66,6 +68,7 @@ public:
 		if (CpuAddress)
 		{
 			m_pResource->Unmap(0, nullptr);
+			CpuAddress = nullptr;
 		}
 	}
 

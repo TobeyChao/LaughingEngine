@@ -6,6 +6,7 @@
 #include "GraphicsCommon.h"
 #include "UploadBuffer.h"
 #include "Display.h"
+#include "GameTimer.h"
 #include <array>
 
 // Shader
@@ -14,17 +15,6 @@
 #include "CompiledShaders/ColorRS.h"
 
 using namespace Graphics;
-
-struct Vertex
-{
-	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
-};
-
-struct ObjectConstants
-{
-	XMFLOAT4X4 WorldViewProj;
-};
 
 void MyGameApp::Initialize()
 {
@@ -40,18 +30,17 @@ void MyGameApp::Initialize()
 
 	m_DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", g_pColorRS, sizeof(g_pColorRS));
 
-	m_DefaultPSO = new GraphicsPiplelineState(L"MyGameApp::m_DefaultPSO");
-	m_DefaultPSO->SetRootSignature(m_DefaultRS);
-	m_DefaultPSO->SetRasterizerState(RasterizerDefault);
-	m_DefaultPSO->SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
-	m_DefaultPSO->SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
-	m_DefaultPSO->SetSampleMask(UINT_MAX);
-	m_DefaultPSO->SetInputLayout(2, inputElementDesc);
-	m_DefaultPSO->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-	m_DefaultPSO->SetVertexShader(g_pColorVS, sizeof(g_pColorVS));
-	m_DefaultPSO->SetPixelShader(g_pColorPS, sizeof(g_pColorPS));
-	m_DefaultPSO->SetRenderTargetFormat(g_DefaultHdrColorFormat, g_DefaultDepthStencilFormat);
-	m_DefaultPSO->Finalize();
+	m_DefaultPSO.SetRootSignature(m_DefaultRS);
+	m_DefaultPSO.SetRasterizerState(RasterizerDefault);
+	m_DefaultPSO.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
+	m_DefaultPSO.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
+	m_DefaultPSO.SetSampleMask(UINT_MAX);
+	m_DefaultPSO.SetInputLayout(2, inputElementDesc);
+	m_DefaultPSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	m_DefaultPSO.SetVertexShader(g_pColorVS, sizeof(g_pColorVS));
+	m_DefaultPSO.SetPixelShader(g_pColorPS, sizeof(g_pColorPS));
+	m_DefaultPSO.SetRenderTargetFormat(g_DefaultHdrColorFormat, g_DefaultDepthStencilFormat);
+	m_DefaultPSO.Finalize();
 
 	std::array<Vertex, 8> vertices =
 	{
@@ -112,17 +101,17 @@ void MyGameApp::Initialize()
 	m_BoxVertexBufferView = m_BoxVertexBuffer.VertexBufferView(0);
 
 	m_Cameras["MainCamera"] = std::make_unique<Camera>();
-	m_Cameras["MainCamera"]->SetPosition3f({ 0, 2, -10 });
+	m_Cameras["MainCamera"]->SetPosition3f({ 0, 3, -10 });
 	m_Cameras["MainCamera"]->SetLens(XM_PIDIV4, (float)Graphics::g_DisplayWidth / Graphics::g_DisplayHeight, 0.1f, 100.0f);
+	m_Cameras["MainCamera"]->Pitch(0.3f);
 	m_Cameras["MainCamera"]->ComputeInfo();
 
-	auto world = XMMatrixIdentity();
-	auto view = m_Cameras["MainCamera"]->GetViewMatrix();
-	auto proj = m_Cameras["MainCamera"]->GetProjMatrix();
-	auto worldViewProj = world * view * proj;
-	ObjectConstants objConstants;
-	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-	m_ObjPerObject.Create(L"m_ObjPerObject", sizeof(ObjectConstants), 1, &objConstants);
+	//auto world = XMMatrixRotationY(XM_PIDIV4) * XMMatrixIdentity();
+	//auto& view = m_Cameras["MainCamera"]->GetViewMatrix();
+	//auto& proj = m_Cameras["MainCamera"]->GetProjMatrix();
+	//auto worldViewProj = world * view * proj;
+	//ObjectConstants objConstants;
+	//XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 }
 
 void MyGameApp::Update()
@@ -136,33 +125,46 @@ void MyGameApp::Update()
 	m_MainScissor.top = 0;
 	m_MainScissor.right = (LONG)g_SceneColorBuffer.GetWidth();
 	m_MainScissor.bottom = (LONG)g_SceneColorBuffer.GetHeight();
+
+	m_Angle += (float)GameTimer::DeltaTime();
+	if (m_Angle > XM_2PI)
+	{
+		m_Angle = 0.0f;
+	}
+
+	auto world = XMMatrixRotationY(m_Angle) * XMMatrixIdentity();
+	auto& view = m_Cameras["MainCamera"]->GetViewMatrix();
+	auto& proj = m_Cameras["MainCamera"]->GetProjMatrix();
+	auto worldViewProj = world * view * proj;
+	XMStoreFloat4x4(&m_ObjPerObject.WorldViewProj, XMMatrixTranspose(worldViewProj));
 }
 
 void MyGameApp::Draw()
 {
-	const D3D12_VIEWPORT& viewport = m_MainViewport;
-	const D3D12_RECT& scissor = m_MainScissor;
-	GraphicsContext& context = GraphicsContext::Begin(L"Scene Render");
-	context.SetRootSignature(m_DefaultRS);
-	context.SetPipelineState(*m_DefaultPSO);
-	context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-	context.SetRenderTarget(g_SceneColorBuffer.GetRTV(), g_SceneDepthBuffer.GetDSV());
-	context.ClearColor(g_SceneColorBuffer, &scissor);
-	context.ClearDepth(g_SceneDepthBuffer);
-	context.SetViewportAndScissorRect(viewport, scissor);
-	context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context.SetConstantBuffer(0, m_ObjPerObject.GetGpuAddress());
-	context.SetIndexBuffer(m_BoxIndexBufferView);
-	context.SetVertexBuffer(0, m_BoxVertexBufferView);
-	context.DrawIndexedInstanced(36, 1, 0, 0, 0);
-	context.Finish();
+	const D3D12_VIEWPORT& Viewport = m_MainViewport;
+	const D3D12_RECT& Scissor = m_MainScissor;
+	GraphicsContext& Context = GraphicsContext::Begin(L"Scene Render");
+	Context.SetRootSignature(m_DefaultRS);
+	Context.SetPipelineState(m_DefaultPSO);
+	Context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+	Context.SetRenderTarget(g_SceneColorBuffer.GetRTV(), g_SceneDepthBuffer.GetDSV());
+	Context.ClearColor(g_SceneColorBuffer, &Scissor);
+	Context.ClearDepth(g_SceneDepthBuffer);
+	Context.SetViewportAndScissorRect(Viewport, Scissor);
+	Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//Context.SetConstantBuffer(0, m_ObjPerObject.GetGpuAddress());
+	Context.SetDynamicConstantBufferView(0, sizeof(ObjectConstants), &m_ObjPerObject);
+	Context.SetIndexBuffer(m_BoxIndexBufferView);
+	Context.SetVertexBuffer(0, m_BoxVertexBufferView);
+	Context.DrawIndexedInstanced(36, 1, 0, 0, 0);
+	Context.Finish();
 }
 
 void MyGameApp::Shutdown()
 {
-	m_DefaultPSO->Destroy();
+	m_DefaultPSO.Destroy();
 	m_DefaultRS.Destroy();
 	m_BoxVertexBuffer.Destroy();
 	m_BoxIndexBuffer.Destroy();
-	m_ObjPerObject.Destroy();
+	//m_ObjPerObject.Destroy();
 }

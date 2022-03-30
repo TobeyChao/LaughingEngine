@@ -10,9 +10,25 @@
 using DirectX::XMConvertToRadians;
 using namespace Game;
 
+struct Vertex
+{
+	XMFLOAT3 Pos;
+	XMFLOAT4 Color;
+};
+
+struct ObjectConstants
+{
+	XMFLOAT4X4 WorldViewProj;
+};
+
 class MyGameApp : public Game::IGameApp
 {
 public:
+	MyGameApp()
+		:
+		m_DefaultPSO(L"MyGameApp::m_DefaultPSO"),
+		m_Angle(0.0f)
+	{}
 	virtual void Initialize() override;
 	virtual void Update() override;
 	virtual void Draw() override;
@@ -27,11 +43,14 @@ private:
 	float m_CamMoveSpeed = 20.f;
 	POINT m_LastMousePos;
 
-	GraphicsPiplelineState* m_DefaultPSO = nullptr;
+	GraphicsPiplelineState m_DefaultPSO;
 	RootSignature m_DefaultRS;
 	VertexBuffer m_BoxVertexBuffer;
 	IndexBuffer m_BoxIndexBuffer;
 	D3D12_INDEX_BUFFER_VIEW m_BoxIndexBufferView;
 	D3D12_VERTEX_BUFFER_VIEW m_BoxVertexBufferView;
-	ByteAddressBuffer m_ObjPerObject;
+	//ByteAddressBuffer m_ObjPerObject;
+	ObjectConstants m_ObjPerObject;
+
+	float m_Angle;
 };

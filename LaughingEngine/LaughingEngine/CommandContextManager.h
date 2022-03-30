@@ -15,10 +15,7 @@ public:
 	ContextManager() = default;
 	CommandContext* AllocateContext(D3D12_COMMAND_LIST_TYPE type);
 	void ReturnContext(CommandContext* commandContext);
-	void Shutdown() { DestroyAllContext(); }
-
-private:
-	void DestroyAllContext();
+	void Shutdown();
 
 private:
 	std::vector<std::unique_ptr<CommandContext>> sm_ContextPool[4];

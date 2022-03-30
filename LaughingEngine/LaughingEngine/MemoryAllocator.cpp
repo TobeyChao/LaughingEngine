@@ -100,6 +100,10 @@ void MemoryPageManager::DestroyLargePages(uint64_t FenceID, const std::vector<Me
 
 void MemoryPageManager::DestroyAll()
 {
+	while (!m_MemoryPagesToReturn.empty())
+	{
+		m_MemoryPagesToReturn.pop();
+	}
 	m_PagePool.clear();
 }
 

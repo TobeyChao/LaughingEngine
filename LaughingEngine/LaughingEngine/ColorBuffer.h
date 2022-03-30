@@ -8,7 +8,7 @@ class ColorBuffer : public PixelBuffer
 public:
 	ColorBuffer()
 		:
-		m_ClearColor(DirectX::Colors::Black),
+		m_ClearColor(DirectX::Colors::SkyBlue),
 		m_NumMipMaps(0),
 		m_FragmentCount(1),
 		m_SampleCount(1)
