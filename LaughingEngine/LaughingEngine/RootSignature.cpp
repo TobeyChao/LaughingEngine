@@ -32,10 +32,12 @@ void RootSignature::Finalize(const std::wstring& name, D3D12_ROOT_SIGNATURE_FLAG
 
 	ThrowIfFailed(hr);
 
-	ThrowIfFailed(Graphics::g_Device->CreateRootSignature(0,
-		serializedRootSign->GetBufferPointer(),
-		serializedRootSign->GetBufferSize(),
-		IID_PPV_ARGS(m_RootSignature.GetAddressOf())));
+	CreateFromMemory(name, serializedRootSign->GetBufferPointer(), serializedRootSign->GetBufferSize());
+}
+
+void RootSignature::CreateFromMemory(const std::wstring& name, const void* Data, size_t Size)
+{
+	ThrowIfFailed(Graphics::g_Device->CreateRootSignature(0, Data, Size, IID_PPV_ARGS(m_RootSignature.GetAddressOf())));
 
 #if defined(_DEBUG) || defined(DEBUG)
 	m_RootSignature->SetName(name.c_str());

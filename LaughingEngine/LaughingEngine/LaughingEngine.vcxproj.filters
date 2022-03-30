@@ -228,9 +228,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\PresentRS.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\ColorSpaceUtility.hlsli">
       <Filter>Shaders</Filter>
     </None>
@@ -247,6 +244,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ColorPS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PresentRS.hlsli">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorRS.hlsli">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -11,6 +11,7 @@
 // Shader
 #include "CompiledShaders/ColorVS.h"
 #include "CompiledShaders/ColorPS.h"
+#include "CompiledShaders/ColorRS.h"
 
 using namespace Graphics;
 
@@ -33,9 +34,11 @@ void MyGameApp::Initialize()
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
-	m_DefaultRS.Reset(1);
-	m_DefaultRS[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	m_DefaultRS.Finalize(L"MyGameApp::m_DefaultRS", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	//m_DefaultRS.Reset(1);
+	//m_DefaultRS[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+	//m_DefaultRS.Finalize(L"MyGameApp::m_DefaultRS", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+	m_DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", g_pColorRS, sizeof(g_pColorRS));
 
 	m_DefaultPSO = new GraphicsPiplelineState(L"MyGameApp::m_DefaultPSO");
 	m_DefaultPSO->SetRootSignature(m_DefaultRS);
@@ -47,7 +50,7 @@ void MyGameApp::Initialize()
 	m_DefaultPSO->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 	m_DefaultPSO->SetVertexShader(g_pColorVS, sizeof(g_pColorVS));
 	m_DefaultPSO->SetPixelShader(g_pColorPS, sizeof(g_pColorPS));
-	m_DefaultPSO->SetRenderTargetFormat(g_DefaultHdrColorFormat, DXGI_FORMAT_UNKNOWN);
+	m_DefaultPSO->SetRenderTargetFormat(g_DefaultHdrColorFormat, g_DefaultDepthStencilFormat);
 	m_DefaultPSO->Finalize();
 
 	std::array<Vertex, 8> vertices =
@@ -143,9 +146,10 @@ void MyGameApp::Draw()
 	context.SetRootSignature(m_DefaultRS);
 	context.SetPipelineState(*m_DefaultPSO);
 	context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-	context.SetRenderTarget(g_SceneColorBuffer.GetRTV());
-	context.SetViewportAndScissorRect(viewport, scissor);
+	context.SetRenderTarget(g_SceneColorBuffer.GetRTV(), g_SceneDepthBuffer.GetDSV());
 	context.ClearColor(g_SceneColorBuffer, &scissor);
+	context.ClearDepth(g_SceneDepthBuffer);
+	context.SetViewportAndScissorRect(viewport, scissor);
 	context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context.SetConstantBuffer(0, m_ObjPerObject.GetGpuAddress());
 	context.SetIndexBuffer(m_BoxIndexBufferView);

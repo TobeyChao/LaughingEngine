@@ -122,6 +122,8 @@ public:
 
 	void Finalize(const std::wstring& name, D3D12_ROOT_SIGNATURE_FLAGS Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE);
 
+	void CreateFromMemory(const std::wstring& name, const void* Data, size_t Size);
+
 	ID3D12RootSignature* GetRootSignature() const
 	{
 		return m_RootSignature.Get();

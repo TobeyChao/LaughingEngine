@@ -19,6 +19,7 @@ extern "C" { __declspec(dllexport) extern const char* D3D12SDKPath = ".\\D3D12\\
 // Shader
 #include "CompiledShaders/ScreenQuadPresentVS.h"
 #include "CompiledShaders/PresentSDRPS.h"
+#include "CompiledShaders/PresentRS.h"
 
 // Back Buffer的数量
 #define SWAP_CHAIN_BUFFER_COUNT 3
@@ -130,13 +131,16 @@ namespace Graphics
 		context.SetRootSignature(s_PresentRS);
 		context.SetPipelineState(PresentSDRPS);
 		context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// 转换资源
 		context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
 			D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+		context.FlushResourceBarrier();
+
+		context.SetViewportAndScissorRect(0, 0, g_DisplayWidth, g_DisplayHeight);
+		context.SetRenderTarget(g_DisplayPlane[g_CurrentBuffer].GetRTV());
 		context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, CommonHeap.GetDescriptorHeapPointer());
 		context.SetDescriptorTable(0, CommonHeap[0]);
 		context.TransitionResource(g_DisplayPlane[g_CurrentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET);
-		context.SetRenderTarget(g_DisplayPlane[g_CurrentBuffer].GetRTV());
-		context.SetViewportAndScissorRect(0, 0, g_DisplayWidth, g_DisplayHeight);
 		context.DrawInstanced(3, 1);
 		context.TransitionResource(g_DisplayPlane[g_CurrentBuffer], D3D12_RESOURCE_STATE_PRESENT);
 		s_CurFrameFence = context.Finish();
@@ -193,17 +197,18 @@ namespace Display
 			g_DisplayPlane[i].CreateFromSwapChain(L"Primary SwapChain Buffer", dispalyPlane.Detach());
 		}
 
-		s_PresentRS.Reset(4, 0);
-		s_PresentRS[0].InitAsDescriptorTable(2, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0);
-		s_PresentRS[1].InitAsConstants(6, 0);
-		s_PresentRS[2].InitAsShaderResourceView(2);
-		s_PresentRS[3].InitAsDescriptorTable(2, D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 0);
-		s_PresentRS.Finalize(L"PresentRS");
+		//s_PresentRS.Reset(4, 0);
+		//s_PresentRS[0].InitAsDescriptorTable(2, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0);
+		//s_PresentRS[1].InitAsConstants(6, 0);
+		//s_PresentRS[2].InitAsShaderResourceView(2);
+		//s_PresentRS[3].InitAsDescriptorTable(2, D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 0);
+		//s_PresentRS.Finalize(L"PresentRS");
+		s_PresentRS.CreateFromMemory(L"PresentRS", g_pPresentRS, sizeof(g_pPresentRS));
 
 		PresentSDRPS.SetRootSignature(s_PresentRS);
 		PresentSDRPS.SetRasterizerState(RasterizerTwoSided);
-		PresentSDRPS.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
-		PresentSDRPS.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
+		PresentSDRPS.SetDepthStencilState(DepthStateDisabled/*CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT)*/);
+		PresentSDRPS.SetBlendState(BlendPreMultiplied/*CD3DX12_BLEND_DESC(D3D12_DEFAULT)*/);
 		PresentSDRPS.SetSampleMask(UINT_MAX);
 		PresentSDRPS.SetInputLayout(0, nullptr);
 		PresentSDRPS.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);

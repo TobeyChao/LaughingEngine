@@ -237,9 +237,22 @@
     <ClInclude Include="WICTextureLoader12.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="ColorRS.hlsli">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Color_RootSig</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rootsig_1.1</ShaderModel>
+    </FxCompile>
     <None Include="packages.config" />
     <None Include="Shaders\ColorSpaceUtility.hlsli" />
-    <None Include="Shaders\PresentRS.hlsli" />
+    <FxCompile Include="Shaders\PresentRS.hlsli">
+      <FileType>Document</FileType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rootsig_1.1</ShaderModel>
+      <SetRootSignature Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </SetRootSignature>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Present_RootSig</EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorPS.hlsl">
@@ -261,6 +274,9 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.3</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.3</ShaderModel>
+      <SetRootSignature Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Present_RootSig</SetRootSignature>
+      <SetRootSignature Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </SetRootSignature>
     </FxCompile>
     <FxCompile Include="Shaders\ScreenQuadPresentVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.3</ShaderModel>

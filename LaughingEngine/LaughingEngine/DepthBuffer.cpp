@@ -9,6 +9,8 @@ void DepthBuffer::Create(const std::wstring Name, uint32_t Width, uint32_t Heigh
 	D3D12_CLEAR_VALUE clear;
 	ZeroMemory(&clear, sizeof(clear));
 	clear.Format = Format;
+	clear.DepthStencil.Depth = 1.0f;
+	clear.DepthStencil.Stencil = 0;
 
 	CreateTextureResource(Graphics::g_Device, Name, desc, clear);
 	CreateDerivedViews(Graphics::g_Device, Format);
