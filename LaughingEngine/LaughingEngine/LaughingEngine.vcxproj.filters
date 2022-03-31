@@ -240,16 +240,16 @@
     <FxCompile Include="Shaders\ScreenQuadPresentVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ColorVS.hlsl">
+    <FxCompile Include="Shaders\ColorVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ColorPS.hlsl">
+    <FxCompile Include="Shaders\ColorPS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PresentRS.hlsli">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ColorRS.hlsli">
+    <FxCompile Include="Shaders\ColorRS.hlsli">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

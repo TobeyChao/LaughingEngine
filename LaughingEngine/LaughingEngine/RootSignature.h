@@ -1,64 +1,41 @@
 #pragma once
 #include "PCH.h"
 
+// https://docs.microsoft.com/en-us/windows/win32/direct3d12/root-signatures
+
+/// <summary>
+/// RootParameter:
+/// root constants (constants inlined in the root arguments), cost 1 DWORD each, since they are 32-bit values.
+/// root descriptors (descriptors inlined in the root arguments), (64-bit GPU virtual addresses) cost 2 DWORDs each.
+/// descriptor tables (pointers to a range of descriptors in the descriptor heap), cost 1 DWORD each.
+/// </summary>
 class RootParameter
 {
 public:
-	void InitAsDescriptorTable(
-		UINT numDescriptors,
-		D3D12_DESCRIPTOR_RANGE_TYPE type,
-		UINT baseRegister,
-		UINT registerSpace = 0,
-		D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
+	void InitAsDescriptorTable(UINT NumDescriptors, D3D12_DESCRIPTOR_RANGE_TYPE Type, UINT BaseRegister, UINT RegisterSpace = 0, D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL)
 	{
-		CD3DX12_DESCRIPTOR_RANGE* table = new CD3DX12_DESCRIPTOR_RANGE(type, numDescriptors, baseRegister, registerSpace);
-		m_Param.InitAsDescriptorTable(1, table, visibility);
+		CD3DX12_DESCRIPTOR_RANGE* table = new CD3DX12_DESCRIPTOR_RANGE(Type, NumDescriptors, BaseRegister, RegisterSpace);
+		m_Param.InitAsDescriptorTable(1, table, Visibility);
 	}
 
-	void InitAsConstants(
-		UINT num32BitValues,
-		UINT shaderRegister,
-		UINT registerSpace = 0,
-		D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
+	void InitAsConstants(UINT Num32BitValues, UINT ShaderRegister, UINT RegisterSpace = 0, D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL)
 	{
-		m_Param.InitAsConstants(
-			num32BitValues,
-			shaderRegister,
-			registerSpace,
-			visibility);
+		m_Param.InitAsConstants(Num32BitValues, ShaderRegister, RegisterSpace, Visibility);
 	}
 
-	void InitAsConstantBufferView(
-		UINT shaderRegister,
-		UINT registerSpace = 0,
-		D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
+	void InitAsConstantBufferView(UINT ShaderRegister, UINT RegisterSpace = 0, D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL)
 	{
-		m_Param.InitAsConstantBufferView(
-			shaderRegister,
-			registerSpace,
-			visibility);
+		m_Param.InitAsConstantBufferView(ShaderRegister, RegisterSpace, Visibility);
 	}
 
-	void InitAsShaderResourceView(
-		UINT shaderRegister,
-		UINT registerSpace = 0,
-		D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
+	void InitAsShaderResourceView(UINT ShaderRegister, UINT RegisterSpace = 0, D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL)
 	{
-		m_Param.InitAsShaderResourceView(
-			shaderRegister,
-			registerSpace,
-			visibility);
+		m_Param.InitAsShaderResourceView(ShaderRegister, RegisterSpace, Visibility);
 	}
 
-	void InitAsUnorderedAccessView(
-		UINT shaderRegister,
-		UINT registerSpace = 0,
-		D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
+	void InitAsUnorderedAccessView(UINT ShaderRegister, UINT RegisterSpace = 0, D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL)
 	{
-		m_Param.InitAsUnorderedAccessView(
-			shaderRegister,
-			registerSpace,
-			visibility);
+		m_Param.InitAsUnorderedAccessView(ShaderRegister, RegisterSpace, Visibility);
 	}
 
 	const CD3DX12_ROOT_PARAMETER& operator() () const
@@ -78,10 +55,10 @@ public:
 		:
 		m_Finalized(FALSE),
 		m_NumParameters(0),
-		m_NumStaticSamplers(0)
+		m_NumStaticSamplers(0),
+		m_NumInitializedStaticSamplers(0)
+	{};
 
-	{
-	};
 	~RootSignature() = default;
 
 	void Destroy()
@@ -110,6 +87,7 @@ public:
 			m_StaticSamplerArray.reset();
 		}
 		m_NumStaticSamplers = NumStaticSamplers;
+		m_NumInitializedStaticSamplers = 0;
 	}
 
 	RootParameter& operator[] (size_t EntryIndex)
@@ -117,12 +95,11 @@ public:
 		return m_ParamArray.get()[EntryIndex];
 	}
 
-	void InitStaticSampler(UINT Register, const D3D12_SAMPLER_DESC& NonStaticSamplerDesc,
-		D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL);
+	void InitStaticSampler(const CD3DX12_STATIC_SAMPLER_DESC& NonStaticSamplerDesc);
 
-	void Finalize(const std::wstring& name, D3D12_ROOT_SIGNATURE_FLAGS Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE);
+	void Finalize(const std::wstring& Name, D3D12_ROOT_SIGNATURE_FLAGS Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE);
 
-	void CreateFromMemory(const std::wstring& name, const void* Data, size_t Size);
+	void CreateFromMemory(const std::wstring& Name, const void* Data, size_t Size);
 
 	ID3D12RootSignature* GetRootSignature() const
 	{
@@ -133,6 +110,7 @@ private:
 	BOOL m_Finalized;
 	UINT m_NumParameters;
 	UINT m_NumStaticSamplers;
+	UINT m_NumInitializedStaticSamplers;
 	std::unique_ptr<RootParameter[]> m_ParamArray;
 	std::unique_ptr<CD3DX12_STATIC_SAMPLER_DESC[]> m_StaticSamplerArray;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_RootSignature;

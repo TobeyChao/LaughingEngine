@@ -3,9 +3,10 @@
 
 using namespace Microsoft::WRL;
 
-void RootSignature::InitStaticSampler(UINT Register, const D3D12_SAMPLER_DESC& NonStaticSamplerDesc, D3D12_SHADER_VISIBILITY Visibility)
+void RootSignature::InitStaticSampler(const CD3DX12_STATIC_SAMPLER_DESC& StaticSamplerDesc)
 {
-
+	assert(m_NumInitializedStaticSamplers < m_NumStaticSamplers);
+	m_StaticSamplerArray[m_NumInitializedStaticSamplers++] = StaticSamplerDesc;
 }
 
 void RootSignature::Finalize(const std::wstring& name, D3D12_ROOT_SIGNATURE_FLAGS Flags)
