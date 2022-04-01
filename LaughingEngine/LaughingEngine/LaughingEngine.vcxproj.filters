@@ -30,6 +30,9 @@
     <Filter Include="Core\Math">
       <UniqueIdentifier>{4b776497-d68f-4120-8084-cebf82991e20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{cee9a3e5-88e4-439e-ab6e-b495d5ea5227}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -121,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,12 +232,27 @@
     <ClInclude Include="MyGameApp.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStruct.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Shaders\Common.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
     <None Include="Shaders\ColorSpaceUtility.hlsli">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="packages.config" />
+    <None Include="Shaders\DataType.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\LightingUtil.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PresentSDRPS.hlsl">
@@ -250,6 +271,15 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\ColorRS.hlsli">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\LightPS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\LightVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\LightRS.hlsli">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

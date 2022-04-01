@@ -6,20 +6,10 @@
 #include "GpuBuffer.h"
 #include <DirectXMath.h>
 #include <unordered_map>
+#include "DataStruct.h"
 
 using DirectX::XMConvertToRadians;
 using namespace Game;
-
-struct Vertex
-{
-	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
-};
-
-struct ObjectConstants
-{
-	XMFLOAT4X4 WorldViewProj;
-};
 
 class MyGameApp : public Game::IGameApp
 {
@@ -49,8 +39,11 @@ private:
 	IndexBuffer m_BoxIndexBuffer;
 	D3D12_INDEX_BUFFER_VIEW m_BoxIndexBufferView;
 	D3D12_VERTEX_BUFFER_VIEW m_BoxVertexBufferView;
-	//ByteAddressBuffer m_ObjPerObject;
-	ObjectConstants m_ObjPerObject;
 
+	//
 	float m_Angle;
+
+	// Constants
+	PassConstants m_MainPassCB;
+	ObjectConstants m_ObjPerObject;
 };

@@ -14,6 +14,10 @@
 #include "CompiledShaders/ColorPS.h"
 #include "CompiledShaders/ColorRS.h"
 
+#include "CompiledShaders/LightVS.h"
+#include "CompiledShaders/LightPS.h"
+#include "CompiledShaders/LightRS.h"
+
 using namespace Graphics;
 
 void MyGameApp::Initialize()
@@ -28,7 +32,7 @@ void MyGameApp::Initialize()
 	//m_DefaultRS[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
 	//m_DefaultRS.Finalize(L"MyGameApp::m_DefaultRS", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-	m_DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", g_pColorRS, sizeof(g_pColorRS));
+	m_DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", g_pLightRS, sizeof(g_pLightRS));
 
 	m_DefaultPSO.SetRootSignature(m_DefaultRS);
 	m_DefaultPSO.SetRasterizerState(RasterizerDefault);
@@ -37,8 +41,8 @@ void MyGameApp::Initialize()
 	m_DefaultPSO.SetSampleMask(UINT_MAX);
 	m_DefaultPSO.SetInputLayout(2, inputElementDesc);
 	m_DefaultPSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-	m_DefaultPSO.SetVertexShader(g_pColorVS, sizeof(g_pColorVS));
-	m_DefaultPSO.SetPixelShader(g_pColorPS, sizeof(g_pColorPS));
+	m_DefaultPSO.SetVertexShader(g_pLightVS, sizeof(g_pLightVS));
+	m_DefaultPSO.SetPixelShader(g_pLightPS, sizeof(g_pLightPS));
 	m_DefaultPSO.SetRenderTargetFormat(g_DefaultHdrColorFormat, g_DefaultDepthStencilFormat);
 	m_DefaultPSO.Finalize();
 
@@ -112,6 +116,39 @@ void MyGameApp::Initialize()
 	//auto worldViewProj = world * view * proj;
 	//ObjectConstants objConstants;
 	//XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+
+	// Pass
+	XMMATRIX proj = m_Cameras["MainCamera"]->GetProjMatrix();
+	XMMATRIX view = m_Cameras["MainCamera"]->GetViewMatrix();
+
+	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
+	XMVECTOR viewDet = XMMatrixDeterminant(view);
+	XMVECTOR projDet = XMMatrixDeterminant(proj);
+	XMVECTOR viewProjDet = XMMatrixDeterminant(viewProj);
+	XMMATRIX invView = XMMatrixInverse(&viewDet, view);
+	XMMATRIX invProj = XMMatrixInverse(&projDet, proj);
+	XMMATRIX invViewProj = XMMatrixInverse(&viewProjDet, viewProj);
+	//XMMATRIX shadowTransform = XMLoadFloat4x4(&mShadowTransform);
+
+	XMStoreFloat4x4(&m_MainPassCB.View, XMMatrixTranspose(view));
+	XMStoreFloat4x4(&m_MainPassCB.InvView, XMMatrixTranspose(invView));
+	XMStoreFloat4x4(&m_MainPassCB.Proj, XMMatrixTranspose(proj));
+	XMStoreFloat4x4(&m_MainPassCB.InvProj, XMMatrixTranspose(invProj));
+	XMStoreFloat4x4(&m_MainPassCB.ViewProj, XMMatrixTranspose(viewProj));
+	XMStoreFloat4x4(&m_MainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
+	//XMStoreFloat4x4(&mMainPassCB.ShadowTransform, XMMatrixTranspose(shadowTransform));
+
+	m_MainPassCB.EyePosW = m_Cameras["MainCamera"]->GetPosition3f();
+	m_MainPassCB.RenderTargetSize = XMFLOAT2{ (float)g_DisplayWidth, (float)g_DisplayHeight };
+	m_MainPassCB.InvRenderTargetSize = { 1.0f / g_DisplayWidth, 1.0f / g_DisplayHeight };
+	m_MainPassCB.NearZ = 0.1f;
+	m_MainPassCB.FarZ = 1000.0f;
+	m_MainPassCB.TotalTime = (float)GameTimer::TotalTime();
+	m_MainPassCB.DeltaTime = (float)GameTimer::DeltaTime();
+	m_MainPassCB.AmbientLight = { 0.25f, 0.25f, 0.35f, 1.0f };
+
+	m_MainPassCB.Lights[0].Direction = { 0.0f, 0.0f, 1.0f };
+	m_MainPassCB.Lights[0].Strength = { 1.0f, 1.0f, 1.0f };
 }
 
 void MyGameApp::Update()
@@ -126,17 +163,14 @@ void MyGameApp::Update()
 	m_MainScissor.right = (LONG)g_SceneColorBuffer.GetWidth();
 	m_MainScissor.bottom = (LONG)g_SceneColorBuffer.GetHeight();
 
+	// Obj
 	m_Angle += (float)GameTimer::DeltaTime();
 	if (m_Angle > XM_2PI)
 	{
 		m_Angle = 0.0f;
 	}
-
 	auto world = XMMatrixRotationY(m_Angle) * XMMatrixIdentity();
-	auto& view = m_Cameras["MainCamera"]->GetViewMatrix();
-	auto& proj = m_Cameras["MainCamera"]->GetProjMatrix();
-	auto worldViewProj = world * view * proj;
-	XMStoreFloat4x4(&m_ObjPerObject.WorldViewProj, XMMatrixTranspose(worldViewProj));
+	XMStoreFloat4x4(&m_ObjPerObject.World, XMMatrixTranspose(world));
 }
 
 void MyGameApp::Draw()
@@ -153,7 +187,8 @@ void MyGameApp::Draw()
 	Context.SetViewportAndScissorRect(Viewport, Scissor);
 	Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//Context.SetConstantBuffer(0, m_ObjPerObject.GetGpuAddress());
-	Context.SetDynamicConstantBufferView(0, sizeof(ObjectConstants), &m_ObjPerObject);
+	Context.SetDynamicConstantBufferView(0, sizeof(m_MainPassCB), &m_MainPassCB);
+	Context.SetDynamicConstantBufferView(1, sizeof(m_ObjPerObject), &m_ObjPerObject);
 	Context.SetIndexBuffer(m_BoxIndexBufferView);
 	Context.SetVertexBuffer(0, m_BoxVertexBufferView);
 	Context.DrawIndexedInstanced(36, 1, 0, 0, 0);

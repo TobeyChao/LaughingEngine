@@ -184,6 +184,7 @@
     <ClCompile Include="FileUtility.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="GpuBuffer.cpp" />
     <ClCompile Include="GraphicsCommon.cpp" />
     <ClCompile Include="GraphicsCore.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="CommandContextManager.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DataStruct.h" />
     <ClInclude Include="DDSTextureLoader12.h" />
     <ClInclude Include="DepthBuffer.h" />
     <ClInclude Include="DescriptorAllocator.h" />
@@ -218,6 +220,7 @@
     <ClInclude Include="FileUtility.h" />
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="GpuBuffer.h" />
     <ClInclude Include="GpuResource.h" />
     <ClInclude Include="GraphicsCommon.h" />
@@ -245,6 +248,12 @@
     </FxCompile>
     <None Include="packages.config" />
     <None Include="Shaders\ColorSpaceUtility.hlsli" />
+    <FxCompile Include="Shaders\LightPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\LightVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shaders\PresentRS.hlsli">
       <FileType>Document</FileType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
@@ -252,6 +261,15 @@
       <SetRootSignature Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </SetRootSignature>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Present_RootSig</EntryPointName>
+    </FxCompile>
+    <None Include="Shaders\Common.hlsli" />
+    <None Include="Shaders\DataType.hlsli" />
+    <None Include="Shaders\LightingUtil.hlsli" />
+    <FxCompile Include="Shaders\LightRS.hlsli">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Light_RootSig</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rootsig_1.1</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
