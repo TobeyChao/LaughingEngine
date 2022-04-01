@@ -79,7 +79,7 @@ void TextureRef::operator=(std::nullptr_t)
 	}
 }
 
-void TextureRef::operator=(TextureRef& rhs)
+void TextureRef::operator=(const TextureRef& rhs)
 {
 	if (m_pTexture)
 		--m_pTexture->m_ReferCount;

@@ -2,6 +2,7 @@
 #include "GraphicsCore.h"
 #include "DescriptorAllocator.h"
 #include "DDSTextureLoader12.h"
+#include "CommandContext.h"
 
 void Texture::Create2D()
 {
@@ -9,6 +10,8 @@ void Texture::Create2D()
 
 bool Texture::CreateDDSFromMemory(const void* Data, size_t Size, bool IssRGB)
 {
+	m_UsageState = D3D12_RESOURCE_STATE_COPY_DEST;
+
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
 	HRESULT hr = DirectX::LoadDDSTextureFromMemory(
 		Graphics::g_Device,
@@ -25,6 +28,8 @@ bool Texture::CreateDDSFromMemory(const void* Data, size_t Size, bool IssRGB)
 	{
 		return false;
 	}
+
+	CommandContext::InitializeTexture(*this, (UINT)subresources.size(), subresources.data());
 
 	if (m_hSRV.ptr == -1)
 	{

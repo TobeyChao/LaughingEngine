@@ -1,13 +1,13 @@
 #include "MyGameApp.h"
-#include "TextureManager.h"
 #include "BufferManager.h"
+#include "GraphicsCore.h"
 #include "CommandContext.h"
 #include "CommandListManager.h"
 #include "GraphicsCommon.h"
 #include "UploadBuffer.h"
 #include "Display.h"
 #include "GameTimer.h"
-#include <array>
+#include "GeometryGenerator.h"
 
 // Shader
 #include "CompiledShaders/ColorVS.h"
@@ -22,15 +22,28 @@ using namespace Graphics;
 
 void MyGameApp::Initialize()
 {
+	// ¼ÓÔØÍ¼Æ¬
+	m_TextureHeap.Create(L"Scene Texture Descriptors", D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 4096);
+	m_SamplerHeap.Create(L"Scene Sampler Descriptors", D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 2048);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_TextureHeap.Alloc(1);
+
+	m_TextureReferences.resize(1);
+	m_TextureReferences[0] = TextureManager::LoadDDSFromFile(L"../Assets/Textures/WoodCrate02.dds");
+	D3D12_CPU_DESCRIPTOR_HANDLE SourceTextures[] =
+	{
+		m_TextureReferences[0].GetSRV()
+	};
+
+	Graphics::g_Device->CopyDescriptorsSimple(1, handle, SourceTextures[0], D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
 	D3D12_INPUT_ELEMENT_DESC inputElementDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
-
-	//m_DefaultRS.Reset(1);
-	//m_DefaultRS[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-	//m_DefaultRS.Finalize(L"MyGameApp::m_DefaultRS", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	m_DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", g_pLightRS, sizeof(g_pLightRS));
 
@@ -39,51 +52,28 @@ void MyGameApp::Initialize()
 	m_DefaultPSO.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
 	m_DefaultPSO.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
 	m_DefaultPSO.SetSampleMask(UINT_MAX);
-	m_DefaultPSO.SetInputLayout(2, inputElementDesc);
+	m_DefaultPSO.SetInputLayout(_countof(inputElementDesc), inputElementDesc);
 	m_DefaultPSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 	m_DefaultPSO.SetVertexShader(g_pLightVS, sizeof(g_pLightVS));
 	m_DefaultPSO.SetPixelShader(g_pLightPS, sizeof(g_pLightPS));
 	m_DefaultPSO.SetRenderTargetFormat(g_DefaultHdrColorFormat, g_DefaultDepthStencilFormat);
 	m_DefaultPSO.Finalize();
 
-	std::array<Vertex, 8> vertices =
+	GeometryGenerator geoGen;
+	GeometryGenerator::MeshData model = geoGen.CreateBox(1.0f, 1.0f, 1.0f, 0);
+	std::vector<Vertex> vertices(model.Vertices.size());
+
+	for (size_t i = 0; i < model.Vertices.size(); ++i)
 	{
-		Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-		Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-		Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-		Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-		Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-		Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-		Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-		Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
-	};
+		auto& p = model.Vertices[i];
+		vertices[i].Position = { p.Position.x, p.Position.y, p.Position.z };
+		vertices[i].TexCoord = p.TexC;
+		vertices[i].Normal = p.Normal;
+		vertices[i].Color = XMFLOAT4(DirectX::Colors::White);
+	}
 
-	std::array<std::uint16_t, 36> indices =
-	{
-		// front face
-		0, 1, 2,
-		0, 2, 3,
-
-		// back face
-		4, 6, 5,
-		4, 7, 6,
-
-		// left face
-		4, 5, 1,
-		4, 1, 0,
-
-		// right face
-		3, 2, 6,
-		3, 6, 7,
-
-		// top face
-		1, 5, 6,
-		1, 6, 2,
-
-		// bottom face
-		4, 0, 3,
-		4, 3, 7
-	};
+	std::vector<std::uint16_t> indices;
+	indices.insert(indices.end(), std::begin(model.GetIndices16()), std::end(model.GetIndices16()));
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
@@ -105,17 +95,13 @@ void MyGameApp::Initialize()
 	m_BoxVertexBufferView = m_BoxVertexBuffer.VertexBufferView(0);
 
 	m_Cameras["MainCamera"] = std::make_unique<Camera>();
-	m_Cameras["MainCamera"]->SetPosition3f({ 0, 3, -10 });
+	m_Cameras["MainCamera"]->SetPosition3f({ 0, 3, -7 });
 	m_Cameras["MainCamera"]->SetLens(XM_PIDIV4, (float)Graphics::g_DisplayWidth / Graphics::g_DisplayHeight, 0.1f, 100.0f);
 	m_Cameras["MainCamera"]->Pitch(0.3f);
 	m_Cameras["MainCamera"]->ComputeInfo();
 
-	//auto world = XMMatrixRotationY(XM_PIDIV4) * XMMatrixIdentity();
-	//auto& view = m_Cameras["MainCamera"]->GetViewMatrix();
-	//auto& proj = m_Cameras["MainCamera"]->GetProjMatrix();
-	//auto worldViewProj = world * view * proj;
-	//ObjectConstants objConstants;
-	//XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+	auto world = XMMatrixRotationY(XM_PIDIV4) * XMMatrixIdentity();
+	XMStoreFloat4x4(&m_ObjPerObject.World, XMMatrixTranspose(world));
 
 	// Pass
 	XMMATRIX proj = m_Cameras["MainCamera"]->GetProjMatrix();
@@ -147,8 +133,8 @@ void MyGameApp::Initialize()
 	m_MainPassCB.DeltaTime = (float)GameTimer::DeltaTime();
 	m_MainPassCB.AmbientLight = { 0.25f, 0.25f, 0.35f, 1.0f };
 
-	m_MainPassCB.Lights[0].Direction = { 0.0f, 0.0f, 1.0f };
-	m_MainPassCB.Lights[0].Strength = { 1.0f, 1.0f, 1.0f };
+	m_MainPassCB.Lights[0].Direction = { -1.0f, -2.0f, 1.0f };
+	m_MainPassCB.Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
 }
 
 void MyGameApp::Update()
@@ -171,6 +157,14 @@ void MyGameApp::Update()
 	}
 	auto world = XMMatrixRotationY(m_Angle) * XMMatrixIdentity();
 	XMStoreFloat4x4(&m_ObjPerObject.World, XMMatrixTranspose(world));
+
+	// Pass
+	m_Theta += (float)GameTimer::DeltaTime();
+	if (m_Theta > XM_2PI)
+	{
+		m_Theta = 0.0f;
+	}
+	m_MainPassCB.Lights[0].Direction = { sinf(m_Theta), -2.0f, cosf(m_Theta) };
 }
 
 void MyGameApp::Draw()
@@ -186,9 +180,10 @@ void MyGameApp::Draw()
 	Context.ClearDepth(g_SceneDepthBuffer);
 	Context.SetViewportAndScissorRect(Viewport, Scissor);
 	Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//Context.SetConstantBuffer(0, m_ObjPerObject.GetGpuAddress());
-	Context.SetDynamicConstantBufferView(0, sizeof(m_MainPassCB), &m_MainPassCB);
-	Context.SetDynamicConstantBufferView(1, sizeof(m_ObjPerObject), &m_ObjPerObject);
+	Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, m_TextureHeap.GetDescriptorHeapPointer());
+	Context.SetDescriptorTable(0, m_TextureHeap[0]);
+	Context.SetDynamicConstantBufferView(1, sizeof(m_MainPassCB), &m_MainPassCB);
+	Context.SetDynamicConstantBufferView(2, sizeof(m_ObjPerObject), &m_ObjPerObject);
 	Context.SetIndexBuffer(m_BoxIndexBufferView);
 	Context.SetVertexBuffer(0, m_BoxVertexBufferView);
 	Context.DrawIndexedInstanced(36, 1, 0, 0, 0);
@@ -197,9 +192,11 @@ void MyGameApp::Draw()
 
 void MyGameApp::Shutdown()
 {
+	m_TextureReferences.clear();
 	m_DefaultPSO.Destroy();
 	m_DefaultRS.Destroy();
 	m_BoxVertexBuffer.Destroy();
 	m_BoxIndexBuffer.Destroy();
-	//m_ObjPerObject.Destroy();
+	m_TextureHeap.Destroy();
+	m_SamplerHeap.Destroy();
 }

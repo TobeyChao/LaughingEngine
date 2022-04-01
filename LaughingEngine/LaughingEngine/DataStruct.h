@@ -9,7 +9,9 @@ constexpr auto MaxLights = 16;
 
 struct Vertex
 {
-	XMFLOAT3 Pos;
+	XMFLOAT3 Position;
+	XMFLOAT2 TexCoord;
+	XMFLOAT3 Normal;
 	XMFLOAT4 Color;
 };
 

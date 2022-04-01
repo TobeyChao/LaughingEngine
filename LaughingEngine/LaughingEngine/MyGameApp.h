@@ -7,6 +7,8 @@
 #include <DirectXMath.h>
 #include <unordered_map>
 #include "DataStruct.h"
+#include "TextureManager.h"
+#include "DescriptorHeap.h"
 
 using DirectX::XMConvertToRadians;
 using namespace Game;
@@ -43,7 +45,17 @@ private:
 	//
 	float m_Angle;
 
+	//
+	float m_Theta = 0.0f;
+
 	// Constants
 	PassConstants m_MainPassCB;
 	ObjectConstants m_ObjPerObject;
+
+	// Textures
+	std::vector<TextureRef> m_TextureReferences;
+
+	//
+	DescriptorHeap m_TextureHeap;
+	DescriptorHeap m_SamplerHeap;
 };

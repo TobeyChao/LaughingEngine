@@ -108,6 +108,21 @@ uint64_t CommandContext::Finish(bool WaitForCompletion)
 	return fenceValue;
 }
 
+void CommandContext::InitializeTexture(GpuResource& Dest, UINT NumSubresources, D3D12_SUBRESOURCE_DATA SubData[])
+{
+	UINT64 uploadBufferSize = GetRequiredIntermediateSize(Dest.GetRes(), 0, NumSubresources);
+
+	CommandContext& InitContext = CommandContext::Begin();
+
+	// copy data to the intermediate upload heap and then schedule a copy from the upload heap to the default texture
+	MemoryHandle mem = InitContext.ReserveUploadMemory(uploadBufferSize);
+	UpdateSubresources(InitContext.m_CommandList, Dest.GetRes(), mem.Res.GetRes(), 0, 0, NumSubresources, SubData);
+	InitContext.TransitionResource(Dest, D3D12_RESOURCE_STATE_GENERIC_READ);
+
+	// Execute the command list and wait for it to finish so we can release the upload buffer
+	InitContext.Finish(true);
+}
+
 void CommandContext::InitializeBuffer(GpuBuffer& Dest, const void* Data, size_t NumBytes, size_t DestOffset)
 {
 	CommandContext& InitContext = CommandContext::Begin();

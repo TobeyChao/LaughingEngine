@@ -13,12 +13,12 @@ namespace TextureManager
 class TextureRef
 {
 public:
-	TextureRef(ManagedTexture* Texture);
-	TextureRef(const TextureRef& Ref);
+	TextureRef(const TextureRef& ref);
+	TextureRef(ManagedTexture* tex = nullptr);
 	~TextureRef();
 
 	void operator= (std::nullptr_t);
-	void operator= (TextureRef& rhs);
+	void operator= (const TextureRef& rhs);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const;
 
