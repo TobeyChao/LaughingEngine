@@ -1,6 +1,6 @@
 #include "PipelineState.h"
-#include "GraphicsCore.h"
 #include "RootSignature.h"
+#include "GraphicsCore.h"
 
 using namespace Graphics;
 
@@ -81,6 +81,7 @@ void GraphicsPiplelineState::SetInputLayout(UINT NumElements, const D3D12_INPUT_
 
 void GraphicsPiplelineState::Finalize()
 {
+	assert(m_RootSignature != nullptr);
 	m_PSODesc.pRootSignature = m_RootSignature->GetRootSignature();
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&m_PSODesc, IID_PPV_ARGS(&m_PSO)));
 

@@ -1,8 +1,9 @@
 #define Light_RootSig \
     "RootFlags( ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT), " \
-    "DescriptorTable(SRV(t0, numDescriptors = 1) )," \
+    "DescriptorTable(SRV(t0, numDescriptors = 1), visibility = SHADER_VISIBILITY_PIXEL)," \
     "CBV(b0, space = 0), " \
     "CBV(b1, space = 0), " \
+    "DescriptorTable(SRV(t10, numDescriptors = 1), visibility = SHADER_VISIBILITY_PIXEL)," \
     "StaticSampler(s0," \
         "addressU = TEXTURE_ADDRESS_CLAMP," \
         "addressV = TEXTURE_ADDRESS_CLAMP," \

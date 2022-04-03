@@ -61,3 +61,15 @@ struct ObjectConstants
 {
 	XMFLOAT4X4 World;
 };
+
+__declspec(align(16)) struct SkyboxVSCB
+{
+	XMFLOAT4X4 ProjInverse;
+	XMFLOAT4X4 ViewInverse;
+};
+
+
+__declspec(align(16)) struct SkyboxPSCB
+{
+	float TextureLevel;
+};

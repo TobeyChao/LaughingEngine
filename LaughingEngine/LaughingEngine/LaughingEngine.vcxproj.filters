@@ -33,13 +33,13 @@
     <Filter Include="Model">
       <UniqueIdentifier>{cee9a3e5-88e4-439e-ab6e-b495d5ea5227}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Graphics">
+      <UniqueIdentifier>{355a90eb-1dae-4584-ab5d-4ac79c7766bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsCore.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="GameCore.cpp">
       <Filter>Core</Filter>
@@ -47,13 +47,7 @@
     <ClCompile Include="MyGameApp.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Display.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="GameTimer.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsCommon.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="PixelBuffer.cpp">
@@ -128,21 +122,21 @@
     <ClCompile Include="GeometryGenerator.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsCore.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsCommon.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Display.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GraphicsCore.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="GameCore.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Display.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="GameTimer.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsCommon.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="PixelBuffer.h">
@@ -238,6 +232,15 @@
     <ClInclude Include="DataStruct.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsCore.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsCommon.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -280,6 +283,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\LightRS.hlsli">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyPS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

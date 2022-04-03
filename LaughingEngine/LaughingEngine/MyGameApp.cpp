@@ -1,7 +1,6 @@
 #include "MyGameApp.h"
 #include "BufferManager.h"
 #include "GraphicsCore.h"
-#include "CommandContext.h"
 #include "CommandListManager.h"
 #include "GraphicsCommon.h"
 #include "UploadBuffer.h"
@@ -18,24 +17,33 @@
 #include "CompiledShaders/LightPS.h"
 #include "CompiledShaders/LightRS.h"
 
+#include "CompiledShaders/SkyVS.h"
+#include "CompiledShaders/SkyPS.h"
+
 using namespace Graphics;
 
 void MyGameApp::Initialize()
 {
 	// ¼ÓÔØÍ¼Æ¬
 	m_TextureHeap.Create(L"Scene Texture Descriptors", D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 4096);
-	m_SamplerHeap.Create(L"Scene Sampler Descriptors", D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 2048);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_TextureHeap.Alloc(1);
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_TextureHeap.Alloc(2);
 
-	m_TextureReferences.resize(1);
+	m_TextureReferences.resize(2);
 	m_TextureReferences[0] = TextureManager::LoadDDSFromFile(L"../Assets/Textures/WoodCrate02.dds");
+	m_TextureReferences[1] = TextureManager::LoadDDSFromFile(L"../Assets/Textures/SkyBox.dds");
+
+	uint32_t DestCount = 2;
+	uint32_t SourceCounts[] = { 1, 1 };
+
 	D3D12_CPU_DESCRIPTOR_HANDLE SourceTextures[] =
 	{
-		m_TextureReferences[0].GetSRV()
+		m_TextureReferences[0].GetSRV(),
+		m_TextureReferences[1].GetSRV()
 	};
 
-	Graphics::g_Device->CopyDescriptorsSimple(1, handle, SourceTextures[0], D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	g_Device->CopyDescriptors(1, &handle, &DestCount, DestCount, SourceTextures, SourceCounts, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
 
 	D3D12_INPUT_ELEMENT_DESC inputElementDesc[] =
 	{
@@ -58,6 +66,14 @@ void MyGameApp::Initialize()
 	m_DefaultPSO.SetPixelShader(g_pLightPS, sizeof(g_pLightPS));
 	m_DefaultPSO.SetRenderTargetFormat(g_DefaultHdrColorFormat, g_DefaultDepthStencilFormat);
 	m_DefaultPSO.Finalize();
+
+	m_SkyPSO = m_DefaultPSO;
+	m_SkyPSO.SetDepthStencilState(DepthStateTestLessEqual);
+	m_SkyPSO.SetRasterizerState(RasterizerTwoSided);
+	m_SkyPSO.SetVertexShader(g_pSkyVS, sizeof(g_pSkyVS));
+	m_SkyPSO.SetPixelShader(g_pSkyPS, sizeof(g_pSkyPS));
+	m_SkyPSO.SetInputLayout(0, nullptr);
+	m_SkyPSO.Finalize();
 
 	GeometryGenerator geoGen;
 	GeometryGenerator::MeshData model = geoGen.CreateBox(1.0f, 1.0f, 1.0f, 0);
@@ -101,7 +117,7 @@ void MyGameApp::Initialize()
 	m_Cameras["MainCamera"]->ComputeInfo();
 
 	auto world = XMMatrixRotationY(XM_PIDIV4) * XMMatrixIdentity();
-	XMStoreFloat4x4(&m_ObjPerObject.World, XMMatrixTranspose(world));
+	XMStoreFloat4x4(&m_ObjCB.World, XMMatrixTranspose(world));
 
 	// Pass
 	XMMATRIX proj = m_Cameras["MainCamera"]->GetProjMatrix();
@@ -135,6 +151,11 @@ void MyGameApp::Initialize()
 
 	m_MainPassCB.Lights[0].Direction = { -1.0f, -2.0f, 1.0f };
 	m_MainPassCB.Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
+
+	XMStoreFloat4x4(&m_SkyboxVSCB.ProjInverse, XMMatrixTranspose(invProj));
+	XMStoreFloat4x4(&m_SkyboxVSCB.ViewInverse, XMMatrixTranspose(invView));
+
+	m_SkyboxPSCB.TextureLevel = 0.0f;
 }
 
 void MyGameApp::Update()
@@ -156,7 +177,7 @@ void MyGameApp::Update()
 		m_Angle = 0.0f;
 	}
 	auto world = XMMatrixRotationY(m_Angle) * XMMatrixIdentity();
-	XMStoreFloat4x4(&m_ObjPerObject.World, XMMatrixTranspose(world));
+	XMStoreFloat4x4(&m_ObjCB.World, XMMatrixTranspose(world));
 
 	// Pass
 	m_Theta += (float)GameTimer::DeltaTime();
@@ -172,21 +193,15 @@ void MyGameApp::Draw()
 	const D3D12_VIEWPORT& Viewport = m_MainViewport;
 	const D3D12_RECT& Scissor = m_MainScissor;
 	GraphicsContext& Context = GraphicsContext::Begin(L"Scene Render");
-	Context.SetRootSignature(m_DefaultRS);
-	Context.SetPipelineState(m_DefaultPSO);
+
 	Context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 	Context.SetRenderTarget(g_SceneColorBuffer.GetRTV(), g_SceneDepthBuffer.GetDSV());
 	Context.ClearColor(g_SceneColorBuffer, &Scissor);
 	Context.ClearDepth(g_SceneDepthBuffer);
-	Context.SetViewportAndScissorRect(Viewport, Scissor);
-	Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, m_TextureHeap.GetDescriptorHeapPointer());
-	Context.SetDescriptorTable(0, m_TextureHeap[0]);
-	Context.SetDynamicConstantBufferView(1, sizeof(m_MainPassCB), &m_MainPassCB);
-	Context.SetDynamicConstantBufferView(2, sizeof(m_ObjPerObject), &m_ObjPerObject);
-	Context.SetIndexBuffer(m_BoxIndexBufferView);
-	Context.SetVertexBuffer(0, m_BoxVertexBufferView);
-	Context.DrawIndexedInstanced(36, 1, 0, 0, 0);
+
+	DrawBox(Context, Viewport, Scissor);
+	DrawSkybox(Context, Viewport, Scissor);
+
 	Context.Finish();
 }
 
@@ -198,5 +213,32 @@ void MyGameApp::Shutdown()
 	m_BoxVertexBuffer.Destroy();
 	m_BoxIndexBuffer.Destroy();
 	m_TextureHeap.Destroy();
-	m_SamplerHeap.Destroy();
+}
+
+void MyGameApp::DrawBox(GraphicsContext& Context, const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Scissor)
+{
+	Context.SetRootSignature(m_DefaultRS);
+	Context.SetPipelineState(m_DefaultPSO);
+	Context.SetViewportAndScissorRect(Viewport, Scissor);
+	Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, m_TextureHeap.GetDescriptorHeapPointer());
+	Context.SetDescriptorTable(0, m_TextureHeap[0]);
+	Context.SetDynamicConstantBufferView(1, sizeof(m_MainPassCB), &m_MainPassCB);
+	Context.SetDynamicConstantBufferView(2, sizeof(m_ObjCB), &m_ObjCB);
+	Context.SetIndexBuffer(m_BoxIndexBufferView);
+	Context.SetVertexBuffer(0, m_BoxVertexBufferView);
+	Context.DrawIndexedInstanced(36, 1, 0, 0, 0);
+}
+
+void MyGameApp::DrawSkybox(GraphicsContext& Context, const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Scissor)
+{
+	Context.SetRootSignature(m_DefaultRS);
+	Context.SetPipelineState(m_SkyPSO);
+	Context.SetViewportAndScissorRect(Viewport, Scissor);
+	Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, m_TextureHeap.GetDescriptorHeapPointer());
+	Context.SetDynamicConstantBufferView(1, sizeof(m_SkyboxVSCB), &m_SkyboxVSCB);
+	Context.SetDynamicConstantBufferView(2, sizeof(m_SkyboxPSCB), &m_SkyboxPSCB);
+	Context.SetDescriptorTable(3, m_TextureHeap[1]);
+	Context.DrawInstanced(3, 1, 0, 0);
 }

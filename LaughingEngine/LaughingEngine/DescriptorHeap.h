@@ -1,9 +1,5 @@
 #pragma once
-
 #include "PCH.h"
-
-#include <vector>
-#include <queue>
 
 /// <summary>
 /// ÃèÊö·û¾ä±ú
@@ -21,17 +17,16 @@ public:
 		:
 		m_CpuHandle(cpuHandle),
 		m_GpuHandle(gpuHandle)
-	{
-	}
+	{}
 
-	DescriptorHandle operator+ (int OffsetScaledByDescriptorSize)
+	DescriptorHandle operator+(int OffsetScaledByDescriptorSize)
 	{
 		DescriptorHandle ret = *this;
 		ret += OffsetScaledByDescriptorSize;
 		return ret;
 	}
 
-	DescriptorHandle operator+ (INT OffsetScaledByDescriptorSize) const
+	DescriptorHandle operator+(INT OffsetScaledByDescriptorSize) const
 	{
 		DescriptorHandle ret = *this;
 		ret += OffsetScaledByDescriptorSize;

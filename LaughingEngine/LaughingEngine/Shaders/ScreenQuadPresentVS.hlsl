@@ -13,10 +13,7 @@
 #include "PresentRS.hlsli"
 
 [RootSignature(Present_RootSig)]
-void main(
-in uint id : SV_VERTEXID,
-out float4 posH : SV_POSITION,
-out float2 tex : TEXCOORD
+void main(in uint id : SV_VERTEXID, out float4 posH : SV_POSITION, out float2 tex : TEXCOORD
 )
 {
     tex = float2(uint2(id, id << 1) & 2);

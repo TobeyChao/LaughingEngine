@@ -10,7 +10,7 @@
 #include "RootSignature.h"
 #include "PipelineState.h"
 #include "CommandListManager.h"
-
+#include "DescriptorHeap.h"
 #include <cmath>
 
 extern "C" { __declspec(dllexport) extern const UINT D3D12SDKVersion = 600; }
@@ -31,7 +31,7 @@ namespace
 {
 	uint64_t s_FrameIndex = 0;
 
-	bool s_EnableVSync = false;
+	bool s_EnableVSync = true;
 
 	uint64_t s_CurFrameFence = 0;
 	uint8_t s_FrameResourceNumLimit = 3;
