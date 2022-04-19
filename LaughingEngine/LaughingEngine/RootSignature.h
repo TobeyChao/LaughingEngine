@@ -18,6 +18,22 @@ public:
 		m_Param.InitAsDescriptorTable(1, table, Visibility);
 	}
 
+	void InitAsDescriptorTable(UINT RangeCount, D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL)
+	{
+		CD3DX12_DESCRIPTOR_RANGE* table = new CD3DX12_DESCRIPTOR_RANGE[RangeCount];
+		m_Param.InitAsDescriptorTable(RangeCount, table, Visibility);
+	}
+
+	void SetTableRange(UINT RangeIndex, D3D12_DESCRIPTOR_RANGE_TYPE Type, UINT Register, UINT Count, UINT Space = 0)
+	{
+		D3D12_DESCRIPTOR_RANGE& range = const_cast<D3D12_DESCRIPTOR_RANGE&>(m_Param.DescriptorTable.pDescriptorRanges[RangeIndex]);
+		range.RangeType = Type;
+		range.NumDescriptors = Count;
+		range.BaseShaderRegister = Register;
+		range.RegisterSpace = Space;
+		range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	}
+
 	void InitAsConstants(UINT Num32BitValues, UINT ShaderRegister, UINT RegisterSpace = 0, D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL)
 	{
 		m_Param.InitAsConstants(Num32BitValues, ShaderRegister, RegisterSpace, Visibility);
@@ -80,11 +96,11 @@ public:
 
 		if (NumStaticSamplers > 0)
 		{
-			m_StaticSamplerArray.reset(new CD3DX12_STATIC_SAMPLER_DESC[NumStaticSamplers]);
+			m_StaticSamplerArray.resize(NumStaticSamplers);
 		}
 		else
 		{
-			m_StaticSamplerArray.reset();
+			m_StaticSamplerArray.clear();
 		}
 		m_NumStaticSamplers = NumStaticSamplers;
 		m_NumInitializedStaticSamplers = 0;
@@ -95,7 +111,7 @@ public:
 		return m_ParamArray.get()[EntryIndex];
 	}
 
-	void InitStaticSampler(const CD3DX12_STATIC_SAMPLER_DESC& NonStaticSamplerDesc);
+	void InitStaticSampler(CD3DX12_STATIC_SAMPLER_DESC StaticSamplerDesc, UINT ShaderRegister, UINT RegisterSpace = 0);
 
 	void Finalize(const std::wstring& Name, D3D12_ROOT_SIGNATURE_FLAGS Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE);
 
@@ -112,6 +128,6 @@ private:
 	UINT m_NumStaticSamplers;
 	UINT m_NumInitializedStaticSamplers;
 	std::unique_ptr<RootParameter[]> m_ParamArray;
-	std::unique_ptr<CD3DX12_STATIC_SAMPLER_DESC[]> m_StaticSamplerArray;
+	std::vector<CD3DX12_STATIC_SAMPLER_DESC> m_StaticSamplerArray;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_RootSignature;
 };

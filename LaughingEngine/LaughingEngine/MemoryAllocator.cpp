@@ -1,3 +1,4 @@
+#include "PCH.h"
 #include "MemoryAllocator.h"
 #include "CommandListManager.h"
 #include "GraphicsCore.h"
@@ -85,7 +86,7 @@ void MemoryPageManager::ReturnPages(uint64_t FenceID, const std::vector<MemoryPa
 void MemoryPageManager::DestroyLargePages(uint64_t FenceID, const std::vector<MemoryPage*> Pages)
 {
 	std::lock_guard<std::mutex> LockGuard(m_Mutex);
-	while (!m_DeletionQueue.empty() && Graphics::g_CommandManager.IsFenceComplete(FenceID))
+	while (!m_DeletionQueue.empty() && Graphics::g_CommandManager.IsFenceComplete(m_DeletionQueue.front().first))
 	{
 		delete m_DeletionQueue.front().second;
 		m_DeletionQueue.pop();

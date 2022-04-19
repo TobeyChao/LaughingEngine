@@ -125,11 +125,16 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\nlohmann;$(SolutionDir)3rdParty\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;d3dcompiler.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\assimp\lib\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <VariableName>g_p%(Filename)</VariableName>
@@ -141,6 +146,10 @@
       <ObjectFileOutput />
       <ShaderModel>6.3</ShaderModel>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>xcopy $(SolutionDir)3rdParty\assimp\lib\Debug\assimp-vc143-mtd.dll $(OutDir) /a /F /I /Y /C
+xcopy $(SolutionDir)3rdParty\assimp\lib\Debug\assimp-vc143-mtd.pdb $(OutDir) /a /F /I /Y /C</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -151,13 +160,18 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\nlohmann;$(SolutionDir)3rdParty\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;d3dcompiler.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\assimp\lib\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <VariableName>g_p%(Filename)</VariableName>
@@ -167,6 +181,10 @@
       <HeaderFileOutput>$(SolutionDir)Build\$(Platform)\$(Configuration)\Output\$(ProjectName)\CompiledShaders\%(Filename).h</HeaderFileOutput>
       <ShaderModel>6.3</ShaderModel>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.dll $(OutDir) /a /F /I /Y /C
+xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a /F /I /Y /C</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BufferManager.cpp" />
@@ -176,7 +194,10 @@
     <ClCompile Include="CommandContext.cpp" />
     <ClCompile Include="CommandListManager.cpp" />
     <ClCompile Include="CommandContextManager.cpp" />
-    <ClCompile Include="DDSTextureLoader12.cpp" />
+    <ClCompile Include="DDSTextureLoader12.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="DepthBuffer.cpp" />
     <ClCompile Include="DescriptorAllocator.cpp" />
     <ClCompile Include="DescriptorHeap.cpp" />
@@ -184,13 +205,21 @@
     <ClCompile Include="FileUtility.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="GameTimer.cpp" />
-    <ClCompile Include="GeometryGenerator.cpp" />
+    <ClCompile Include="GeometryGenerator.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="GpuBuffer.cpp" />
     <ClCompile Include="GraphicsCommon.cpp" />
     <ClCompile Include="GraphicsCore.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MyGameApp.cpp" />
+    <ClCompile Include="PCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="PixelBuffer.cpp" />
     <ClCompile Include="RootSignature.cpp" />
@@ -199,7 +228,10 @@
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="UploadBuffer.cpp" />
     <ClCompile Include="Utility.cpp" />
-    <ClCompile Include="WICTextureLoader12.cpp" />
+    <ClCompile Include="WICTextureLoader12.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
@@ -225,15 +257,21 @@
     <ClInclude Include="GpuResource.h" />
     <ClInclude Include="GraphicsCommon.h" />
     <ClInclude Include="GraphicsCore.h" />
+    <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="KeyCode.h" />
     <ClInclude Include="MemoryAllocator.h" />
+    <ClInclude Include="MeshGeometry.h" />
+    <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="MyGameApp.h" />
     <ClInclude Include="PCH.h" />
     <ClInclude Include="PipelineState.h" />
     <ClInclude Include="PixelBuffer.h" />
+    <ClInclude Include="RenderItem.h" />
     <ClInclude Include="RootSignature.h" />
     <ClInclude Include="ShadowMapBuffer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="Utility.h" />
@@ -245,6 +283,25 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Color_RootSig</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rootsig_1.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RootSignature</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rootsig_1.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Color_RootSig</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Shaders\PbrPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">frag</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">frag</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Shaders\PbrVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">vert</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vert</EntryPointName>
     </FxCompile>
     <FxCompile Include="Shaders\SkyPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -256,15 +313,19 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <None Include="packages.config" />
     <None Include="Shaders\ColorSpaceUtility.hlsli" />
     <FxCompile Include="Shaders\LightPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <AllResourcesBound Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </AllResourcesBound>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\LightVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\PresentRS.hlsli">
       <FileType>Document</FileType>
@@ -273,16 +334,28 @@
       <SetRootSignature Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </SetRootSignature>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Present_RootSig</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RootSignature</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rootsig_1.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Present_RootSig</EntryPointName>
     </FxCompile>
     <None Include="Shaders\Common.hlsli" />
     <None Include="Shaders\DataType.hlsli" />
     <None Include="Shaders\LightingUtil.hlsli" />
-    <FxCompile Include="Shaders\LightRS.hlsli">
+    <FxCompile Include="Shaders\CommonRS.hlsli">
       <FileType>Document</FileType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Light_RootSig</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Common_RootSig</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rootsig_1.1</ShaderModel>
+      <AllResourcesBound Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </AllResourcesBound>
+      <EnableUnboundedDescriptorTables Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EnableUnboundedDescriptorTables>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RootSignature</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rootsig_1.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Common_RootSig</EntryPointName>
     </FxCompile>
+    <None Include="Shaders\MyBRDF.hlsli" />
+    <None Include="Shaders\TangentHelper.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ColorPS.hlsl">
@@ -314,6 +387,15 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.3</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Assets\Textures\outBrdf.dds" />
+    <Image Include="..\Assets\Textures\outDiffuseHDR.dds" />
+    <Image Include="..\Assets\Textures\outEnvHDR.dds" />
+    <Image Include="..\Assets\Textures\outSpecularHDR.dds" />
+    <Image Include="..\Assets\Textures\SkyBox.dds" />
+    <Image Include="..\Assets\Textures\WoodCrate01.dds" />
+    <Image Include="..\Assets\Textures\WoodCrate02.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

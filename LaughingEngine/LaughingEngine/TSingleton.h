@@ -34,4 +34,4 @@ protected:
 	static T* mSingleton;
 };
 
-template<typename T> T* TSingleton<T>::mSingleton = new T;
+template<typename T> T* TSingleton<T>::mSingleton = nullptr;

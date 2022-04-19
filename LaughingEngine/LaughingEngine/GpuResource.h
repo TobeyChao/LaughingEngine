@@ -1,6 +1,5 @@
 #pragma once
-#include "PCH.h"
-
+// 所有GPU资源的基类
 class GpuResource
 {
 	friend class CommandContext;

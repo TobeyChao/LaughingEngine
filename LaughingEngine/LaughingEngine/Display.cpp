@@ -1,3 +1,4 @@
+#include "PCH.h"
 #include "Display.h"
 #include "Utility.h"
 #include "ColorBuffer.h"
@@ -31,7 +32,7 @@ namespace
 {
 	uint64_t s_FrameIndex = 0;
 
-	bool s_EnableVSync = true;
+	bool s_EnableVSync = false;
 
 	uint64_t s_CurFrameFence = 0;
 	uint8_t s_FrameResourceNumLimit = 3;

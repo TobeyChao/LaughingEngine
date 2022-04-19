@@ -1,3 +1,4 @@
+#include "PCH.h"
 #include "PixelBuffer.h"
 
 void PixelBuffer::AssociateWithResource(

@@ -1,12 +1,16 @@
+#include "PCH.h"
 #include "RootSignature.h"
 #include "GraphicsCore.h"
 
 using namespace Microsoft::WRL;
 
-void RootSignature::InitStaticSampler(const CD3DX12_STATIC_SAMPLER_DESC& StaticSamplerDesc)
+void RootSignature::InitStaticSampler(CD3DX12_STATIC_SAMPLER_DESC StaticSamplerDesc, UINT ShaderRegister, UINT RegisterSpace)
 {
 	assert(m_NumInitializedStaticSamplers < m_NumStaticSamplers);
-	m_StaticSamplerArray[m_NumInitializedStaticSamplers++] = StaticSamplerDesc;
+	m_StaticSamplerArray[m_NumInitializedStaticSamplers] = StaticSamplerDesc;
+	m_StaticSamplerArray[m_NumInitializedStaticSamplers].ShaderRegister = ShaderRegister;
+	m_StaticSamplerArray[m_NumInitializedStaticSamplers].RegisterSpace = RegisterSpace;
+	m_NumInitializedStaticSamplers++;
 }
 
 void RootSignature::Finalize(const std::wstring& name, D3D12_ROOT_SIGNATURE_FLAGS Flags)
@@ -15,7 +19,7 @@ void RootSignature::Finalize(const std::wstring& name, D3D12_ROOT_SIGNATURE_FLAG
 		m_NumParameters,
 		(const CD3DX12_ROOT_PARAMETER*)m_ParamArray.get(),
 		m_NumStaticSamplers,
-		m_StaticSamplerArray.get(),
+		m_StaticSamplerArray.data(),
 		Flags);
 
 	ComPtr<ID3DBlob> serializedRootSign = nullptr;

@@ -1,3 +1,4 @@
+#include "PCH.h"
 #include "DescriptorHeap.h"
 #include "GraphicsCore.h"
 
@@ -9,7 +10,7 @@ void DescriptorHeap::Create(const std::wstring& name, D3D12_DESCRIPTOR_HEAP_TYPE
 	m_Desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
 	Graphics::g_Device->CreateDescriptorHeap(&m_Desc, IID_PPV_ARGS(m_Heap.GetAddressOf()));
-
+	
 #if defined(_DEBUG) || defined(DEBUG)
 	m_Heap->SetName(name.c_str());
 #endif // defined(_DEBUG) || defined(DEBUG)

@@ -1,3 +1,4 @@
+#include "PCH.h"
 #include "Camera.h"
 
 void Camera::SetLens(float fov, float aspect, float zn, float zf)

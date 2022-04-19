@@ -4,10 +4,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{42d90914-ba1b-4ddb-9071-cf4159bb0337}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -35,6 +31,25 @@
     </Filter>
     <Filter Include="Core\Graphics">
       <UniqueIdentifier>{355a90eb-1dae-4584-ab5d-4ac79c7766bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{7b01579a-0630-414a-a9db-78ebdf6fad22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Textures">
+      <UniqueIdentifier>{f9ab3c9b-932b-45d0-ae52-fcdda1fde3a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Shaders">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{6cfa70d1-840a-4569-b3ff-80c02b10b0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Components">
+      <UniqueIdentifier>{7e8a1d1f-22d5-4b29-b317-2d5215429cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Struct">
+      <UniqueIdentifier>{f1f02364-96a0-47e8-9e39-bbc632fedb9c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +134,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="GeometryGenerator.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsCore.cpp">
       <Filter>Core\Graphics</Filter>
     </ClCompile>
@@ -130,6 +142,15 @@
     </ClCompile>
     <ClCompile Include="Display.cpp">
       <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>Model\Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="PCH.cpp">
+      <Filter>Core\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,9 +247,6 @@
     <ClInclude Include="MyGameApp.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryGenerator.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="DataStruct.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -241,55 +259,111 @@
     <ClInclude Include="Display.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Model\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>Model\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshGeometry.h">
+      <Filter>Model\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>Model\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderItem.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyCode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Shaders\Common.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </None>
     <None Include="Shaders\ColorSpaceUtility.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </None>
     <None Include="Shaders\DataType.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </None>
     <None Include="Shaders\LightingUtil.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="Shaders\TangentHelper.hlsli">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="Shaders\MyBRDF.hlsli">
+      <Filter>Resources\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\PresentSDRPS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\ScreenQuadPresentVS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\ColorVS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\ColorPS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PresentRS.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\ColorRS.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\LightPS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\LightVS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\LightRS.hlsli">
-      <Filter>Shaders</Filter>
+    <FxCompile Include="Shaders\CommonRS.hlsli">
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SkyPS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SkyVS.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Resources\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\PbrPS.hlsl">
+      <Filter>Resources\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PbrVS.hlsl">
+      <Filter>Resources\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Assets\Textures\outBrdf.dds">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Assets\Textures\outDiffuseHDR.dds">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Assets\Textures\outEnvHDR.dds">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Assets\Textures\outSpecularHDR.dds">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Assets\Textures\SkyBox.dds">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Assets\Textures\WoodCrate01.dds">
+      <Filter>Resources\Textures</Filter>
+    </Image>
+    <Image Include="..\Assets\Textures\WoodCrate02.dds">
+      <Filter>Resources\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

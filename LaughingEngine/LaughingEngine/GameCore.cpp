@@ -1,6 +1,8 @@
+#include "PCH.h"
 #include "GameCore.h"
 #include "GraphicsCore.h"
 #include "GameTimer.h"
+#include "InputSystem.h"
 #include "Display.h"
 
 namespace Game
@@ -43,6 +45,8 @@ namespace Game
 
 	void InitializeApplication(IGameApp& game)
 	{
+		InputSystem* inputSystem = new InputSystem();
+
 		Graphics::Initialize();
 		GameTimer::Initialize();
 		game.Initialize();
@@ -129,6 +133,13 @@ namespace Game
 		return 0;
 	}
 
+	template<typename T>
+	inline int GetValue(T value, size_t numMoveBit)
+	{
+		
+		return (int)(short)((uint16_t)((((uint64_t)(value)) >> numMoveBit) & 0xffff));
+	}
+
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		switch (message)
@@ -136,11 +147,80 @@ namespace Game
 		case WM_SIZE:
 			Display::Resize((UINT)(UINT64)lParam & 0xFFFF, (UINT)(UINT64)lParam >> 16);
 			break;
-
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
-
+		case WM_KILLFOCUS:
+			InputSystem::GetInstance().ClearState();
+			break;
+		case WM_KEYDOWN:
+			InputSystem::GetInstance().OnKeyPressed(static_cast<KeyCode>(wParam));
+			break;
+		case WM_KEYUP:
+			InputSystem::GetInstance().OnKeyReleased(static_cast<KeyCode>(wParam));
+			break;
+		case WM_MOUSEMOVE:
+		{
+			int x = GetValue(lParam, 0);
+			int y = GetValue(lParam, 16);
+			if (x >= 0 && x < (int)Graphics::g_DisplayWidth && y >= 0 && y < (int)Graphics::g_DisplayHeight)
+			{
+				InputSystem::GetInstance().OnMouseMove(x, y);
+				if (!InputSystem::GetInstance().IsInWindow())
+				{
+					SetCapture(hWnd);
+					InputSystem::GetInstance().OnMouseEnter();
+				}
+			}
+			else
+			{
+				if (wParam & (MK_LBUTTON | MK_RBUTTON))
+				{
+					//x = std::max(0, x);
+					//x = std::min((int)Graphics::g_DisplayWidth - 1, x);
+					//y = std::max(0, y);
+					//y = std::min((int)Graphics::g_DisplayHeight - 1, y);
+					InputSystem::GetInstance().OnMouseMove(x, y);
+				}
+				else
+				{
+					ReleaseCapture();
+					InputSystem::GetInstance().OnMouseLeave();
+					InputSystem::GetInstance().OnLeftReleased(x, y);
+					InputSystem::GetInstance().OnRightReleased(x, y);
+				}
+			}
+			break;
+		}
+		case WM_LBUTTONDOWN:
+		{
+			int x = GetValue(lParam, 0);
+			int y = GetValue(lParam, 16);
+			InputSystem::GetInstance().OnLeftPressed(x, y);
+			SetForegroundWindow(hWnd);
+			break;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			int x = GetValue(lParam, 0);
+			int y = GetValue(lParam, 16);
+			InputSystem::GetInstance().OnRightPressed(x, y);
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			int x = GetValue(lParam, 0);
+			int y = GetValue(lParam, 16);
+			InputSystem::GetInstance().OnLeftReleased(x, y);
+			break;
+		}
+		case WM_RBUTTONUP:
+		{
+			int x = GetValue(lParam, 0);
+			int y = GetValue(lParam, 16);
+			InputSystem::GetInstance().OnRightReleased(x, y);
+			break;
+		}
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}

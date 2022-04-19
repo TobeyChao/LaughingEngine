@@ -8,6 +8,8 @@
 #include "DataStruct.h"
 #include "TextureManager.h"
 #include "DescriptorHeap.h"
+#include "RenderItem.h"
+
 #include <DirectXMath.h>
 #include <unordered_map>
 
@@ -29,7 +31,9 @@ public:
 	virtual void Shutdown() override;
 
 private:
-	void DrawBox(GraphicsContext& Context, const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Scissor);
+	void BuildRenderItem();
+
+	void DrawRenderItems(GraphicsContext& Context, const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Scissor);
 	void DrawSkybox(GraphicsContext& Context, const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Scissor);
 
 private:
@@ -41,11 +45,6 @@ private:
 	GraphicsPiplelineState m_DefaultPSO;
 	GraphicsPiplelineState m_SkyPSO;
 	RootSignature m_DefaultRS;
-
-	VertexBuffer m_BoxVertexBuffer;
-	IndexBuffer m_BoxIndexBuffer;
-	D3D12_INDEX_BUFFER_VIEW m_BoxIndexBufferView;
-	D3D12_VERTEX_BUFFER_VIEW m_BoxVertexBufferView;
 
 	// 正方体旋转的角度
 	float m_Angle;
@@ -64,4 +63,17 @@ private:
 
 	// Texture的描述符堆
 	DescriptorHeap m_TextureHeap;
+
+	// 
+	std::unordered_map<std::wstring, std::unique_ptr<MeshGeometry>> m_Geometries;
+
+	// List of all the render items.
+	std::unordered_map<std::wstring, std::unique_ptr<RenderItem>> m_AllRitems;
+	// Render items divided by PSO.
+	std::vector<RenderItem*> m_RitemLayer[(uint8_t)RenderLayer::Count];
+
+	float m_Yaw = 0;
+	float m_Pitch = XMConvertToRadians(15);
+	float m_CamMoveSpeed = 20.f;
+	XMFLOAT2 m_LastMousePos;
 };

@@ -3,6 +3,8 @@
 #include <DirectXColors.h>
 #include "PixelBuffer.h"
 
+using DirectX::XMVECTORF32;
+
 class ColorBuffer : public PixelBuffer
 {
 public:
@@ -33,13 +35,13 @@ public:
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTV() const { return m_hRTV; }
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_hUAV[0]; }
 
-	const DirectX::XMVECTORF32& GetClearColor() const { return m_ClearColor; }
+	const XMVECTORF32& GetClearColor() const { return m_ClearColor; }
 
 	/// <summary>
 	/// 设置和资源创建的时候不同的颜色会导致Warning
 	/// </summary>
 	/// <param name="color"></param>
-	void SetClearColor(const DirectX::XMVECTORF32& color) { m_ClearColor = color; }
+	void SetClearColor(const XMVECTORF32& color) { m_ClearColor = color; }
 
 private:
 	D3D12_RESOURCE_FLAGS CombineResourceFlags() const
@@ -65,7 +67,7 @@ private:
 	void CreateDerivedViews(ID3D12Device* Device, DXGI_FORMAT Format, uint32_t ArraySize, uint32_t NumMips = 1);
 
 private:
-	DirectX::XMVECTORF32 m_ClearColor;
+	XMVECTORF32 m_ClearColor;
 	D3D12_CPU_DESCRIPTOR_HANDLE m_hSRV;
 	D3D12_CPU_DESCRIPTOR_HANDLE m_hRTV;
 	D3D12_CPU_DESCRIPTOR_HANDLE m_hUAV[12];

@@ -1,3 +1,4 @@
+#include "PCH.h"
 #include "GraphicsCommon.h"
 
 namespace Graphics
@@ -18,6 +19,15 @@ namespace Graphics
 	D3D12_DEPTH_STENCIL_DESC DepthStateReadOnlyReversed;
 	D3D12_DEPTH_STENCIL_DESC DepthStateTestEqual;
 	D3D12_DEPTH_STENCIL_DESC DepthStateTestLessEqual;
+	
+	CD3DX12_STATIC_SAMPLER_DESC SamplerPointWrap;
+	CD3DX12_STATIC_SAMPLER_DESC SamplerPointClamp;
+	CD3DX12_STATIC_SAMPLER_DESC SamplerLinearWrap;
+	CD3DX12_STATIC_SAMPLER_DESC SamplerLinearClamp;
+	CD3DX12_STATIC_SAMPLER_DESC SamplerAnisotropicWrap;
+	CD3DX12_STATIC_SAMPLER_DESC SamplerAnisotropicClamp;
+	CD3DX12_STATIC_SAMPLER_DESC SamplerShadow;
+
 }
 
 void Graphics::InitializeCommonState()
@@ -82,6 +92,63 @@ void Graphics::InitializeCommonState()
 
 	DepthStateTestLessEqual = DepthStateReadWrite;
 	DepthStateTestLessEqual.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
+	SamplerPointWrap = CD3DX12_STATIC_SAMPLER_DESC(
+		0, // shaderRegister
+		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
+
+	SamplerPointClamp = CD3DX12_STATIC_SAMPLER_DESC(
+		1, // shaderRegister
+		D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
+
+	SamplerLinearWrap = CD3DX12_STATIC_SAMPLER_DESC(
+		2, // shaderRegister
+		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP); // addressW
+
+	SamplerLinearClamp = CD3DX12_STATIC_SAMPLER_DESC(
+		3, // shaderRegister
+		D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
+
+	SamplerAnisotropicWrap = CD3DX12_STATIC_SAMPLER_DESC(
+		4, // shaderRegister
+		D3D12_FILTER_ANISOTROPIC, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP,  // addressW
+		0.0f,                             // mipLODBias
+		8);                               // maxAnisotropy
+
+	SamplerAnisotropicClamp = CD3DX12_STATIC_SAMPLER_DESC(
+		5, // shaderRegister
+		D3D12_FILTER_ANISOTROPIC, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressW
+		0.0f,                              // mipLODBias
+		8);                                // maxAnisotropy
+
+	SamplerShadow = CD3DX12_STATIC_SAMPLER_DESC(
+		6, // shaderRegister
+		D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT, // filter
+		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressU
+		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressV
+		D3D12_TEXTURE_ADDRESS_MODE_BORDER,  // addressW
+		0.0f,                               // mipLODBias
+		16,                                 // maxAnisotropy
+		D3D12_COMPARISON_FUNC_LESS_EQUAL,
+		D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK);
 }
 
 void Graphics::DestroyCommonState()
