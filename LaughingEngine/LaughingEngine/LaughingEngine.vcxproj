@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\nlohmann;$(SolutionDir)3rdParty\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
@@ -189,12 +189,15 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
   <ItemGroup>
     <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\AllocatorTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\TestFreeList.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\TestMultiTypeFixedChunk.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -226,15 +229,19 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MPL\Test\TestAlign.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MPL\Test\TestCompileTimeCounter.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MPL\Test\TestMPL.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MPL\Test\TestStringHash.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MyGameApp.cpp" />
     <ClCompile Include="PCH.cpp">
@@ -257,6 +264,8 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
   <ItemGroup>
     <ClInclude Include="BufferManager.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraStorage.h" />
+    <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="ColorBuffer.h" />
     <ClInclude Include="CommandAllocatorPool.h" />
     <ClInclude Include="CommandContext.h" />
@@ -278,6 +287,7 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="FileUtility.h" />
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="GeometriesStorage.h" />
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="GpuBuffer.h" />
     <ClInclude Include="GpuResource.h" />
@@ -285,6 +295,8 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="GraphicsCore.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="KeyCode.h" />
+    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="MainPassStorage.h" />
     <ClInclude Include="MemoryAllocator.h" />
     <ClInclude Include="Memory\ChunkHandle.h" />
     <ClInclude Include="Memory\ConstantChunkSizeGrowth.h" />
@@ -307,11 +319,16 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="PCH.h" />
     <ClInclude Include="PipelineState.h" />
     <ClInclude Include="PixelBuffer.h" />
+    <ClInclude Include="PSOStorage.h" />
     <ClInclude Include="RenderItem.h" />
+    <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="RenderTargetStorage.h" />
     <ClInclude Include="RootSignature.h" />
     <ClInclude Include="ShadowMapBuffer.h" />
+    <ClInclude Include="SkyPassStorage.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="TextureStorage.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TSingleton.h" />
     <ClInclude Include="UploadBuffer.h" />

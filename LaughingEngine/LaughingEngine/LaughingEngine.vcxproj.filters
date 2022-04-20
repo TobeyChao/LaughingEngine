@@ -63,6 +63,9 @@
     <Filter Include="Memory\Test">
       <UniqueIdentifier>{ff8c765d-8708-4cc6-ba11-e232ef3b7c70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model\System">
+      <UniqueIdentifier>{47d841c6-4451-4d1c-a24f-d38f06386509}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -372,6 +375,36 @@
     </ClInclude>
     <ClInclude Include="ECS\ArchetypeStorage.h">
       <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureStorage.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOStorage.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTargetStorage.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraStorage.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometriesStorage.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="MainPassStorage.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyPassStorage.h">
+      <Filter>Model\System</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSystem.h">
+      <Filter>Model\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 #include "PCH.h"
-#include <DirectXMath.h>
+#include "GpuBuffer.h"
 #include <DirectXCollision.h>
 
 using DirectX::BoundingBox;

@@ -1,5 +1,7 @@
 #pragma once
 #include "MPL/TypeList.h"
+#include "TypeID.h"
+#include "ISystem.h"
 
 template<typename ...ComponentType>
 class System : public ISystem
