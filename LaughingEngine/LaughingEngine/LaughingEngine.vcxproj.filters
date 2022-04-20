@@ -23,9 +23,6 @@
     <Filter Include="Core\Misc">
       <UniqueIdentifier>{c575a07b-851e-4599-b60d-f83cd9937b5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Math">
-      <UniqueIdentifier>{4b776497-d68f-4120-8084-cebf82991e20}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model">
       <UniqueIdentifier>{cee9a3e5-88e4-439e-ab6e-b495d5ea5227}</UniqueIdentifier>
     </Filter>
@@ -42,14 +39,29 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ECS">
-      <UniqueIdentifier>{6cfa70d1-840a-4569-b3ff-80c02b10b0ff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\Components">
       <UniqueIdentifier>{7e8a1d1f-22d5-4b29-b317-2d5215429cbc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Model\Struct">
       <UniqueIdentifier>{f1f02364-96a0-47e8-9e39-bbc632fedb9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MPL">
+      <UniqueIdentifier>{1a85c44e-93f3-4295-ae35-16915db384de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{2654755b-a76a-4c76-b079-0a9baf300ac1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{6cfa70d1-840a-4569-b3ff-80c02b10b0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MPL\Test">
+      <UniqueIdentifier>{8252b741-ada9-4bcf-acff-29aa1183bfc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MPL\Util">
+      <UniqueIdentifier>{31dad8fb-3a6c-4276-91e6-8d1305c33ce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Test">
+      <UniqueIdentifier>{ff8c765d-8708-4cc6-ba11-e232ef3b7c70}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +164,27 @@
     <ClCompile Include="InputSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\AllocatorTest.cpp">
+      <Filter>Memory\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\TestFreeList.cpp">
+      <Filter>Memory\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\TestMultiTypeFixedChunk.cpp">
+      <Filter>Memory\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="MPL\Test\TestAlign.cpp">
+      <Filter>MPL\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="MPL\Test\TestCompileTimeCounter.cpp">
+      <Filter>MPL\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="MPL\Test\TestMPL.cpp">
+      <Filter>MPL\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="MPL\Test\TestStringHash.cpp">
+      <Filter>MPL\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameCore.h">
@@ -223,9 +256,6 @@
     <ClInclude Include="DDSTextureLoader12.h">
       <Filter>Core\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Common.h">
-      <Filter>Core\Math</Filter>
-    </ClInclude>
     <ClInclude Include="UploadBuffer.h">
       <Filter>Core\GPUResource</Filter>
     </ClInclude>
@@ -279,6 +309,69 @@
     </ClInclude>
     <ClInclude Include="KeyCode.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ChunkHandle.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ConstantChunkSizeGrowth.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ConstantElementCountGrowth.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\DefaultFreeList.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\DefaultMultiTypeFixedChunk.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\FixedChunkCacheFriendlyLink.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\FreeList.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MultiTypeFixedChunk.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\PlacementNewEmbeddedLink.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="MPL\Utils\Align.h">
+      <Filter>MPL\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="MPL\Utils\CompileTimeCounter.h">
+      <Filter>MPL\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="MPL\Utils\CompileTimeStringHash.h">
+      <Filter>MPL\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="MPL\Utils\Math.h">
+      <Filter>MPL\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="MPL\MPL.h">
+      <Filter>MPL</Filter>
+    </ClInclude>
+    <ClInclude Include="MPL\TypeList.h">
+      <Filter>MPL</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\Entity.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\EntityAdmin.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\ISystem.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\System.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\TypeID.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\ArchetypeStorage.h">
+      <Filter>ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

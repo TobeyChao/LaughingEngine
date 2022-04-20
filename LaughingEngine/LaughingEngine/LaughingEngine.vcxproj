@@ -187,6 +187,15 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\AllocatorTest.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\TestFreeList.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\TestMultiTypeFixedChunk.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorBuffer.cpp" />
@@ -215,6 +224,18 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MPL\Test\TestAlign.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="MPL\Test\TestCompileTimeCounter.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="MPL\Test\TestMPL.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="MPL\Test\TestStringHash.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MyGameApp.cpp" />
     <ClCompile Include="PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -241,7 +262,6 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="CommandContext.h" />
     <ClInclude Include="CommandListManager.h" />
     <ClInclude Include="CommandContextManager.h" />
-    <ClInclude Include="Common.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DataStruct.h" />
     <ClInclude Include="DDSTextureLoader12.h" />
@@ -249,6 +269,12 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="DescriptorAllocator.h" />
     <ClInclude Include="DescriptorHeap.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="ECS\ArchetypeStorage.h" />
+    <ClInclude Include="ECS\Entity.h" />
+    <ClInclude Include="ECS\EntityAdmin.h" />
+    <ClInclude Include="ECS\ISystem.h" />
+    <ClInclude Include="ECS\System.h" />
+    <ClInclude Include="ECS\TypeID.h" />
     <ClInclude Include="FileUtility.h" />
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="GameTimer.h" />
@@ -260,8 +286,23 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="KeyCode.h" />
     <ClInclude Include="MemoryAllocator.h" />
+    <ClInclude Include="Memory\ChunkHandle.h" />
+    <ClInclude Include="Memory\ConstantChunkSizeGrowth.h" />
+    <ClInclude Include="Memory\ConstantElementCountGrowth.h" />
+    <ClInclude Include="Memory\DefaultFreeList.h" />
+    <ClInclude Include="Memory\DefaultMultiTypeFixedChunk.h" />
+    <ClInclude Include="Memory\FixedChunkCacheFriendlyLink.h" />
+    <ClInclude Include="Memory\FreeList.h" />
+    <ClInclude Include="Memory\MultiTypeFixedChunk.h" />
+    <ClInclude Include="Memory\PlacementNewEmbeddedLink.h" />
     <ClInclude Include="MeshGeometry.h" />
     <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="MPL\MPL.h" />
+    <ClInclude Include="MPL\TypeList.h" />
+    <ClInclude Include="MPL\Utils\Align.h" />
+    <ClInclude Include="MPL\Utils\CompileTimeCounter.h" />
+    <ClInclude Include="MPL\Utils\CompileTimeStringHash.h" />
+    <ClInclude Include="MPL\Utils\Math.h" />
     <ClInclude Include="MyGameApp.h" />
     <ClInclude Include="PCH.h" />
     <ClInclude Include="PipelineState.h" />

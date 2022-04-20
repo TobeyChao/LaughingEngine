@@ -303,8 +303,8 @@ void MyGameApp::Update()
 		m_Pitch += dy;
 	}
 
-	m_LastMousePos.x = x;
-	m_LastMousePos.y = y;
+	m_LastMousePos.x = (float)x;
+	m_LastMousePos.y = (float)y;
 
 	m_Cameras["MainCamera"]->Pitch(m_Pitch);
 	m_Cameras["MainCamera"]->Yaw(m_Yaw);
