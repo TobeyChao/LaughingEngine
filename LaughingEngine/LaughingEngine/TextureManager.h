@@ -7,7 +7,7 @@ class TextureRef;
 
 namespace TextureManager
 {
-	TextureRef LoadDDSFromFile(const std::wstring FileName);
+	TextureRef LoadFromFile(const std::wstring FileName);
 }
 
 class TextureRef

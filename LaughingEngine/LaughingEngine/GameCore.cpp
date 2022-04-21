@@ -4,12 +4,15 @@
 #include "GameTimer.h"
 #include "InputSystem.h"
 #include "Display.h"
+#include "COMInitializer.h"
 
 namespace Game
 {
 	using namespace Graphics;
 
 	const std::wstring m_MainWndCaption = L"MainWindow";
+
+	COMInitializer* g_COMInitializer = nullptr;
 
 	void CalculateFrameStats()
 	{
@@ -45,6 +48,7 @@ namespace Game
 
 	void InitializeApplication(IGameApp& game)
 	{
+		g_COMInitializer = new COMInitializer();
 		InputSystem* inputSystem = new InputSystem();
 
 		Graphics::Initialize();
@@ -73,6 +77,8 @@ namespace Game
 		Graphics::Shutdown();
 
 		GameTimer::Stop();
+
+		delete g_COMInitializer;
 	}
 
 	HWND g_hWnd = nullptr;

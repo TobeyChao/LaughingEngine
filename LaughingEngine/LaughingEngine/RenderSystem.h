@@ -6,6 +6,7 @@
 #include "CommandContext.h"
 #include "DataStruct.h"
 #include "MainPassStorage.h"
+#include "SkyPassStorage.h"
 #include "PSOStorage.h"
 #include "TextureStorage.h"
 
@@ -24,12 +25,11 @@ public:
 		Context.ClearColor(Graphics::g_SceneColorBuffer, &Scissor);
 		Context.ClearDepth(Graphics::g_SceneDepthBuffer);
 
-		Context.SetRootSignature(PSOStorage::GetInstance().m_DefaultRS);
+		Context.SetRootSignature(PSOStorage::GetInstance().DefaultRS);
 		Context.SetPipelineState(PSOStorage::GetInstance().DefaultPSO);
 		Context.SetViewportAndScissorRect(Viewport, Scissor);
 		Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
 			TextureStorage::GetInstance().TextureHeap.GetDescriptorHeapPointer());
-		Context.SetDescriptorTable(0, TextureStorage::GetInstance().TextureHeap[0]);
 		Context.SetDynamicConstantBufferView(1,
 			sizeof(MainPassStorage::GetInstance().MainPassCB),
 			&MainPassStorage::GetInstance().MainPassCB);
@@ -41,13 +41,15 @@ public:
 			DrawRenderItems(*renderer, *transform, Context);
 		}
 
+		DrawSkybox(Context, Viewport, Scissor);
+
 		Context.Finish();
 	}
 
 private:
 	void DrawRenderItems(
-		MeshRenderer& ItemRenderer,
-		Transform& ItemTransform,
+		const MeshRenderer& ItemRenderer,
+		const Transform& ItemTransform,
 		GraphicsContext& Context)
 	{
 		Context.SetVertexBuffer(0, ItemRenderer.Mesh->VertexBufferGPU.VertexBufferView(0));
@@ -58,9 +60,25 @@ private:
 		cb.World = ItemTransform.World;
 		Context.SetDynamicConstantBufferView(2, sizeof(cb), &cb);
 
+		Context.SetDescriptorTable(0, TextureStorage::GetInstance().TextureHeap[ItemRenderer.TextureIndex]);
+
 		Context.DrawIndexedInstanced(
 			ItemRenderer.SubMesh->IndexCount,
 			1, ItemRenderer.SubMesh->StartIndexLocation,
 			ItemRenderer.SubMesh->BaseVertexLocation, 0);
+	}
+
+	void DrawSkybox(GraphicsContext& Context, const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Scissor)
+	{
+		Context.SetRootSignature(PSOStorage::GetInstance().DefaultRS);
+		Context.SetPipelineState(PSOStorage::GetInstance().SkyPSO);
+		Context.SetViewportAndScissorRect(Viewport, Scissor);
+		Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+			TextureStorage::GetInstance().TextureHeap.GetDescriptorHeapPointer());
+		Context.SetDynamicConstantBufferView(1, sizeof(SkyPassStorage::GetInstance().SkyboxVSCB), &SkyPassStorage::GetInstance().SkyboxVSCB);
+		Context.SetDynamicConstantBufferView(2, sizeof(SkyPassStorage::GetInstance().SkyboxPSCB), &SkyPassStorage::GetInstance().SkyboxPSCB);
+		Context.SetDescriptorTable(3, TextureStorage::GetInstance().TextureHeap[5]);
+		Context.DrawInstanced(3, 1, 0, 0);
 	}
 };

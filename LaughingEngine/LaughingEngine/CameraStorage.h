@@ -10,7 +10,7 @@ public:
 	void Load()
 	{
 		Cameras["MainCamera"] = std::make_unique<Camera>();
-		Cameras["MainCamera"]->SetPosition3f({ 0, 3, -100 });
+		Cameras["MainCamera"]->SetPosition3f({ 0, 1, -5 });
 		Cameras["MainCamera"]->SetLens(XM_PIDIV4, (float)Graphics::g_DisplayWidth / Graphics::g_DisplayHeight, 0.1f, 1000.0f);
 		Cameras["MainCamera"]->ComputeInfo();
 	}

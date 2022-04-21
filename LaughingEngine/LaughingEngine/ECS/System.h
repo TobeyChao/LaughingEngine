@@ -14,7 +14,7 @@ public:
 		ParseDataStructure();
 	}
 
-	~System()
+	~System() override
 	{
 		m_EntityIDToIndex.clear();
 		m_ComponentHash.clear();
@@ -28,12 +28,12 @@ public:
 	}
 
 private:
-	virtual void SetEntityAdmin(EntityAdmin* admin)
+	virtual void SetEntityAdmin(EntityAdmin* admin) override
 	{
 		m_Admin = admin;
 	}
 
-	virtual void OnEntityCreated(const Entity& entity)
+	virtual void OnEntityCreated(const Entity& entity) override
 	{
 		for (const size_t& comHash : m_ComponentHash)
 		{
@@ -46,7 +46,7 @@ private:
 		m_EntityIDToIndex[entity.EntityID] = m_EntitiesCache.size() - 1;
 	}
 
-	virtual void OnEntityModified(const Entity& entity)
+	virtual void OnEntityModified(const Entity& entity) override
 	{
 		// 如果改变了的Entity没有符合的组件啦，就把他删掉啦
 		for (const size_t& comHash : m_ComponentHash)
@@ -59,7 +59,7 @@ private:
 		}
 	}
 
-	virtual void OnEntityDestroyed(const Entity& entity)
+	virtual void OnEntityDestroyed(const Entity& entity) override
 	{
 		RemoveEntityCache(entity.EntityID);
 	}

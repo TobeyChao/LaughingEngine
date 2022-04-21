@@ -3,6 +3,7 @@
 #include "GraphicsCore.h"
 #include "DescriptorAllocator.h"
 #include "DDSTextureLoader12.h"
+#include "WICTextureLoader12.h"
 #include "CommandContext.h"
 
 void Texture::Create2D()
@@ -11,21 +12,50 @@ void Texture::Create2D()
 
 bool Texture::CreateDDSFromMemory(const void* Data, size_t Size, bool IssRGB)
 {
+	return CreateFromMemory(Data, Size, IssRGB, true);
+}
+
+bool Texture::CreateWICFromMemory(const void* Data, size_t Size, bool IssRGB)
+{
+	return CreateFromMemory(Data, Size, IssRGB, false);
+}
+
+bool Texture::CreateFromMemory(const void* Data, size_t Size, bool IssRGB, bool isDDS)
+{
 	m_UsageState = D3D12_RESOURCE_STATE_COPY_DEST;
 
 	bool isCubeMap = false;
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
-	HRESULT hr = DirectX::LoadDDSTextureFromMemory(
-		Graphics::g_Device,
-		(const uint8_t*)Data,
-		Size,
-		m_pResource.GetAddressOf(),
-		subresources,
-		0,
-		nullptr,
-		&isCubeMap
-	);
+	// WICÐèÒª
+	std::unique_ptr<uint8_t[]> decodedData;
+	HRESULT hr = S_FALSE;
+	if (isDDS)
+	{
+		hr = DirectX::LoadDDSTextureFromMemory(
+			Graphics::g_Device,
+			(const uint8_t*)Data,
+			Size,
+			m_pResource.GetAddressOf(),
+			subresources,
+			0,
+			nullptr,
+			&isCubeMap
+		);
+	}
+	else
+	{
+		subresources.push_back(D3D12_SUBRESOURCE_DATA());
+		hr = DirectX::LoadWICTextureFromMemory(
+			Graphics::g_Device,
+			(const uint8_t*)Data,
+			Size,
+			m_pResource.GetAddressOf(),
+			decodedData,
+			subresources[0],
+			0
+		);
+	}
 
 	if (FAILED(hr))
 	{

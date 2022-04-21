@@ -29,9 +29,9 @@ public:
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 		};
 
-		m_DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", g_pCommonRS, sizeof(g_pCommonRS));
+		DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", g_pCommonRS, sizeof(g_pCommonRS));
 
-		DefaultPSO.SetRootSignature(m_DefaultRS);
+		DefaultPSO.SetRootSignature(DefaultRS);
 		DefaultPSO.SetRasterizerState(Graphics::RasterizerDefault);
 		DefaultPSO.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
 		DefaultPSO.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
@@ -52,7 +52,7 @@ public:
 		SkyPSO.Finalize();
 	}
 
-	RootSignature m_DefaultRS;
+	RootSignature DefaultRS;
 
 	GraphicsPiplelineState DefaultPSO;
 	GraphicsPiplelineState SkyPSO;

@@ -202,6 +202,10 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClCompile Include="BufferManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorBuffer.cpp" />
+    <ClCompile Include="COMInitializer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="CommandAllocatorPool.cpp" />
     <ClCompile Include="CommandContext.cpp" />
     <ClCompile Include="CommandListManager.cpp" />
@@ -267,6 +271,7 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="CameraStorage.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="ColorBuffer.h" />
+    <ClInclude Include="COMInitializer.h" />
     <ClInclude Include="CommandAllocatorPool.h" />
     <ClInclude Include="CommandContext.h" />
     <ClInclude Include="CommandListManager.h" />
@@ -295,7 +300,8 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="GraphicsCore.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="KeyCode.h" />
-    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="LightStorage.h" />
+    <ClInclude Include="LightSystem.h" />
     <ClInclude Include="MainPassStorage.h" />
     <ClInclude Include="MemoryAllocator.h" />
     <ClInclude Include="Memory\ChunkHandle.h" />

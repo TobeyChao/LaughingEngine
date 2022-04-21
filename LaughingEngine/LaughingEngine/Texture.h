@@ -25,6 +25,7 @@ public:
 	void Create2D();
 
 	bool CreateDDSFromMemory(const void* Data, size_t Size, bool IssRGB);
+	bool CreateWICFromMemory(const void* Data, size_t Size, bool IssRGB);
 
 	virtual void Destroy() override
 	{
@@ -40,6 +41,9 @@ public:
 	uint32_t GetWidth() const { return m_Width; };
 	uint32_t GetHeight() const { return m_Height; };
 	uint32_t GetDepth() const { return m_Depth; };
+
+private:
+	bool CreateFromMemory(const void* Data, size_t Size, bool IssRGB, bool isDDS);
 
 protected:
 	uint32_t m_Width;

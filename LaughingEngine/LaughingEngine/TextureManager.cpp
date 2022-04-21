@@ -13,7 +13,7 @@ class ManagedTexture : public Texture
 public:
 	ManagedTexture(const std::wstring& FileName);
 	~ManagedTexture();
-	void CreateFromMemory(Utility::ByteArray Data, bool IssRGB);
+	void CreateFromMemory(Utility::ByteArray Data, bool IssRGB, bool IsDDS);
 	void Unload();
 
 private:
@@ -33,9 +33,16 @@ ManagedTexture::~ManagedTexture()
 	Destroy();
 }
 
-void ManagedTexture::CreateFromMemory(Utility::ByteArray Data, bool IssRGB)
+void ManagedTexture::CreateFromMemory(Utility::ByteArray Data, bool IssRGB, bool IsDDS)
 {
-	Texture::CreateDDSFromMemory(Data->data(), Data->size(), IssRGB);
+	if (IsDDS)
+	{
+		Texture::CreateDDSFromMemory(Data->data(), Data->size(), IssRGB);
+	}
+	else
+	{
+		Texture::CreateWICFromMemory(Data->data(), Data->size(), IssRGB);
+	}
 }
 
 void ManagedTexture::Unload()
@@ -129,11 +136,20 @@ namespace TextureManager
 		}
 		// 没有找到需要加载
 		auto Data = Utility::LoadFileSync(FileName);
-		ret->CreateFromMemory(Data, false);
+
+		if (Utility::GetFileExtension(FileName) == L"dds")
+		{
+			ret->CreateFromMemory(Data, false, true);
+		}
+		else
+		{
+			ret->CreateFromMemory(Data, false, false);
+		}
+
 		return ret;
 	}
 
-	TextureRef LoadDDSFromFile(const std::wstring FileName)
+	TextureRef LoadFromFile(const std::wstring FileName)
 	{
 		return FindOrLoadTexture(FileName);
 	}

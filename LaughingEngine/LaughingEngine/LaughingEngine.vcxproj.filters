@@ -188,6 +188,9 @@
     <ClCompile Include="MPL\Test\TestStringHash.cpp">
       <Filter>MPL\Test</Filter>
     </ClCompile>
+    <ClCompile Include="COMInitializer.cpp">
+      <Filter>Core\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameCore.h">
@@ -379,32 +382,38 @@
     <ClInclude Include="RenderSystem.h">
       <Filter>Model\System</Filter>
     </ClInclude>
-    <ClInclude Include="LightManager.h">
-      <Filter>Model\System</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureStorage.h">
-      <Filter>Model\System</Filter>
-    </ClInclude>
-    <ClInclude Include="PSOStorage.h">
-      <Filter>Model\System</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTargetStorage.h">
+    <ClInclude Include="CameraSystem.h">
       <Filter>Model\System</Filter>
     </ClInclude>
     <ClInclude Include="CameraStorage.h">
-      <Filter>Model\System</Filter>
+      <Filter>Model\Components</Filter>
     </ClInclude>
     <ClInclude Include="GeometriesStorage.h">
-      <Filter>Model\System</Filter>
+      <Filter>Model\Components</Filter>
     </ClInclude>
     <ClInclude Include="MainPassStorage.h">
-      <Filter>Model\System</Filter>
+      <Filter>Model\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PSOStorage.h">
+      <Filter>Model\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTargetStorage.h">
+      <Filter>Model\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureStorage.h">
+      <Filter>Model\Components</Filter>
     </ClInclude>
     <ClInclude Include="SkyPassStorage.h">
+      <Filter>Model\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LightStorage.h">
+      <Filter>Model\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSystem.h">
       <Filter>Model\System</Filter>
     </ClInclude>
-    <ClInclude Include="CameraSystem.h">
-      <Filter>Model\System</Filter>
+    <ClInclude Include="COMInitializer.h">
+      <Filter>Core\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

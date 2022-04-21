@@ -16,5 +16,6 @@ struct MeshRenderer
 {
 	MeshGeometry* Mesh = nullptr;
 	SubmeshGeometry* SubMesh = nullptr;
+	uint32_t TextureIndex = 0;
 	RenderLayer RenderLayer;
 };
