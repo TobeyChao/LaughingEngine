@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FREELIST_
+#define FREELIST_
 #include <cstdint>
 
 template<typename T, typename GrowthPolicy, typename AllocationPolicy>
@@ -57,3 +58,4 @@ inline void FreeList<T, GrowthPolicy, AllocationPolicy>::Free(T* pObject)
 	AllocationPolicy::Destroy(pObject);
 	AllocationPolicy::Push(pObject);
 }
+#endif // FREELIST_

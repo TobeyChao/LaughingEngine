@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONSTANTELEMENTCOUNTGROWTH_
+#define CONSTANTELEMENTCOUNTGROWTH_
 #include <cstdint>
 
 class ConstantElementCountGrowth
@@ -25,3 +26,4 @@ private:
 	uint32_t m_PreAllocate;
 	uint32_t m_NumToGrow;
 };
+#endif // CONSTANTELEMENTCOUNTGROWTH_

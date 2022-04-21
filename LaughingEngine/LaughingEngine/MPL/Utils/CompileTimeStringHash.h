@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMPILETIMESTRINGHASH_
+#define COMPILETIMESTRINGHASH_
 #include <cstdint>
 
 namespace StringHash
@@ -91,3 +92,4 @@ namespace StringHash
 
 //#define COMPILE_TIME_CRC32_STR(x) (StringHash::crc32<sizeof(x) - 2>(x) ^ 0xFFFFFFFF)
 #define COMPILE_TIME_CRC32_STR(x) (StringHash::MM<sizeof(x)-1>::crc32(x))
+#endif // COMPILETIMESTRINGHASH_

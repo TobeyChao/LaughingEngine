@@ -1,5 +1,5 @@
-#ifndef __ENTITY_ADMIN__
-#define __ENTITY_ADMIN__
+#ifndef ENTITYADMIN_
+#define ENTITYADMIN_
 #include "Entity.h"
 #include "ISystem.h"
 #include "ArchetypeStorage.h"
@@ -13,20 +13,34 @@
 class EntityAdmin
 {
 public:
+	EntityAdmin()
+	{
+		m_Entities.reserve(256);
+	}
+
 	// 创建Entity
 	template<typename T>
 	EntityID CreateEntity()
 	{
-		Entity entity;
-		entity.Hash = typeid(T).hash_code();
-		entity.EntityID = m_NextEntityID;
-		entity.MemHandle = m_ArchetypeStorage.Get(typeid(T).hash_code()).Allocate();
-		// 设置Entity签名
-		SetEntityComHash<T>(entity, std::make_index_sequence<Size<T>()>());
-		m_Entities[m_NextEntityID] = std::move(entity);
+		EntityID ID;
+		if (m_FreeEntities.empty())
+		{
+			ID = m_NextEntityID++;
+			Entity entity;
+			SetEntityInfo<T>(entity, ID);
+			m_Entities.push_back(std::move(entity));
+		}
+		else
+		{
+			ID = m_FreeEntities.top();
+			m_FreeEntities.pop();
+			Entity& entity = m_Entities[ID];
+			SetEntityInfo<T>(entity, ID);
+			SetEntityComHash<T>(entity, std::make_index_sequence<Length<T>()>());
+		}
 
-		NotifySystemEntityCreated(m_Entities[m_NextEntityID]);
-		return m_NextEntityID++;
+		NotifySystemEntityCreated(m_Entities[ID]);
+		return ID;
 	}
 
 	// 设置Component
@@ -34,7 +48,7 @@ public:
 	T* SetComponentData(EntityID ID, Args&&... args)
 	{
 		const Entity& entity = m_Entities[ID];
-		T* ret = m_ArchetypeStorage.Get(entity.Hash).template Create<T, Args...>(entity.MemHandle, std::forward<decltype(args)>(args)...);
+		T* ret = m_ArchetypeStorage.Get(entity.PoolIndex).template Create<T, Args...>(entity.MemHandle, std::forward<decltype(args)>(args)...);
 		return ret;
 	}
 
@@ -43,16 +57,17 @@ public:
 	T* GetComponent(EntityID ID)
 	{
 		const Entity& entity = m_Entities[ID];
-		return m_ArchetypeStorage.Get(entity.Hash).Get<T>(entity.MemHandle);
+		return m_ArchetypeStorage.Get(entity.PoolIndex).Get<T>(entity.MemHandle);
 	}
 
 	// 销毁Entity
 	void DestroyEntity(EntityID ID)
 	{
-		NotifySystemEntityCreated(m_Entities[ID]);
-
-		m_ArchetypeStorage.Get(m_Entities[ID].Hash).Free(m_Entities[ID].MemHandle);
-		m_Entities.erase(ID);
+		Entity& entity = m_Entities[ID];
+		NotifySystemEntityDestroyed(entity);
+		m_ArchetypeStorage.Get(entity.PoolIndex).Free(entity.MemHandle);
+		entity.IsValid = false;
+		m_FreeEntities.push(ID);
 	}
 
 	// 注册系统
@@ -68,12 +83,12 @@ public:
 	template <typename TypeList>
 	void RegisterArchetype()
 	{
-		m_ArchetypeStorage.Get(typeid(TypeList).hash_code()).template Init<TypeList>();
+		m_ArchetypeStorage.AddPool(typeid(TypeList).hash_code()).template Init<TypeList>();
 	}
 
 	void Update(float deltaTime)
 	{
-		std::for_each(m_Systems.begin(), m_Systems.end(), [deltaTime](auto system)
+		std::ranges::for_each(m_Systems, [deltaTime](auto system)
 			{
 				system->Update(deltaTime);
 			});
@@ -87,6 +102,17 @@ public:
 	}
 
 private:
+	template<typename T>
+	void SetEntityInfo(Entity& entity, EntityID ID)
+	{
+		entity.IsValid = true;
+		entity.Hash = typeid(T).hash_code();
+		entity.EntityID = ID;
+		entity.PoolIndex = m_ArchetypeStorage.GetIndex(typeid(T).hash_code());
+		entity.MemHandle = m_ArchetypeStorage.Get(entity.PoolIndex).Allocate();
+		SetEntityComHash<T>(entity, std::make_index_sequence<Length<T>()>());
+	}
+
 	template<typename TypeList, std::size_t... Is>
 	constexpr void SetEntityComHash(Entity& entity, std::index_sequence<Is...>)
 	{
@@ -101,7 +127,7 @@ private:
 
 	void NotifySystemEntityCreated(const Entity& entity)
 	{
-		std::for_each(m_Systems.begin(), m_Systems.end(), [&entity](auto system)
+		std::ranges::for_each(m_Systems, [&entity](auto system)
 			{
 				system->OnEntityCreated(entity);
 			});
@@ -109,7 +135,7 @@ private:
 
 	void NotifySystemEntityModified(const Entity& entity)
 	{
-		std::for_each(m_Systems.begin(), m_Systems.end(), [&entity](auto system)
+		std::ranges::for_each(m_Systems, [&entity](auto system)
 			{
 				system->OnEntityModified(entity);
 			});
@@ -117,7 +143,7 @@ private:
 
 	void NotifySystemEntityDestroyed(const Entity& entity)
 	{
-		std::for_each(m_Systems.begin(), m_Systems.end(), [&entity](auto system)
+		std::ranges::for_each(m_Systems, [&entity](auto system)
 			{
 				system->OnEntityDestroyed(entity);
 			});
@@ -127,9 +153,10 @@ private:
 	// System
 	std::vector<std::shared_ptr<ISystem>> m_Systems;
 	// Entity
-	EntityID m_NextEntityID = 1;
-	std::unordered_map<EntityID, Entity> m_Entities;
+	EntityID m_NextEntityID = 0;
+	std::vector<Entity> m_Entities;
+	std::stack<EntityID> m_FreeEntities;
 	// Component Pool
 	ArchetypeStorage m_ArchetypeStorage;
 };
-#endif // __ENTITY_ADMIN__
+#endif // ENTITYADMIN_

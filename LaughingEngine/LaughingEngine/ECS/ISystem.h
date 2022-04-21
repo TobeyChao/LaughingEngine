@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ISYSTEM_
+#define ISYSTEM_
 class Entity;
 class EntityAdmin;
 
@@ -15,3 +16,4 @@ public:
 	virtual void OnEntityModified(const Entity& entity) = 0;
 	virtual void OnEntityDestroyed(const Entity& entity) = 0;
 };
+#endif // ISYSTEM_

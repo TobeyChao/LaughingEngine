@@ -1,5 +1,5 @@
-#ifndef __MULTI_TYPE_FIXED_CHUNK__
-#define __MULTI_TYPE_FIXED_CHUNK__
+#ifndef MULTITYPEFIXEDCHUNK_
+#define MULTITYPEFIXEDCHUNK_
 #include "ChunkHandle.h"
 
 template<typename GrowthPolicy, typename AllocationPolicy>
@@ -65,4 +65,4 @@ public:
 private:
 	bool m_Ready;
 };
-#endif // !__MULTI_TYPE_FIXED_CHUNK__
+#endif // MULTITYPEFIXEDCHUNK_

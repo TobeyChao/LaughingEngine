@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLACEMENTNEWEMBEDDEDLINK_
+#define PLACEMENTNEWEMBEDDEDLINK_
 #include <vector>
 #include <algorithm>
 
@@ -78,3 +79,4 @@ inline void PlacementNewEmbeddedLink<T>::Destroy(T* pObject)
 {
 	pObject->~T();
 }
+#endif // PLACEMENTNEWEMBEDDEDLINK_

@@ -1,16 +1,18 @@
-#include "../Utils/Align.h"
-
+//#include "../Utils/Align.h"
 //#include <iostream>
+//
 //int main()
 //{
+//	using namespace Math;
+//
 //	// 0 1 2 0 3 4 5 6 7 8 9 a b c d e f
 //	// 255 0x00ff
 //	int x = 1502;
 //	int x2 = 1280;
 //	int x3 = 64;
-//	std::cout << AlignUpWithMask(x, 255) << std::endl;				//1536
-//	std::cout << AlignUp(x, 256) << std::endl;						//1536
-//	std::cout << AlignDownWithMask(x, 255) << std::endl;			//1280
+//	std::cout << Math::AlignUpWithMask(x, 255) << std::endl;				//1536
+//	std::cout << Math::AlignUp(x, 256) << std::endl;						//1536
+//	std::cout << Math::AlignDownWithMask(x, 255) << std::endl;			//1280
 //	std::cout << std::boolalpha << IsAligned(x, 256) << std::endl;	//false	
 //	std::cout << std::boolalpha << IsAligned(x2, 256) << std::endl;	//true
 //	std::cout << std::boolalpha << IsPowerOfTwo(x) << std::endl;	//false

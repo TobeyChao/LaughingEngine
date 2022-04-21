@@ -1,5 +1,5 @@
-#ifndef __FIXED_CHUNK_CACHE_FRIENDLY_LINK__
-#define __FIXED_CHUNK_CACHE_FRIENDLY_LINK__
+#ifndef FIXEDCHUNKCACHEFRIENDLYLINK_
+#define FIXEDCHUNKCACHEFRIENDLYLINK_
 #include <vector>
 #include <stack>
 #include <unordered_map>
@@ -12,6 +12,12 @@
 
 class FixedChunkCacheFriendlyLink
 {
+private:
+	template<typename T>
+	struct TypeToIndex
+	{
+		static inline size_t Index = 0;
+	};
 protected:
 	~FixedChunkCacheFriendlyLink()
 	{
@@ -40,15 +46,15 @@ protected:
 	{
 		m_ElementSize = SizeSum<TypeList>::Value;
 		m_ElementMaxCount = ChunkSize / m_ElementSize;
-		_ParseDataStructure<TypeList>(std::make_index_sequence<Size<TypeList>()>());
+		_ParseDataStructure<TypeList>(std::make_index_sequence<Length<TypeList>()>());
 
 #ifdef _DEBUG
 		std::cout << "ElementSize: " << m_ElementSize << std::endl;
 		std::cout << "ElementMaxCount: " << m_ElementMaxCount << std::endl;
-		for (auto& [hash, tpl] : m_TypeOffset)
+		for (int i = 0; i < m_TypeOffset.size(); ++i)
 		{
-			auto& [offset, size] = tpl;
-			std::cout << "Hash: " << hash << " Addr: " << offset << " Size: " << size << std::endl;
+			auto& [offset, size] = m_TypeOffset[i];
+			std::cout << "Index: " << i << " Addr: " << offset << " Length: " << size << std::endl;
 		}
 #endif // DEBUG
 		return true;
@@ -91,7 +97,7 @@ protected:
 	T* Create(ChunkHandle* handle, Args&&... args)
 	{
 		void* chunk = m_UsedChunks[handle->ChunkIndex];
-		uint64_t offset = std::get<0>(m_TypeOffset[typeid(T).hash_code()]);
+		uint64_t offset = std::get<0>(m_TypeOffset[TypeToIndex<T>::Index]);
 		void* addr = (uint8_t*)chunk + offset + handle->DataIndex * sizeof(T);
 		return new(addr)T(std::forward<decltype(args)>(args)...);
 	}
@@ -100,16 +106,15 @@ protected:
 	T* Get(ChunkHandle* handle)
 	{
 		void* chunk = m_UsedChunks[handle->ChunkIndex];
-		uint64_t offset = std::get<0>(m_TypeOffset[typeid(T).hash_code()]);
+		uint64_t offset = std::get<0>(m_TypeOffset[TypeToIndex<T>::Index]);
 		void* addr = (uint8_t*)chunk + offset + handle->DataIndex * sizeof(T);
-		return (T*)addr;
+		return reinterpret_cast<T*>(addr);
 	}
 
 	void Destroy(ChunkHandle* handle)
 	{
-		for (auto& [hash, tpl] : m_TypeOffset)
+		for (auto& [offset, size] : m_TypeOffset)
 		{
-			auto& [offset, size] = tpl;
 			void* chunk = m_UsedChunks[handle->ChunkIndex];
 			void* addr = (uint8_t*)chunk + offset + handle->DataIndex * size;
 			// TODO 如何调用析构函数
@@ -127,9 +132,8 @@ protected:
 		uint64_t ToReleaseDataIndex = handle->DataIndex;
 		uint64_t ToReleaseKey = GetHandleKey(ToReleaseChunkIndex, ToReleaseDataIndex);
 
-		for (auto& [hash, tpl] : m_TypeOffset)
+		for (auto& [offset, size] : m_TypeOffset)
 		{
-			auto& [offset, size] = tpl;
 			void* chunk = m_UsedChunks[handle->ChunkIndex];
 			void* theLastChunk = m_UsedChunks.back();
 			uint64_t typeOffset = offset;
@@ -165,20 +169,24 @@ protected:
 
 private:
 	template<typename TypeList, std::size_t... Is>
-	constexpr void _ParseDataStructure(std::index_sequence<Is...>)
+	constexpr void _ParseDataStructure(std::index_sequence<Is...> sequence)
 	{
 		uint64_t offset = 0;
-		(_ParseDataStructureImpl<typename TypeAt<Is, TypeList>::Type>(offset), ...);
+		size_t index = 0;
+		m_TypeOffset.resize(sequence.size());
+		(_ParseDataStructureImpl<typename TypeAt<Is, TypeList>::Type>(offset, index), ...);
 	}
 
 	template<typename T>
-	constexpr void _ParseDataStructureImpl(uint64_t& offset)
+	constexpr void _ParseDataStructureImpl(uint64_t& offset, size_t& index)
 	{
-		m_TypeOffset[typeid(T).hash_code()] = { offset, sizeof(T) };
+		m_TypeOffset[index] = { offset, sizeof(T) };
+		TypeToIndex<T>::Index = index;
 		offset += m_ElementMaxCount * sizeof(T);
+		index++;
 	}
 
-	uint64_t GetHandleKey(uint64_t ChunkIndex, uint64_t DataIndex)
+	static uint64_t GetHandleKey(uint64_t ChunkIndex, uint64_t DataIndex)
 	{
 		return (ChunkIndex << 32) | DataIndex;
 	}
@@ -194,13 +202,13 @@ private:
 	std::stack<void*> m_FreeChunks;
 
 	// 当前块的数据索引
-	uint64_t m_CurIndex;
+	uint64_t m_CurIndex{};
 
-	// TypeHash -> [Offset, Size]
-	std::unordered_map<size_t, std::tuple<uint64_t, uint64_t>> m_TypeOffset;
+	// TypeHash -> [Offset, Length]
+	std::vector<std::tuple<uint64_t, uint64_t>> m_TypeOffset;
 
 	// 最大Element数量
-	uint64_t m_ElementMaxCount;
+	uint64_t m_ElementMaxCount{};
 
 	// 分配出去的内存Handle
 	std::unordered_map<uint64_t, ChunkHandle*> m_Handles;
@@ -208,5 +216,4 @@ private:
 	// 类型大小
 	size_t m_ElementSize = 0;
 };
-
-#endif // !__FIXED_CHUNK_CACHE_FRIENDLY_LINK__
+#endif // FIXEDCHUNKCACHEFRIENDLYLINK_

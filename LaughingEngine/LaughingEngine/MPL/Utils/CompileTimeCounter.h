@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COMPILETIMECOUNTER_
+#define COMPILETIMECOUNTER_
 #include <cstddef>
 
 #define COUNTER_READ_CRUMB( TAG, RANK, ACC ) AutoIDInternal::counter_crumb( TAG(), AutoIDInternal::constant_index< RANK >(), AutoIDInternal::constant_index< ACC >() )
@@ -23,3 +24,4 @@ namespace AutoIDInternal
 	template< typename id, std::size_t rank, std::size_t acc >
 	constexpr constant_index< acc > counter_crumb(id, constant_index< rank >, constant_index< acc >) { return {}; } // found by ADL via constant_index
 }
+#endif // COMPILETIMECOUNTER_

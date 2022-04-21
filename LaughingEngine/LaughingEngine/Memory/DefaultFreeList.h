@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DEFAULTFREELIST_
+#define DEFAULTFREELIST_
 #include "FreeList.h"
 #include "PlacementNewEmbeddedLink.h"
 #include "ConstantElementCountGrowth.h"
@@ -8,3 +9,4 @@ struct DefaultFreeList
 {
 	using Type = FreeList<T, ConstantElementCountGrowth, PlacementNewEmbeddedLink<T>>;
 };
+#endif // DEFAULTFREELIST_

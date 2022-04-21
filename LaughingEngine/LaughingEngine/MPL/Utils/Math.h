@@ -1,6 +1,8 @@
-#pragma once
+#ifndef MATH_
+#define MATH_
 #include <intrin.h>
 #include <cstdint>
+
 namespace Math
 {
 	__forceinline uint8_t Log2(uint64_t value)
@@ -33,3 +35,4 @@ namespace Math
 		return (value / divisor) * divisor == value;
 	}
 }
+#endif // MATH_
