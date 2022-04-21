@@ -167,15 +167,6 @@
     <ClCompile Include="InputSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\AllocatorTest.cpp">
-      <Filter>Memory\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\TestFreeList.cpp">
-      <Filter>Memory\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\ECS\ECS\Memory\Test\TestMultiTypeFixedChunk.cpp">
-      <Filter>Memory\Test</Filter>
-    </ClCompile>
     <ClCompile Include="MPL\Test\TestAlign.cpp">
       <Filter>MPL\Test</Filter>
     </ClCompile>
@@ -190,6 +181,15 @@
     </ClCompile>
     <ClCompile Include="COMInitializer.cpp">
       <Filter>Core\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Test\AllocatorTest.cpp">
+      <Filter>Memory\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Test\TestFreeList.cpp">
+      <Filter>Memory\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Test\TestMultiTypeFixedChunk.cpp">
+      <Filter>Memory\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
