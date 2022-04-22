@@ -307,9 +307,6 @@
     <ClInclude Include="GeometryGenerator.h">
       <Filter>Model\Struct</Filter>
     </ClInclude>
-    <ClInclude Include="RenderItem.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="InputSystem.h">
       <Filter>Core</Filter>
     </ClInclude>

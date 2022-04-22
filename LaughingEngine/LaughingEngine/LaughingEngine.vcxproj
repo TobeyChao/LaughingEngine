@@ -221,12 +221,15 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Test\AllocatorTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Memory\Test\TestFreeList.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Memory\Test\TestMultiTypeFixedChunk.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MPL\Test\TestAlign.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -323,7 +326,6 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="PipelineState.h" />
     <ClInclude Include="PixelBuffer.h" />
     <ClInclude Include="PSOStorage.h" />
-    <ClInclude Include="RenderItem.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="RenderTargetStorage.h" />
     <ClInclude Include="RootSignature.h" />
