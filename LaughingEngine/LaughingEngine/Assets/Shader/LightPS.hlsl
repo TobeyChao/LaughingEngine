@@ -1,6 +1,6 @@
 #include "Common.hlsli"
 
-Texture2D gDiffuseMap : register(t0);
+Texture2D gDiffuseMap : register(t10);
 
 SamplerState gsamLinerClamp : register(s0);
 SamplerState gsamPointClamp : register(s1);

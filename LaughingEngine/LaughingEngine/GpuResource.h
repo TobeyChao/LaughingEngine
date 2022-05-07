@@ -24,7 +24,7 @@ public:
 
 	virtual ~GpuResource()
 	{
-		Destroy();
+		GpuResource::Destroy();
 	}
 
 	virtual void Destroy()

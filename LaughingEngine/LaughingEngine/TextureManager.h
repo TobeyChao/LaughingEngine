@@ -7,7 +7,7 @@ class TextureRef;
 
 namespace TextureManager
 {
-	TextureRef LoadFromFile(const std::wstring FileName);
+	TextureRef LoadFromFile(const std::wstring& FileName);
 }
 
 class TextureRef
@@ -22,7 +22,7 @@ public:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const;
 
-	const Texture* Get(void) const;
+	const Texture* Get() const;
 
 private:
 	ManagedTexture* m_pTexture;

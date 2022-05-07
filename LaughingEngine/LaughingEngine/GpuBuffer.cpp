@@ -12,18 +12,12 @@ void GpuBuffer::Create(const std::wstring& name, uint32_t ElementSize, uint32_t 
 
 	m_ElementCount = ElementCount;
 	m_ElementSize = ElementSize;
-	m_BufferSize = ElementCount * ElementSize;
+	m_BufferSize = (size_t)ElementCount * ElementSize;
 
 	CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(m_BufferSize, m_ResourceFlags);
 	m_UsageState = D3D12_RESOURCE_STATE_COMMON;
 	CD3DX12_HEAP_PROPERTIES HeapProps(D3D12_HEAP_TYPE_DEFAULT);
-	ThrowIfFailed(g_Device->CreateCommittedResource(
-		&HeapProps,
-		D3D12_HEAP_FLAG_NONE,
-		&desc,
-		m_UsageState,
-		nullptr,
-		IID_PPV_ARGS(m_pResource.GetAddressOf())));
+	ThrowIfFailed(g_Device->CreateCommittedResource(&HeapProps, D3D12_HEAP_FLAG_NONE, &desc, m_UsageState, nullptr, IID_PPV_ARGS(m_pResource.GetAddressOf())));
 
 	m_GpuVirtualAddress = m_pResource->GetGPUVirtualAddress();
 
@@ -45,18 +39,12 @@ void GpuBuffer::Create(const std::wstring& name, uint32_t ElementSize, uint32_t 
 
 	m_ElementCount = ElementCount;
 	m_ElementSize = ElementSize;
-	m_BufferSize = ElementCount * ElementSize;
+	m_BufferSize = (size_t)ElementCount * ElementSize;
 
 	CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(m_BufferSize, m_ResourceFlags);
 	m_UsageState = D3D12_RESOURCE_STATE_COMMON;
-	CD3DX12_HEAP_PROPERTIES HeapProps(D3D12_HEAP_TYPE_DEFAULT);
-	g_Device->CreateCommittedResource(
-		&HeapProps,
-		D3D12_HEAP_FLAG_NONE,
-		&desc,
-		m_UsageState,
-		nullptr,
-		IID_PPV_ARGS(m_pResource.GetAddressOf()));
+	const CD3DX12_HEAP_PROPERTIES HeapProps(D3D12_HEAP_TYPE_DEFAULT);
+	g_Device->CreateCommittedResource(&HeapProps, D3D12_HEAP_FLAG_NONE, &desc, m_UsageState, nullptr, IID_PPV_ARGS(m_pResource.GetAddressOf()));
 
 	m_GpuVirtualAddress = m_pResource->GetGPUVirtualAddress();
 

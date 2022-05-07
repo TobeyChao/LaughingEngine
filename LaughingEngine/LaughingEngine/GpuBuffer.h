@@ -18,9 +18,8 @@ public:
 		m_ResourceFlags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 	}
 
-	virtual ~GpuBuffer()
+	~GpuBuffer() override
 	{
-		Destroy();
 	}
 
 	void Create(const std::wstring& name, uint32_t ElementSize, uint32_t ElementCount, const void* Data);
@@ -34,16 +33,16 @@ public:
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_hUAV; }
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const { return m_hSRV; }
 
-	size_t BufferSize() const { return m_BufferSize; };
-	uint32_t ElementCount() const { return m_ElementCount; };
-	uint32_t ElementSize() const { return m_ElementSize; };
+	size_t BufferSize() const { return m_BufferSize; }
+	uint32_t ElementCount() const { return m_ElementCount; }
+	uint32_t ElementSize() const { return m_ElementSize; }
 
 protected:
 	virtual void CreateDerivedViews() = 0;
 
 protected:
-	D3D12_CPU_DESCRIPTOR_HANDLE m_hUAV;
-	D3D12_CPU_DESCRIPTOR_HANDLE m_hSRV;
+	D3D12_CPU_DESCRIPTOR_HANDLE m_hUAV{};
+	D3D12_CPU_DESCRIPTOR_HANDLE m_hSRV{};
 
 	size_t m_BufferSize;
 	uint32_t m_ElementCount;
@@ -68,7 +67,7 @@ protected:
 	virtual void CreateDerivedViews()
 	{
 		// DO NOTHING.
-	};
+	}
 };
 
 class VertexBuffer : public GpuBuffer
@@ -87,7 +86,7 @@ protected:
 	virtual void CreateDerivedViews()
 	{
 		// DO NOTHING.
-	};
+	}
 };
 
 class ByteAddressBuffer : public GpuBuffer

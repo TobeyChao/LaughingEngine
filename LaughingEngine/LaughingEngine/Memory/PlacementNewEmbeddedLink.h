@@ -1,5 +1,4 @@
-#ifndef PLACEMENTNEWEMBEDDEDLINK_
-#define PLACEMENTNEWEMBEDDEDLINK_
+#pragma once
 #include <vector>
 #include <algorithm>
 
@@ -23,7 +22,7 @@ private:
 		FreeBlock* Next;
 	};
 	// 空闲内存块链表头节点
-	FreeBlock* m_pFreeBlocks;
+	FreeBlock* m_pFreeBlocks = nullptr;
 
 	std::vector<void*> m_Chunks;
 
@@ -79,4 +78,3 @@ inline void PlacementNewEmbeddedLink<T>::Destroy(T* pObject)
 {
 	pObject->~T();
 }
-#endif // PLACEMENTNEWEMBEDDEDLINK_

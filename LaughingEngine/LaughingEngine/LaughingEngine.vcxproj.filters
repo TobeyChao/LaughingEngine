@@ -66,6 +66,27 @@
     <Filter Include="Model\System">
       <UniqueIdentifier>{47d841c6-4451-4d1c-a24f-d38f06386509}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Material">
+      <UniqueIdentifier>{d86a9292-a561-4afa-956e-54d016835ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Shaders\Inc">
+      <UniqueIdentifier>{ba478121-7dad-4060-99d7-6dae018cfd4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Materials">
+      <UniqueIdentifier>{1d740699-dacb-48c2-addd-e5b952e97dc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\CPUResource">
+      <UniqueIdentifier>{45ec1fa9-bbff-4186-a170-d700ef8c096d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\PlacementNew">
+      <UniqueIdentifier>{75ca39d4-c2be-47f3-92ae-3cac7746a3c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\FixedChunk">
+      <UniqueIdentifier>{a206d6bd-0e3a-4520-993f-02086975954b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\RawBinary">
+      <UniqueIdentifier>{e76885e3-2960-4880-ba6a-d83fae6ea35d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -191,6 +212,15 @@
     <ClCompile Include="Memory\Test\TestMultiTypeFixedChunk.cpp">
       <Filter>Memory\Test</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Core\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Core\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialManager.cpp">
+      <Filter>Core\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameCore.h">
@@ -313,33 +343,6 @@
     <ClInclude Include="KeyCode.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Memory\ChunkHandle.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\ConstantChunkSizeGrowth.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\ConstantElementCountGrowth.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\DefaultFreeList.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\DefaultMultiTypeFixedChunk.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\FixedChunkCacheFriendlyLink.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\FreeList.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\MultiTypeFixedChunk.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory\PlacementNewEmbeddedLink.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
     <ClInclude Include="MPL\Utils\Align.h">
       <Filter>MPL\Util</Filter>
     </ClInclude>
@@ -412,67 +415,148 @@
     <ClInclude Include="COMInitializer.h">
       <Filter>Core\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="CpuBuffer.h">
+      <Filter>Core\CPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\PlacementNewEmbeddedLink.h">
+      <Filter>Memory\PlacementNew</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\DefaultFreeList.h">
+      <Filter>Memory\PlacementNew</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ConstantElementCountGrowth.h">
+      <Filter>Memory\PlacementNew</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\FreeList.h">
+      <Filter>Memory\PlacementNew</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ChunkHandle.h">
+      <Filter>Memory\FixedChunk</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\ConstantChunkSizeGrowth.h">
+      <Filter>Memory\FixedChunk</Filter>
+    </ClInclude>
+    <ClInclude Include="CpuBufferPool.h">
+      <Filter>Core\CPUResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MultiTypeFixedChunk.h">
+      <Filter>Memory\FixedChunk</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\FixedChunkCacheFriendlyLink.h">
+      <Filter>Memory\FixedChunk</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\DefaultMultiTypeFixedChunk.h">
+      <Filter>Memory\FixedChunk</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\RawBinaryFreeList.h">
+      <Filter>Memory\RawBinary</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParamCBuffer.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParameter.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParamMatrix.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParamScalar.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParamStruct.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParamTexture.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParamVariable.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParamVector.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderType.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialManager.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialObject.h">
+      <Filter>Core\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Shaders\Common.hlsli">
-      <Filter>Resources\Shaders</Filter>
+    <None Include="Assets\Shader\ColorSpaceUtility.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
     </None>
-    <None Include="Shaders\ColorSpaceUtility.hlsli">
-      <Filter>Resources\Shaders</Filter>
+    <None Include="Assets\Shader\Common.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
     </None>
-    <None Include="Shaders\DataType.hlsli">
-      <Filter>Resources\Shaders</Filter>
+    <None Include="Assets\Shader\DataType.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
     </None>
-    <None Include="Shaders\LightingUtil.hlsli">
-      <Filter>Resources\Shaders</Filter>
+    <None Include="Assets\Shader\LightingUtil.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
     </None>
-    <None Include="Shaders\TangentHelper.hlsli">
-      <Filter>Resources\Shaders</Filter>
+    <None Include="Assets\Shader\MyBRDF.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
     </None>
-    <None Include="Shaders\MyBRDF.hlsli">
-      <Filter>Resources\Shaders</Filter>
+    <None Include="Assets\Shader\TangentHelper.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
+    </None>
+    <None Include="Assets\Materials\Mat.json">
+      <Filter>Resources\Materials</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\PresentSDRPS.hlsl">
+    <FxCompile Include="Assets\Shader\ColorPS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\ScreenQuadPresentVS.hlsl">
+    <FxCompile Include="Assets\Shader\ColorVS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\ColorVS.hlsl">
+    <FxCompile Include="Assets\Shader\LightPS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\ColorPS.hlsl">
+    <FxCompile Include="Assets\Shader\LightVS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PresentRS.hlsli">
+    <FxCompile Include="Assets\Shader\PbrPS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\ColorRS.hlsli">
+    <FxCompile Include="Assets\Shader\PbrVS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\LightPS.hlsl">
+    <FxCompile Include="Assets\Shader\PresentSDRPS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\LightVS.hlsl">
+    <FxCompile Include="Assets\Shader\ScreenQuadPresentVS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\CommonRS.hlsli">
+    <FxCompile Include="Assets\Shader\SkyPS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SkyPS.hlsl">
+    <FxCompile Include="Assets\Shader\SkyVS.hlsl">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SkyVS.hlsl">
-      <Filter>Resources\Shaders</Filter>
+    <FxCompile Include="Assets\Shader\ColorRS.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PbrPS.hlsl">
-      <Filter>Resources\Shaders</Filter>
+    <FxCompile Include="Assets\Shader\CommonRS.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PbrVS.hlsl">
-      <Filter>Resources\Shaders</Filter>
+    <FxCompile Include="Assets\Shader\PresentRS.hlsli">
+      <Filter>Resources\Shaders\Inc</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

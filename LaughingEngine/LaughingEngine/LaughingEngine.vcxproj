@@ -143,12 +143,13 @@
       <HeaderFileOutput>$(SolutionDir)Build\$(Platform)\$(Configuration)\Output\$(ProjectName)\CompiledShaders\%(Filename).h</HeaderFileOutput>
     </FxCompile>
     <FxCompile>
-      <ObjectFileOutput />
-      <ShaderModel>6.3</ShaderModel>
+      <ObjectFileOutput>$(ProjectDir)Assets\CompiledShaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel>5.1</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\assimp\lib\Debug\assimp-vc143-mtd.dll $(OutDir) /a /F /I /Y /C
-xcopy $(SolutionDir)3rdParty\assimp\lib\Debug\assimp-vc143-mtd.pdb $(OutDir) /a /F /I /Y /C</Command>
+xcopy $(SolutionDir)3rdParty\assimp\lib\Debug\assimp-vc143-mtd.pdb $(OutDir) /a /F /I /Y /C
+xcopy $(ProjectDir)Assets $(OutDir)Assets /a /E /F /I /Y /C</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -177,13 +178,14 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Debug\assimp-vc143-mtd.pdb $(OutDir) /a 
       <VariableName>g_p%(Filename)</VariableName>
     </FxCompile>
     <FxCompile>
-      <ObjectFileOutput />
+      <ObjectFileOutput>$(ProjectDir)Assets\CompiledShaders\%(Filename).cso</ObjectFileOutput>
       <HeaderFileOutput>$(SolutionDir)Build\$(Platform)\$(Configuration)\Output\$(ProjectName)\CompiledShaders\%(Filename).h</HeaderFileOutput>
-      <ShaderModel>6.3</ShaderModel>
+      <ShaderModel>5.1</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.dll $(OutDir) /a /F /I /Y /C
-xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a /F /I /Y /C</Command>
+xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a /F /I /Y /C
+xcopy $(ProjectDir)Assets $(OutDir)Assets /a /E /F /I /Y /C</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -217,6 +219,7 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClCompile Include="GraphicsCommon.cpp" />
     <ClCompile Include="GraphicsCore.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\Test\AllocatorTest.cpp">
@@ -255,6 +258,8 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="PixelBuffer.cpp" />
     <ClCompile Include="RootSignature.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShadowMapBuffer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -276,6 +281,7 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="CommandContext.h" />
     <ClInclude Include="CommandListManager.h" />
     <ClInclude Include="CommandContextManager.h" />
+    <ClInclude Include="CpuBufferPool.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DataStruct.h" />
     <ClInclude Include="DDSTextureLoader12.h" />
@@ -296,6 +302,7 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="GpuBuffer.h" />
     <ClInclude Include="GpuResource.h" />
+    <ClInclude Include="CpuBuffer.h" />
     <ClInclude Include="GraphicsCommon.h" />
     <ClInclude Include="GraphicsCore.h" />
     <ClInclude Include="InputSystem.h" />
@@ -303,6 +310,9 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="LightStorage.h" />
     <ClInclude Include="LightSystem.h" />
     <ClInclude Include="MainPassStorage.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialManager.h" />
+    <ClInclude Include="MaterialObject.h" />
     <ClInclude Include="MemoryAllocator.h" />
     <ClInclude Include="Memory\ChunkHandle.h" />
     <ClInclude Include="Memory\ConstantChunkSizeGrowth.h" />
@@ -313,6 +323,7 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="Memory\FreeList.h" />
     <ClInclude Include="Memory\MultiTypeFixedChunk.h" />
     <ClInclude Include="Memory\PlacementNewEmbeddedLink.h" />
+    <ClInclude Include="Memory\RawBinaryFreeList.h" />
     <ClInclude Include="MeshGeometry.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="MPL\MPL.h" />
@@ -329,6 +340,17 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="RenderTargetStorage.h" />
     <ClInclude Include="RootSignature.h" />
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="ShaderParamCBuffer.h" />
+    <ClInclude Include="ShaderParameter.h" />
+    <ClInclude Include="ShaderParamMatrix.h" />
+    <ClInclude Include="ShaderParamScalar.h" />
+    <ClInclude Include="ShaderParamStruct.h" />
+    <ClInclude Include="ShaderParamTexture.h" />
+    <ClInclude Include="ShaderParamVariable.h" />
+    <ClInclude Include="ShaderParamVector.h" />
+    <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="ShaderType.h" />
     <ClInclude Include="ShadowMapBuffer.h" />
     <ClInclude Include="SkyPassStorage.h" />
     <ClInclude Include="Texture.h" />
@@ -341,7 +363,7 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
     <ClInclude Include="WICTextureLoader12.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\ColorRS.hlsli">
+    <FxCompile Include="Assets\Shader\ColorRS.hlsli">
       <FileType>Document</FileType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Color_RootSig</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
@@ -350,47 +372,60 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rootsig_1.1</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Color_RootSig</EntryPointName>
     </FxCompile>
-    <FxCompile Include="Shaders\PbrPS.hlsl">
+    <FxCompile Include="Assets\Shader\PbrPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">frag</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">frag</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\PbrVS.hlsl">
+    <FxCompile Include="Assets\Shader\PbrVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">vert</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vert</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\SkyPS.hlsl">
+    <FxCompile Include="Assets\Shader\SkyPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\SkyVS.hlsl">
+    <FxCompile Include="Assets\Shader\SkyVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
+    <None Include="Assets\Materials\Mat.json" />
     <None Include="packages.config" />
-    <None Include="Shaders\ColorSpaceUtility.hlsli" />
-    <FxCompile Include="Shaders\LightPS.hlsl">
+    <None Include="Assets\Shader\ColorSpaceUtility.hlsli" />
+    <FxCompile Include="Assets\Shader\LightPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <AllResourcesBound Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </AllResourcesBound>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\LightVS.hlsl">
+    <FxCompile Include="Assets\Shader\LightVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\PresentRS.hlsli">
+    <FxCompile Include="Assets\Shader\PresentRS.hlsli">
       <FileType>Document</FileType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rootsig_1.1</ShaderModel>
@@ -401,10 +436,10 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rootsig_1.1</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Present_RootSig</EntryPointName>
     </FxCompile>
-    <None Include="Shaders\Common.hlsli" />
-    <None Include="Shaders\DataType.hlsli" />
-    <None Include="Shaders\LightingUtil.hlsli" />
-    <FxCompile Include="Shaders\CommonRS.hlsli">
+    <None Include="Assets\Shader\Common.hlsli" />
+    <None Include="Assets\Shader\DataType.hlsli" />
+    <None Include="Assets\Shader\LightingUtil.hlsli" />
+    <FxCompile Include="Assets\Shader\CommonRS.hlsli">
       <FileType>Document</FileType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Common_RootSig</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
@@ -417,38 +452,37 @@ xcopy $(SolutionDir)3rdParty\assimp\lib\Release\assimp-vc143-mt.pdb $(OutDir) /a
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rootsig_1.1</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Common_RootSig</EntryPointName>
     </FxCompile>
-    <None Include="Shaders\MyBRDF.hlsli" />
-    <None Include="Shaders\TangentHelper.hlsli" />
+    <None Include="Assets\Shader\MyBRDF.hlsli" />
+    <None Include="Assets\Shader\TangentHelper.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\ColorPS.hlsl">
+    <FxCompile Include="Assets\Shader\ColorPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\ColorVS.hlsl">
+    <FxCompile Include="Assets\Shader\ColorVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.3</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.3</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\PresentSDRPS.hlsl">
+    <FxCompile Include="Assets\Shader\PresentSDRPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.3</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.3</ShaderModel>
-      <SetRootSignature Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Present_RootSig</SetRootSignature>
-      <SetRootSignature Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </SetRootSignature>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\ScreenQuadPresentVS.hlsl">
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.3</ShaderModel>
+    <FxCompile Include="Assets\Shader\ScreenQuadPresentVS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.3</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

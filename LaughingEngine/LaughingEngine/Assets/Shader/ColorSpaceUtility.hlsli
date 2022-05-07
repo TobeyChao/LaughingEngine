@@ -7,7 +7,7 @@
 // http://www.heronuke.com/archives/12305
 float3 ApplySRGBCurve(float3 color)
 {
-    return color < 0.0031308 ? 12.92 * color : 1.055 * pow(color, 1.0 / 2.4) - 0.055;
+    return color < 0.0031308 ? 12.92 * color : 1.055 * pow(abs(color), 1.0 / 2.4) - 0.055;
 }
 
 float3 ApplyDisplayProfile(float3 color, int displayFormat)

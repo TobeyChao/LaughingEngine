@@ -1,22 +1,60 @@
 #include "PCH.h"
 #include "Utility.h"
+
+#include <codecvt>
 #include <locale>
+
+//std::wstring Utility::UTF8ToWideString(const std::string& str)
+//{
+//	wchar_t wstr[MAX_PATH];
+//	if (!MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, str.c_str(), -1, wstr, MAX_PATH))
+//		wstr[0] = L'\0';
+//	return wstr;
+//}
+//
+//std::string Utility::WideStringToUTF8(const std::wstring& wstr)
+//{
+//	char str[MAX_PATH];
+//	if (!WideCharToMultiByte(CP_ACP, MB_PRECOMPOSED, wstr.c_str(), -1, str, MAX_PATH, nullptr, nullptr))
+//		str[0] = L'\0';
+//	return str;
+//}
 
 std::wstring Utility::UTF8ToWideString(const std::string& str)
 {
-	wchar_t wstr[MAX_PATH];
-	if (!MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, str.c_str(), -1, wstr, MAX_PATH))
-		wstr[0] = L'\0';
-	return wstr;
+	if (str.empty())
+	{
+		return std::wstring();
+	}
+	int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), nullptr, 0);
+	std::wstring wstrTo(sizeNeeded, 0);
+	MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], sizeNeeded);
+	return wstrTo;
 }
 
 std::string Utility::WideStringToUTF8(const std::wstring& wstr)
 {
-	char str[MAX_PATH];
-	if (!WideCharToMultiByte(CP_ACP, MB_PRECOMPOSED, wstr.c_str(), -1, str, MAX_PATH, nullptr, nullptr))
-		str[0] = L'\0';
-	return str;
+	if (wstr.empty())
+	{
+		return std::string();
+	}
+	int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), nullptr, 0, nullptr, nullptr);
+	std::string strTo(sizeNeeded, 0);
+	WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], sizeNeeded, nullptr, nullptr);
+	return strTo;
 }
+
+//static std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+//
+//std::wstring Utility::UTF8ToWideString(const std::string& str)
+//{
+//	return conv.from_bytes(str);
+//}
+//
+//std::string Utility::WideStringToUTF8(const std::wstring& wstr)
+//{
+//	return conv.to_bytes(wstr);
+//}
 
 std::string Utility::ToLower(const std::string& str)
 {

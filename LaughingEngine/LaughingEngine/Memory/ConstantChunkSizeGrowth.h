@@ -1,5 +1,4 @@
-#ifndef CONSTANTCHUNKSIZEGROWTH_
-#define CONSTANTCHUNKSIZEGROWTH_
+#pragma once
 #include <cstdint>
 
 class ConstantChunkSizeGrowth
@@ -24,4 +23,3 @@ protected:
 private:
 	uint32_t m_ChunkSizeInBytes;
 };
-#endif // CONSTANTCHUNKSIZEGROWTH_

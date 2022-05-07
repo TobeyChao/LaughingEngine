@@ -19,6 +19,10 @@
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
+#include <d3d12shader.h>
+#include <d3d12compatibility.h>
+#include <d3d12sdklayers.h>
+#include <d3d12video.h>
 #include <d3dcompiler.h>
 #include "d3dx12.h"
 

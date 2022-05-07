@@ -46,7 +46,7 @@ protected:
 	{
 		m_ElementSize = SizeSum<TypeList>::Value;
 		m_ElementMaxCount = ChunkSize / m_ElementSize;
-		_ParseDataStructure<TypeList>(std::make_index_sequence<Length<TypeList>()>());
+		ParseDataStructure<TypeList>(std::make_index_sequence<Length<TypeList>()>());
 
 #ifdef _DEBUG
 		std::cout << "ElementSize: " << m_ElementSize << std::endl;
@@ -62,7 +62,7 @@ protected:
 
 	void Grow(uint64_t SizeInBytes)
 	{
-		void* pChunk = nullptr;
+		void* pChunk;
 		if (m_FreeChunks.empty())
 		{
 			pChunk = malloc(SizeInBytes);
@@ -169,16 +169,16 @@ protected:
 
 private:
 	template<typename TypeList, std::size_t... Is>
-	constexpr void _ParseDataStructure(std::index_sequence<Is...> sequence)
+	constexpr void ParseDataStructure(std::index_sequence<Is...> sequence)
 	{
 		uint64_t offset = 0;
 		size_t index = 0;
 		m_TypeOffset.resize(sequence.size());
-		(_ParseDataStructureImpl<typename TypeAt<Is, TypeList>::Type>(offset, index), ...);
+		(ParseDataStructureImpl<typename TypeAt<Is, TypeList>::Type>(offset, index), ...);
 	}
 
 	template<typename T>
-	constexpr void _ParseDataStructureImpl(uint64_t& offset, size_t& index)
+	constexpr void ParseDataStructureImpl(uint64_t& offset, size_t& index)
 	{
 		m_TypeOffset[index] = { offset, sizeof(T) };
 		TypeToIndex<T>::Index = index;

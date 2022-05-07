@@ -118,7 +118,7 @@ namespace TextureManager
 {
 	std::map<std::wstring, std::unique_ptr<ManagedTexture>> s_TextureCache;
 
-	ManagedTexture* FindOrLoadTexture(const std::wstring FileName)
+	ManagedTexture* FindOrLoadTexture(const std::wstring& FileName)
 	{
 		ManagedTexture* ret = nullptr;
 
@@ -149,7 +149,7 @@ namespace TextureManager
 		return ret;
 	}
 
-	TextureRef LoadFromFile(const std::wstring FileName)
+	TextureRef LoadFromFile(const std::wstring& FileName)
 	{
 		return FindOrLoadTexture(FileName);
 	}
