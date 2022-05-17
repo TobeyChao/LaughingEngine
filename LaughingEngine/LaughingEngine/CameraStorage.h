@@ -15,6 +15,11 @@ public:
 		Cameras["MainCamera"]->ComputeInfo();
 	}
 
+	void Shutdown()
+	{
+		Cameras.clear();
+	}
+
 	std::unordered_map<std::string, std::unique_ptr<Camera>> Cameras;
 	float Yaw = 0;
 	float Pitch = XMConvertToRadians(15);

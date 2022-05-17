@@ -5,4 +5,6 @@ class Material;
 namespace MaterialManager
 {
 	Material* GetMaterial(const std::wstring& Path);
+
+	void Shutdown();
 }

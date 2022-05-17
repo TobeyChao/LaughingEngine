@@ -23,6 +23,12 @@ std::shared_ptr<ShaderProgram> ShaderManager::GetShader(const std::wstring& Name
 	return FindOrLoadShader(Name);
 }
 
+void ShaderManager::Shutdown()
+{
+	m_ShaderMapper.clear();
+	m_Shaders.clear();
+}
+
 std::shared_ptr<ShaderProgram> ShaderManager::FindOrLoadShader(const std::wstring& Name)
 {
 	if (!m_Shaders.contains(Name))

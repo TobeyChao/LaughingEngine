@@ -50,6 +50,13 @@ public:
 		SkyPSO.Finalize();
 	}
 
+	void Shutdown()
+	{
+		DefaultRS.Destroy();
+		DefaultPSO.Destroy();
+		SkyPSO.Destroy();
+	}
+
 	RootSignature DefaultRS;
 
 	GraphicsPiplelineState DefaultPSO;

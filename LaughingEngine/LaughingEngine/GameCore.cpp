@@ -81,6 +81,7 @@ namespace Game
 
 		GameTimer::Stop();
 
+		ShaderManager::GetInstance().Shutdown();
 		delete g_COMInitializer;
 	}
 

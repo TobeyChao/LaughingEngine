@@ -18,6 +18,11 @@ public:
 		MainScissor.bottom = (LONG)Graphics::g_SceneColorBuffer.GetHeight();
 	}
 
+	void Shutdown()
+	{
+
+	}
+
 	CD3DX12_VIEWPORT MainViewport;
 	CD3DX12_RECT MainScissor;
 };

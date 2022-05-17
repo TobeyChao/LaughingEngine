@@ -9,6 +9,7 @@ class ShaderManager : public TSingleton<ShaderManager>
 public:
 	void RegisterShader(const std::wstring& Name, const std::wstring& VertexPath, const std::wstring& PixelPath, bool LoadImmediately = false);
 	std::shared_ptr<ShaderProgram> GetShader(const std::wstring& Name);
+	void Shutdown();
 
 private:
 	std::shared_ptr<ShaderProgram> FindOrLoadShader(const std::wstring& Name);

@@ -160,6 +160,11 @@ public:
 		}
 	}
 
+	void Shutdown()
+	{
+		Geometries.clear();
+	}
+
 	// 所有加载的Mesh
 	std::unordered_map<std::wstring, std::unique_ptr<MeshGeometry>> Geometries;
 };

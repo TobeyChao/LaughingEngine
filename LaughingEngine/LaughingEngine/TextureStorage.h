@@ -63,6 +63,12 @@ public:
 			D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 
+	void Shutdown()
+	{
+		TextureReferences.clear();
+		TextureHeap.Destroy();
+	}
+
 	// Textures
 	std::vector<TextureRef> TextureReferences;
 

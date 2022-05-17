@@ -55,6 +55,12 @@ public:
 		MainPassCB->Lights[0].Direction = { sinf(LightStorage::GetInstance().Theta), -2.0f, cosf(LightStorage::GetInstance().Theta) };
 		MainPassCB->Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
 	}
+	
+	void Shutdown()
+	{
+		CpuBuffer::Destroy(MainPass);
+		MainPassCB = nullptr;
+	}
 
 	PassConstants* MainPassCB;
 	CpuBuffer* MainPass;

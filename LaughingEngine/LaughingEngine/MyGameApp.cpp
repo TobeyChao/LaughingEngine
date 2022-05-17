@@ -28,6 +28,7 @@ void MyGameApp::Initialize()
 
 	ShaderManager& shaderManager = ShaderManager::GetInstance();
 	shaderManager.RegisterShader(L"Light", L"Assets\\CompiledShaders\\LightVS.cso", L"Assets\\CompiledShaders\\LightPS.cso");
+	shaderManager.RegisterShader(L"Color", L"Assets\\CompiledShaders\\ColorVS.cso", L"Assets\\CompiledShaders\\ColorPS.cso");
 	shaderManager.RegisterShader(L"Pbr", L"Assets\\CompiledShaders\\PbrVS.cso", L"Assets\\CompiledShaders\\PbrPS.cso");
 	shaderManager.RegisterShader(L"Sky", L"Assets\\CompiledShaders\\SkyVS.cso", L"Assets\\CompiledShaders\\SkyPS.cso");
 
@@ -107,4 +108,14 @@ void MyGameApp::Draw()
 
 void MyGameApp::Shutdown()
 {
+	MaterialManager::Shutdown();
+
+	CameraStorage::GetInstance().Shutdown();
+	GeometriesStorage::GetInstance().Shutdown();
+	LightStorage::GetInstance().Shutdown();
+	MainPassStorage::GetInstance().Shutdown();
+	PSOStorage::GetInstance().Shutdown();
+	RenderTargetStorage::GetInstance().Shutdown();
+	SkyPassStorage::GetInstance().Shutdown();
+	TextureStorage::GetInstance().Shutdown();
 }

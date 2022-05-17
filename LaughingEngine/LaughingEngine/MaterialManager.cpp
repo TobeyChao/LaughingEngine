@@ -49,4 +49,8 @@ namespace MaterialManager
 		return FindOrLoadMaterial(Path);
 	}
 
+	void Shutdown()
+	{
+		s_Materials.clear();
+	}
 }

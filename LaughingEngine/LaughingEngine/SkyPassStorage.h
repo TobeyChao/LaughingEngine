@@ -30,6 +30,11 @@ public:
 		SkyboxPSCB.TextureLevel = 0.0f;
 	}
 
+	void Shutdown()
+	{
+
+	}
+
 	SkyboxVSCB SkyboxVSCB;
 	SkyboxPSCB SkyboxPSCB;
 };
