@@ -18,6 +18,6 @@ public:
 	std::unordered_map<std::string, std::unique_ptr<Camera>> Cameras;
 	float Yaw = 0;
 	float Pitch = XMConvertToRadians(15);
-	float CamMoveSpeed = 20.f;
+	float CamMoveSpeed = 10.f;
 	XMFLOAT2 LastMousePos;
 };

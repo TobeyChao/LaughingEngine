@@ -29,8 +29,8 @@ public:
 		if (InputSystem::GetInstance().LeftIsPressed())
 		{
 			// Make each pixel correspond to a quarter of a degree.
-			float dx = XMConvertToRadians(0.25f * (x - lastMousePos.x));
-			float dy = XMConvertToRadians(0.25f * (y - lastMousePos.y));
+			float dx = XMConvertToRadians(0.15f * (x - lastMousePos.x));
+			float dy = XMConvertToRadians(0.15f * (y - lastMousePos.y));
 
 			// Update angles based on input to orbit camera around box.
 			yaw += dx;

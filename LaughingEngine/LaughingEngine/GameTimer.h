@@ -7,8 +7,8 @@ class GameTimer
 public:
 	static void Initialize();
 
-	static double TotalTime(); // in seconds
-	static double DeltaTime(); // in seconds
+	static float TotalTime(); // in seconds
+	static float DeltaTime(); // in seconds
 
 	static void Reset(); // Call before message loop.
 	static void Start(); // Call when unpaused.
@@ -16,12 +16,12 @@ public:
 	static void Tick();  // Call every frame.
 
 	static int64_t GetCurrentTick();
-	static double DeltaTimeMillisecs(int64_t tick1, int64_t tick2);
-	static double DeltaTimeSeconds(int64_t tick1, int64_t tick2);
+	static float DeltaTimeMillisecs(int64_t tick1, int64_t tick2);
+	static float DeltaTimeSeconds(int64_t tick1, int64_t tick2);
 
 private:
-	static double m_SecondsPerCount;
-	static double m_DeltaTime;
+	static float m_SecondsPerCount;
+	static float m_DeltaTime;
 
 	static int64_t m_BaseTime;
 	static int64_t m_PausedTime;

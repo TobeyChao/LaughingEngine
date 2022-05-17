@@ -1,22 +1,19 @@
 #pragma once
+#include "PCH.h"
 #include "TSingleton.h"
-#include <unordered_map>
-#include <memory>
+#include "ShaderType.h"
 
 class ShaderProgram;
 class ShaderManager : public TSingleton<ShaderManager>
 {
 public:
-	std::shared_ptr<ShaderProgram> GetShader(
-		const std::wstring& Path,
-		const std::wstring& VertexPath,
-		const std::wstring& PixelPath);
+	void RegisterShader(const std::wstring& Name, const std::wstring& VertexPath, const std::wstring& PixelPath, bool LoadImmediately = false);
+	std::shared_ptr<ShaderProgram> GetShader(const std::wstring& Name);
 
 private:
-	std::shared_ptr<ShaderProgram> FindOrLoadShader(const std::wstring& Path,
-		const std::wstring& VertexPath,
-		const std::wstring& PixelPath);
+	std::shared_ptr<ShaderProgram> FindOrLoadShader(const std::wstring& Name);
 
 private:
 	std::unordered_map<std::wstring, std::shared_ptr<ShaderProgram>> m_Shaders;
+	std::unordered_map<std::wstring, std::wstring[(size_t)ShaderType::Count]> m_ShaderMapper;
 };

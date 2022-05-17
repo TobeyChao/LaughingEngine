@@ -26,11 +26,6 @@ struct Light
 	float SpotPower = 64.0f;					// spot light only
 };
 
-struct Material
-{
-
-};
-
 struct PassConstants
 {
 	XMFLOAT4X4 View;

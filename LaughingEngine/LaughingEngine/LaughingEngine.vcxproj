@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\nlohmann;$(SolutionDir)3rdParty\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
@@ -208,6 +208,7 @@ xcopy $(ProjectDir)Assets $(OutDir)Assets /a /E /F /I /Y /C</Command>
     <ClCompile Include="DescriptorAllocator.cpp" />
     <ClCompile Include="DescriptorHeap.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="DynamicDescriptorHeap.cpp" />
     <ClCompile Include="FileUtility.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="GameTimer.cpp" />
@@ -289,6 +290,7 @@ xcopy $(ProjectDir)Assets $(OutDir)Assets /a /E /F /I /Y /C</Command>
     <ClInclude Include="DescriptorAllocator.h" />
     <ClInclude Include="DescriptorHeap.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="DynamicDescriptorHeap.h" />
     <ClInclude Include="ECS\ArchetypeStorage.h" />
     <ClInclude Include="ECS\Entity.h" />
     <ClInclude Include="ECS\EntityAdmin.h" />
@@ -408,7 +410,8 @@ xcopy $(ProjectDir)Assets $(OutDir)Assets /a /E /F /I /Y /C</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
-    <None Include="Assets\Materials\Mat.json" />
+    <None Include="Assets\Materials\BoxMat.json" />
+    <None Include="Assets\Materials\GunMat.json" />
     <None Include="packages.config" />
     <None Include="Assets\Shader\ColorSpaceUtility.hlsli" />
     <FxCompile Include="Assets\Shader\LightPS.hlsl">

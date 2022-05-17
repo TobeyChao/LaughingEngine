@@ -18,6 +18,8 @@ CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE Type)
 	m_NumBarriers(0),
 	m_DescriptorHeaps(),
 	m_Type(Type),
+	m_DynamicViewDescriptorHeap(*this, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV),
+	m_DynamicSamplerDescriptorHeap(*this, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER),
 	m_CpuMemoryAllocator(AllocatorType::Upload),
 	m_GpuMemoryAllocator(AllocatorType::Default)
 {
@@ -98,6 +100,9 @@ uint64_t CommandContext::Finish(bool WaitForCompletion)
 
 	m_CpuMemoryAllocator.CleanupUsedPages(fenceValue);
 	m_GpuMemoryAllocator.CleanupUsedPages(fenceValue);
+
+	m_DynamicViewDescriptorHeap.CleanupUsedHeaps(fenceValue);
+	m_DynamicSamplerDescriptorHeap.CleanupUsedHeaps(fenceValue);
 
 	if (WaitForCompletion)
 	{

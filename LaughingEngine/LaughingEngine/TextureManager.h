@@ -17,12 +17,16 @@ public:
 	TextureRef(ManagedTexture* tex = nullptr);
 	~TextureRef();
 
-	void operator= (std::nullptr_t);
-	void operator= (const TextureRef& rhs);
+	TextureRef& operator= (std::nullptr_t);
+	TextureRef& operator= (const TextureRef& rhs);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const;
+	[[nodiscard]] D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const;
 
-	const Texture* Get() const;
+	[[nodiscard]] const Texture* Get() const;
+
+	[[nodiscard]] uint32_t GetIndexInHeap() const;
+
+	void SetIndexInHeap(uint32_t IndexInHeap);
 
 private:
 	ManagedTexture* m_pTexture;

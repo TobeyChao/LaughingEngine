@@ -28,7 +28,6 @@ namespace MaterialSerialization
 	struct ShadersObject
 	{
 		string m_Name;
-		ResourceID m_Shader[(int)ShaderType::Count];
 	};
 
 	struct MaterialObject
@@ -56,9 +55,7 @@ namespace MaterialSerialization
 			{
 				"m_Shader",
 				{
-					{"m_Name", p.m_ShaderObject.m_Name},
-					{"m_VertexShader", p.m_ShaderObject.m_Shader[(int)ShaderType::Vertex]},
-					{"m_PixelShader", p.m_ShaderObject.m_Shader[(int)ShaderType::Pixel]}
+					{"m_Name", p.m_ShaderObject.m_Name}
 				}
 			},
 			{
@@ -91,8 +88,6 @@ namespace MaterialSerialization
 		}
 		{
 			const auto& shader = j["m_Shader"];
-			p.m_ShaderObject.m_Shader[(int)ShaderType::Vertex] = shader["m_VertexShader"];
-			p.m_ShaderObject.m_Shader[(int)ShaderType::Pixel] = shader["m_PixelShader"];
 			p.m_ShaderObject.m_Name = shader["m_Name"];
 		}
 		{

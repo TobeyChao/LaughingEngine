@@ -2,40 +2,51 @@
 #include "MaterialManager.h"
 #include "ShaderManager.h"
 #include "Material.h"
-#include <fstream>
 #include <json.hpp>
 
 using namespace std;
 using namespace nlohmann;
 using namespace MaterialSerialization;
 
-std::shared_ptr<Material> MaterialManager::GetMaterial(const std::wstring& Path)
+namespace MaterialManager
 {
-	return FindOrLoadMaterial(Path);
-}
+	static std::unordered_map<std::wstring, std::shared_ptr<Material>> s_Materials;
 
-std::shared_ptr<Material> MaterialManager::FindOrLoadMaterial(const std::wstring& Path)
-{
-	if (!m_Materials.contains(Path))
+	Material* FindOrLoadMaterial(const std::wstring& Path)
 	{
-		std::shared_ptr<Material> material = std::make_shared<Material>();
-
-		ifstream file;
-		file.open(Path, ios::in);
-		json j;
-		if (file.is_open())
+		if (!s_Materials.contains(Path))
 		{
-			file >> j;
+			std::shared_ptr<Material> material = std::make_shared<Material>();
+
+			ifstream file;
+			file.open(Path, ios::in);
+			json j;
+			if (file.is_open())
+			{
+				file >> j;
+			}
+			file.close();
+			material->MaterialObject = j.get<MaterialObject>();
+			auto& [name] = material->MaterialObject.m_ShaderObject;
+			const std::wstring path = Utility::UTF8ToWideString(name);
+			material->ShaderProgram = ShaderManager::GetInstance().GetShader(path);
+
+			// ¼ÓÔØÍ¼Æ¬
+			for (auto& [ID, Res] : material->MaterialObject.m_Properties.m_Textures)
+			{
+				const TextureRef texRef = TextureManager::LoadFromFile(Utility::UTF8ToWideString(Res.GUID));
+				material->SetTexture(ID, texRef);
+			}
+
+			s_Materials[Path] = std::move(material);
 		}
-		file.close();
-		material->m_MaterialObject = j.get<MaterialObject>();
-		auto& [name, shader] = material->m_MaterialObject.m_ShaderObject;
-		const std::wstring path = Utility::UTF8ToWideString(name);
-		const std::wstring vertexShaderPath = Utility::UTF8ToWideString(shader[(int)ShaderType::Vertex].GUID);
-		const std::wstring pixelShaderPath = Utility::UTF8ToWideString(shader[(int)ShaderType::Pixel].GUID);
-		material->m_ShaderProgram = ShaderManager::GetInstance().GetShader(path, vertexShaderPath, pixelShaderPath);
-		m_Materials[Path] = std::move(material);
+
+		return s_Materials[Path].get();
 	}
 
-	return m_Materials[Path];
+	Material* GetMaterial(const std::wstring& Path)
+	{
+		return FindOrLoadMaterial(Path);
+	}
+
 }

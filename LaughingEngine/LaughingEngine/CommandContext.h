@@ -6,6 +6,7 @@
 #include "DepthBuffer.h"
 #include "GpuBuffer.h"
 #include "MemoryAllocator.h"
+#include "DynamicDescriptorHeap.h"
 
 class GraphicsContext;
 class ComputeContext;
@@ -69,8 +70,10 @@ protected:
 
 	ID3D12RootSignature* m_GraphicsRootSignature;
 	ID3D12RootSignature* m_ComputeRootSignature;
-
 	ID3D12PipelineState* m_PipelineState;
+
+	DynamicDescriptorHeap m_DynamicViewDescriptorHeap;		// HEAP_TYPE_CBV_SRV_UAV
+	DynamicDescriptorHeap m_DynamicSamplerDescriptorHeap;	// HEAP_TYPE_SAMPLER
 
 	D3D12_RESOURCE_BARRIER m_ResourceBarrier[16];
 	UINT m_NumBarriers;
@@ -114,6 +117,11 @@ public:
 	void SetBufferUAV(UINT RootIndex, const GpuBuffer& UAV, UINT64 Offset = 0);
 	void SetDescriptorTable(UINT RootIndex, D3D12_GPU_DESCRIPTOR_HANDLE FirstHandle);
 
+	void SetDynamicDescriptor(UINT RootIndex, UINT Offset, D3D12_CPU_DESCRIPTOR_HANDLE Handle);
+	void SetDynamicDescriptors(UINT RootIndex, UINT Offset, UINT Count, const D3D12_CPU_DESCRIPTOR_HANDLE Handles[]);
+	void SetDynamicSampler(UINT RootIndex, UINT Offset, D3D12_CPU_DESCRIPTOR_HANDLE Handle);
+	void SetDynamicSamplers(UINT RootIndex, UINT Offset, UINT Count, const D3D12_CPU_DESCRIPTOR_HANDLE Handles[]);
+
 	void SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& IBView);
 	void SetVertexBuffer(UINT Slot, const D3D12_VERTEX_BUFFER_VIEW& VBView);
 
@@ -128,6 +136,9 @@ inline void CommandContext::SetPipelineState(const PipelineState& pso)
 
 inline void GraphicsContext::SetRootSignature(const RootSignature& rootSignature)
 {
+	if (rootSignature.GetRootSignature() == m_GraphicsRootSignature)
+		return;
+	m_GraphicsRootSignature = rootSignature.GetRootSignature();
 	m_CommandList->SetGraphicsRootSignature(rootSignature.GetRootSignature());
 }
 
@@ -163,6 +174,26 @@ inline void GraphicsContext::SetDescriptorTable(UINT RootIndex, D3D12_GPU_DESCRI
 	m_CommandList->SetGraphicsRootDescriptorTable(RootIndex, FirstHandle);
 }
 
+inline void GraphicsContext::SetDynamicDescriptor(UINT RootIndex, UINT Offset, D3D12_CPU_DESCRIPTOR_HANDLE Handle)
+{
+	SetDynamicDescriptors(RootIndex, Offset, 1, &Handle);
+}
+
+inline void GraphicsContext::SetDynamicDescriptors(UINT RootIndex, UINT Offset, UINT Count, const D3D12_CPU_DESCRIPTOR_HANDLE Handles[])
+{
+	m_DynamicViewDescriptorHeap.SetGraphicsDescriptorHandles(RootIndex, Offset, Count, Handles);
+}
+
+inline void GraphicsContext::SetDynamicSampler(UINT RootIndex, UINT Offset, D3D12_CPU_DESCRIPTOR_HANDLE Handle)
+{
+	SetDynamicSamplers(RootIndex, Offset, 1, &Handle);
+}
+
+inline void GraphicsContext::SetDynamicSamplers(UINT RootIndex, UINT Offset, UINT Count, const D3D12_CPU_DESCRIPTOR_HANDLE Handles[])
+{
+	m_DynamicSamplerDescriptorHeap.SetGraphicsDescriptorHandles(RootIndex, Offset, Count, Handles);
+}
+
 inline void GraphicsContext::SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& IBView)
 {
 	m_CommandList->IASetIndexBuffer(&IBView);
@@ -176,12 +207,16 @@ inline void GraphicsContext::SetVertexBuffer(UINT Slot, const D3D12_VERTEX_BUFFE
 inline void GraphicsContext::DrawInstanced(UINT VertexCountPerInstance, UINT InstanceCount, UINT StartVertexLocation, UINT StartInstanceLocation)
 {
 	FlushResourceBarrier();
+	m_DynamicViewDescriptorHeap.CommitGraphicsRootDescriptorTables(m_CommandList);
+	m_DynamicSamplerDescriptorHeap.CommitGraphicsRootDescriptorTables(m_CommandList);
 	m_CommandList->DrawInstanced(VertexCountPerInstance, InstanceCount, StartVertexLocation, StartInstanceLocation);
 }
 
 inline void GraphicsContext::DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation, INT BaseVertexLocation, UINT StartInstanceLocation)
 {
 	FlushResourceBarrier();
+	m_DynamicViewDescriptorHeap.CommitGraphicsRootDescriptorTables(m_CommandList);
+	m_DynamicSamplerDescriptorHeap.CommitGraphicsRootDescriptorTables(m_CommandList);
 	m_CommandList->DrawIndexedInstanced(IndexCountPerInstance, InstanceCount, StartIndexLocation, BaseVertexLocation, StartInstanceLocation);
 }
 

@@ -11,13 +11,17 @@ class MainPassStorage : public TSingleton<MainPassStorage>
 public:
 	void Load()
 	{
+		MainPass = CpuBuffer::Create(1, sizeof(PassConstants));
+		MainPassCB = static_cast<PassConstants*>(MainPass->GetData());
+
 		Update();
 
-		MainPassCB.RenderTargetSize = XMFLOAT2{ (float)Graphics::g_DisplayWidth, (float)Graphics::g_DisplayHeight };
-		MainPassCB.InvRenderTargetSize = { 1.0f / Graphics::g_DisplayWidth, 1.0f / Graphics::g_DisplayHeight };
-		MainPassCB.NearZ = 0.1f;
-		MainPassCB.FarZ = 1000.0f;
-		MainPassCB.AmbientLight = { 0.25f, 0.25f, 0.35f, 1.0f };
+		MainPassCB->RenderTargetSize = XMFLOAT2{ (float)Graphics::g_DisplayWidth, (float)Graphics::g_DisplayHeight };
+		MainPassCB->InvRenderTargetSize = { 1.0f / (float)Graphics::g_DisplayWidth, 1.0f / (float)Graphics::g_DisplayHeight };
+		MainPassCB->NearZ = 0.1f;
+		MainPassCB->FarZ = 1000.0f;
+		MainPassCB->AmbientLight = { 0.25f, 0.25f, 0.35f, 1.0f };
+
 	}
 
 	void Update()
@@ -35,22 +39,23 @@ public:
 		XMMATRIX invViewProj = XMMatrixInverse(&viewProjDet, viewProj);
 		//XMMATRIX shadowTransform = XMLoadFloat4x4(&mShadowTransform);
 
-		XMStoreFloat4x4(&MainPassCB.View, XMMatrixTranspose(view));
-		XMStoreFloat4x4(&MainPassCB.InvView, XMMatrixTranspose(invView));
-		XMStoreFloat4x4(&MainPassCB.Proj, XMMatrixTranspose(proj));
-		XMStoreFloat4x4(&MainPassCB.InvProj, XMMatrixTranspose(invProj));
-		XMStoreFloat4x4(&MainPassCB.ViewProj, XMMatrixTranspose(viewProj));
-		XMStoreFloat4x4(&MainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
+		XMStoreFloat4x4(&MainPassCB->View, XMMatrixTranspose(view));
+		XMStoreFloat4x4(&MainPassCB->InvView, XMMatrixTranspose(invView));
+		XMStoreFloat4x4(&MainPassCB->Proj, XMMatrixTranspose(proj));
+		XMStoreFloat4x4(&MainPassCB->InvProj, XMMatrixTranspose(invProj));
+		XMStoreFloat4x4(&MainPassCB->ViewProj, XMMatrixTranspose(viewProj));
+		XMStoreFloat4x4(&MainPassCB->InvViewProj, XMMatrixTranspose(invViewProj));
 		//XMStoreFloat4x4(&mMainPassCB.ShadowTransform, XMMatrixTranspose(shadowTransform));
 
-		MainPassCB.EyePosW = CameraStorage::GetInstance().Cameras["MainCamera"]->GetPosition3f();
+		MainPassCB->EyePosW = CameraStorage::GetInstance().Cameras["MainCamera"]->GetPosition3f();
 
-		MainPassCB.TotalTime = (float)GameTimer::TotalTime();
-		MainPassCB.DeltaTime = (float)GameTimer::DeltaTime();
+		MainPassCB->TotalTime = GameTimer::TotalTime();
+		MainPassCB->DeltaTime = GameTimer::DeltaTime();
 
-		MainPassCB.Lights[0].Direction = { sinf(LightStorage::GetInstance().Theta), -2.0f, cosf(LightStorage::GetInstance().Theta) };
-		MainPassCB.Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
+		MainPassCB->Lights[0].Direction = { sinf(LightStorage::GetInstance().Theta), -2.0f, cosf(LightStorage::GetInstance().Theta) };
+		MainPassCB->Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
 	}
 
-	PassConstants MainPassCB;
+	PassConstants* MainPassCB;
+	CpuBuffer* MainPass;
 };

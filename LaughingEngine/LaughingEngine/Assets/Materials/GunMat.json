@@ -1,0 +1,21 @@
+{
+  "m_Name": "GunMat",
+  "m_Shader": {
+    "m_Name": "Light"
+  },
+  "m_Properties": {
+    "m_Floats": {
+    },
+    "m_Ints": {
+    },
+    "m_Textures": {
+      "gDiffuseMap": {
+        "FileID": 0,
+        "GUID": "Assets\\Meshes\\textures\\cerberus_A.png",
+        "Type": 2
+      }
+    },
+    "m_Vectors": {
+    }
+  }
+}

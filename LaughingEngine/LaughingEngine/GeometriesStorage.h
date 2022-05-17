@@ -18,8 +18,7 @@ public:
 			aiMaterial* material = nullptr;
 			aiString path;
 
-			const aiScene* scene = loader.ReadFile("../Assets/Meshes/cerberus.fbx",
-				aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_ConvertToLeftHanded);
+			const aiScene* scene = loader.ReadFile("Assets/Meshes/cerberus.fbx", aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices | aiProcess_ConvertToLeftHanded);
 
 			auto geo = std::make_unique<MeshGeometry>();
 			geo->Name = L"Cerberus";

@@ -17,6 +17,7 @@ public:
 	void Unload();
 
 private:
+	uint32_t m_IndexInHeap = 0;
 	std::wstring m_FileName;
 	size_t m_ReferCount;
 };
@@ -78,16 +79,17 @@ TextureRef::~TextureRef()
 	}
 }
 
-void TextureRef::operator=(std::nullptr_t)
+TextureRef& TextureRef::operator=(std::nullptr_t)
 {
 	if (m_pTexture)
 	{
 		m_pTexture->m_ReferCount--;
 		m_pTexture = nullptr;
 	}
+	return *this;
 }
 
-void TextureRef::operator=(const TextureRef& rhs)
+TextureRef& TextureRef::operator=(const TextureRef& rhs)
 {
 	if (m_pTexture)
 		--m_pTexture->m_ReferCount;
@@ -96,6 +98,8 @@ void TextureRef::operator=(const TextureRef& rhs)
 
 	if (m_pTexture != nullptr)
 		++m_pTexture->m_ReferCount;
+
+	return *this;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE TextureRef::GetSRV() const
@@ -114,9 +118,19 @@ const Texture* TextureRef::Get() const
 	return m_pTexture;
 }
 
+uint32_t TextureRef::GetIndexInHeap() const
+{
+	return m_pTexture->m_IndexInHeap;
+}
+
+void TextureRef::SetIndexInHeap(uint32_t IndexInHeap)
+{
+	m_pTexture->m_IndexInHeap = IndexInHeap;
+}
+
 namespace TextureManager
 {
-	std::map<std::wstring, std::unique_ptr<ManagedTexture>> s_TextureCache;
+	static std::map<std::wstring, std::unique_ptr<ManagedTexture>> s_TextureCache;
 
 	ManagedTexture* FindOrLoadTexture(const std::wstring& FileName)
 	{

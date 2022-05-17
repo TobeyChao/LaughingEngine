@@ -1,14 +1,9 @@
 #pragma once
-#include <CompiledShaders/CommonRS.h>
-#include <CompiledShaders/LightPS.h>
-#include <CompiledShaders/LightVS.h>
-#include <CompiledShaders/SkyPS.h>
-#include <CompiledShaders/SkyVS.h>
-
 #include "BufferManager.h"
 #include "GraphicsCommon.h"
 #include "PipelineState.h"
 #include "RootSignature.h"
+#include "ShaderManager.h"
 
 class PSOStorage : public TSingleton<PSOStorage>
 {
@@ -29,7 +24,8 @@ public:
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 		};
 
-		DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", g_pCommonRS, sizeof(g_pCommonRS));
+		auto rs = Utility::LoadFileSync(L"Assets\\CompiledShaders\\CommonRS.cso");
+		DefaultRS.CreateFromMemory(L"MyGameApp::m_DefaultRS", rs->data(), rs->size());
 
 		DefaultPSO.SetRootSignature(DefaultRS);
 		DefaultPSO.SetRasterizerState(Graphics::RasterizerDefault);
@@ -38,16 +34,18 @@ public:
 		DefaultPSO.SetSampleMask(UINT_MAX);
 		DefaultPSO.SetInputLayout(_countof(inputElementDesc), inputElementDesc);
 		DefaultPSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-		DefaultPSO.SetVertexShader(g_pLightVS, sizeof(g_pLightVS));
-		DefaultPSO.SetPixelShader(g_pLightPS, sizeof(g_pLightPS));
+		auto light = ShaderManager::GetInstance().GetShader(L"Light");
+		DefaultPSO.SetVertexShader(light->GetShader(ShaderType::Vertex)->data(), light->GetShader(ShaderType::Vertex)->size());
+		DefaultPSO.SetPixelShader(light->GetShader(ShaderType::Pixel)->data(), light->GetShader(ShaderType::Pixel)->size());
 		DefaultPSO.SetRenderTargetFormat(Graphics::g_DefaultHdrColorFormat, Graphics::g_DefaultDepthStencilFormat);
 		DefaultPSO.Finalize();
 
 		SkyPSO = DefaultPSO;
 		SkyPSO.SetDepthStencilState(Graphics::DepthStateTestLessEqual);
 		SkyPSO.SetRasterizerState(Graphics::RasterizerTwoSided);
-		SkyPSO.SetVertexShader(g_pSkyVS, sizeof(g_pSkyVS));
-		SkyPSO.SetPixelShader(g_pSkyPS, sizeof(g_pSkyPS));
+		auto sky = ShaderManager::GetInstance().GetShader(L"Sky");
+		SkyPSO.SetVertexShader(sky->GetShader(ShaderType::Vertex)->data(), sky->GetShader(ShaderType::Vertex)->size());
+		SkyPSO.SetPixelShader(sky->GetShader(ShaderType::Pixel)->data(), sky->GetShader(ShaderType::Pixel)->size());
 		SkyPSO.SetInputLayout(0, nullptr);
 		SkyPSO.Finalize();
 	}

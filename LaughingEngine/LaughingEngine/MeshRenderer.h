@@ -1,4 +1,5 @@
 #pragma once
+#include "Material.h"
 #include "MeshGeometry.h"
 
 enum class RenderLayer : uint8_t
@@ -16,6 +17,6 @@ struct MeshRenderer
 {
 	MeshGeometry* Mesh = nullptr;
 	SubmeshGeometry* SubMesh = nullptr;
-	uint32_t TextureIndex = 0;
+	Material* Material = nullptr;
 	RenderLayer RenderLayer;
 };

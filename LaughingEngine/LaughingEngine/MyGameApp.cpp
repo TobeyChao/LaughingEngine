@@ -6,8 +6,10 @@
 #include "GeometriesStorage.h"
 #include "LightSystem.h"
 #include "MainPassStorage.h"
+#include "MaterialManager.h"
 #include "PSOStorage.h"
 #include "RenderTargetStorage.h"
+#include "ShaderManager.h"
 #include "SkyPassStorage.h"
 #include "TextureStorage.h"
 
@@ -23,6 +25,11 @@ void MyGameApp::Initialize()
 	RenderTargetStorage* renderTargetStorage = new RenderTargetStorage();
 	SkyPassStorage* skyPassStorage = new SkyPassStorage();
 	TextureStorage* textureStorage = new TextureStorage();
+
+	ShaderManager& shaderManager = ShaderManager::GetInstance();
+	shaderManager.RegisterShader(L"Light", L"Assets\\CompiledShaders\\LightVS.cso", L"Assets\\CompiledShaders\\LightPS.cso");
+	shaderManager.RegisterShader(L"Pbr", L"Assets\\CompiledShaders\\PbrVS.cso", L"Assets\\CompiledShaders\\PbrPS.cso");
+	shaderManager.RegisterShader(L"Sky", L"Assets\\CompiledShaders\\SkyVS.cso", L"Assets\\CompiledShaders\\SkyPS.cso");
 
 	cameraStorage->Load();
 	geometriesStorage->Load();
@@ -57,7 +64,7 @@ void MyGameApp::Initialize()
 				ItemRenderer->Mesh = mesh;
 				ItemRenderer->SubMesh = subMesh;
 				ItemRenderer->RenderLayer = layer;
-				ItemRenderer->TextureIndex = 6;
+				ItemRenderer->Material = MaterialManager::GetMaterial(L"Assets\\Materials\\GunMat.json");
 
 				m_Entities.push_back(id);
 			}
@@ -78,7 +85,7 @@ void MyGameApp::Initialize()
 				ItemRenderer->Mesh = mesh;
 				ItemRenderer->SubMesh = subMesh;
 				ItemRenderer->RenderLayer = layer;
-				ItemRenderer->TextureIndex = 0;
+				ItemRenderer->Material = MaterialManager::GetMaterial(L"Assets\\Materials\\BoxMat.json");
 
 				m_Entities.push_back(id);
 			}
@@ -91,7 +98,7 @@ void MyGameApp::Update()
 	MainPassStorage::GetInstance().Update();
 	SkyPassStorage::GetInstance().Update();
 
-	m_EntityAdmin->Update((float)GameTimer::DeltaTime());
+	m_EntityAdmin->Update(GameTimer::DeltaTime());
 }
 
 void MyGameApp::Draw()

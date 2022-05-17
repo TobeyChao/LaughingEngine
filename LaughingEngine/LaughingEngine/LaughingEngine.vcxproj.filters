@@ -221,6 +221,9 @@
     <ClCompile Include="MaterialManager.cpp">
       <Filter>Core\Material</Filter>
     </ClCompile>
+    <ClCompile Include="DynamicDescriptorHeap.cpp">
+      <Filter>Core\Wrap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameCore.h">
@@ -493,6 +496,9 @@
     <ClInclude Include="MaterialObject.h">
       <Filter>Core\Material</Filter>
     </ClInclude>
+    <ClInclude Include="DynamicDescriptorHeap.h">
+      <Filter>Core\Wrap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -514,7 +520,10 @@
     <None Include="Assets\Shader\TangentHelper.hlsli">
       <Filter>Resources\Shaders\Inc</Filter>
     </None>
-    <None Include="Assets\Materials\Mat.json">
+    <None Include="Assets\Materials\GunMat.json">
+      <Filter>Resources\Materials</Filter>
+    </None>
+    <None Include="Assets\Materials\BoxMat.json">
       <Filter>Resources\Materials</Filter>
     </None>
   </ItemGroup>

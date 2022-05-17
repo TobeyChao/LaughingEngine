@@ -11,6 +11,7 @@
 /// </summary>
 class RootParameter
 {
+	friend class RootSignature;
 public:
 	void InitAsDescriptorTable(UINT NumDescriptors, D3D12_DESCRIPTOR_RANGE_TYPE Type, UINT BaseRegister, UINT RegisterSpace = 0, D3D12_SHADER_VISIBILITY Visibility = D3D12_SHADER_VISIBILITY_ALL)
 	{
@@ -24,7 +25,7 @@ public:
 		m_Param.InitAsDescriptorTable(RangeCount, table, Visibility);
 	}
 
-	void SetTableRange(UINT RangeIndex, D3D12_DESCRIPTOR_RANGE_TYPE Type, UINT Register, UINT Count, UINT Space = 0)
+	void SetTableRange(UINT RangeIndex, D3D12_DESCRIPTOR_RANGE_TYPE Type, UINT Count, UINT Register, UINT Space = 0)
 	{
 		D3D12_DESCRIPTOR_RANGE& range = const_cast<D3D12_DESCRIPTOR_RANGE&>(m_Param.DescriptorTable.pDescriptorRanges[RangeIndex]);
 		range.RangeType = Type;
@@ -60,74 +61,44 @@ public:
 	}
 
 private:
-	CD3DX12_ROOT_PARAMETER m_Param;
+	CD3DX12_ROOT_PARAMETER m_Param{};
 };
 
 class RootSignature
 {
+	friend class DynamicDescriptorHeap;
 public:
+	RootSignature();
 
-	RootSignature()
-		:
-		m_Finalized(FALSE),
-		m_NumParameters(0),
-		m_NumStaticSamplers(0),
-		m_NumInitializedStaticSamplers(0)
-	{};
+	~RootSignature();
 
-	~RootSignature() = default;
+	void Destroy();
 
-	void Destroy()
-	{
-		m_RootSignature.Reset();
-	}
+	void Reset(UINT NumRootParams, UINT NumStaticSamplers = 0);
 
-	void Reset(UINT NumRootParams, UINT NumStaticSamplers = 0)
-	{
-		if (NumRootParams > 0)
-		{
-			m_ParamArray.reset(new RootParameter[NumRootParams]);
-		}
-		else
-		{
-			m_ParamArray.reset();
-		}
-		m_NumParameters = NumRootParams;
+	RootParameter& operator[] (size_t EntryIndex);
 
-		if (NumStaticSamplers > 0)
-		{
-			m_StaticSamplerArray.resize(NumStaticSamplers);
-		}
-		else
-		{
-			m_StaticSamplerArray.clear();
-		}
-		m_NumStaticSamplers = NumStaticSamplers;
-		m_NumInitializedStaticSamplers = 0;
-	}
-
-	RootParameter& operator[] (size_t EntryIndex)
-	{
-		return m_ParamArray.get()[EntryIndex];
-	}
-
-	void InitStaticSampler(CD3DX12_STATIC_SAMPLER_DESC StaticSamplerDesc, UINT ShaderRegister, UINT RegisterSpace = 0);
+	void InitStaticSampler(const D3D12_STATIC_SAMPLER_DESC& StaticSamplerDesc);
 
 	void Finalize(const std::wstring& Name, D3D12_ROOT_SIGNATURE_FLAGS Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE);
 
 	void CreateFromMemory(const std::wstring& Name, const void* Data, size_t Size);
 
-	ID3D12RootSignature* GetRootSignature() const
-	{
-		return m_RootSignature.Get();
-	}
+	[[nodiscard]] ID3D12RootSignature* GetRootSignature() const;
 
 private:
-	BOOL m_Finalized;
+	void CreateRootSignature(const std::wstring& name, const void* Data, size_t Size);
+
+private:
 	UINT m_NumParameters;
 	UINT m_NumStaticSamplers;
 	UINT m_NumInitializedStaticSamplers;
-	std::unique_ptr<RootParameter[]> m_ParamArray;
-	std::vector<CD3DX12_STATIC_SAMPLER_DESC> m_StaticSamplerArray;
+
+	uint32_t m_DescriptorTableBitMap;		// One bit is set for root parameters that are non-sampler descriptor tables
+	uint32_t m_SamplerTableBitMap;			// One bit is set for root parameters that are sampler descriptor tables
+	uint32_t m_DescriptorTableSize[16];		// Non-sampler descriptor tables need to know their descriptor count
+
+	std::vector<RootParameter> m_ParamArray;
+	std::vector<D3D12_STATIC_SAMPLER_DESC> m_StaticSamplerArray;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_RootSignature;
 };

@@ -5,6 +5,8 @@
 #include "InputSystem.h"
 #include "Display.h"
 #include "COMInitializer.h"
+#include "MaterialManager.h"
+#include "ShaderManager.h"
 
 namespace Game
 {
@@ -50,6 +52,7 @@ namespace Game
 	{
 		g_COMInitializer = new COMInitializer();
 		InputSystem* inputSystem = new InputSystem();
+		ShaderManager* shaderManager = new ShaderManager();
 
 		Graphics::Initialize();
 		GameTimer::Initialize();

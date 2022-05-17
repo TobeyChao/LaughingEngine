@@ -4,22 +4,33 @@
 
 using namespace std;
 
-std::shared_ptr<ShaderProgram> ShaderManager::GetShader(
-	const std::wstring& Path,
-	const std::wstring& VertexPath,
-	const std::wstring& PixelPath)
+void ShaderManager::RegisterShader(const std::wstring& Name, const std::wstring& VertexPath, const std::wstring& PixelPath, bool LoadImmediately)
 {
-	return FindOrLoadShader(Path, VertexPath, PixelPath);
+	if (m_Shaders.contains(Name))
+	{
+		return;
+	}
+	m_ShaderMapper[Name][(size_t)ShaderType::Vertex] = VertexPath;
+	m_ShaderMapper[Name][(size_t)ShaderType::Pixel] = PixelPath;
+	if (LoadImmediately)
+	{
+		GetShader(Name);
+	}
 }
 
-std::shared_ptr<ShaderProgram> ShaderManager::FindOrLoadShader(
-	const std::wstring& Name,
-	const std::wstring& VertexPath,
-	const std::wstring& PixelPath)
+std::shared_ptr<ShaderProgram> ShaderManager::GetShader(const std::wstring& Name)
+{
+	return FindOrLoadShader(Name);
+}
+
+std::shared_ptr<ShaderProgram> ShaderManager::FindOrLoadShader(const std::wstring& Name)
 {
 	if (!m_Shaders.contains(Name))
 	{
 		std::shared_ptr<ShaderProgram> shader = std::make_shared<ShaderProgram>();
+		const wstring& VertexPath = m_ShaderMapper[Name][(size_t)ShaderType::Vertex];
+		const wstring& PixelPath = m_ShaderMapper[Name][(size_t)ShaderType::Pixel];
+		m_ShaderMapper[Name][(size_t)ShaderType::Pixel] = PixelPath;
 		const auto vertex = Utility::LoadFileSync(VertexPath);
 		const auto pixel = Utility::LoadFileSync(PixelPath);
 		shader->LoadFromMemory(vertex, pixel);

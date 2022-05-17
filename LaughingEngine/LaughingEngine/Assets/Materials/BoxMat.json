@@ -1,0 +1,21 @@
+{
+  "m_Name": "BoxMat",
+  "m_Properties": {
+    "m_Floats": {
+    },
+    "m_Ints": {
+    },
+    "m_Textures": {
+      "gDiffuseMap": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\WoodCrate01.dds",
+        "Type": 2
+      }
+    },
+    "m_Vectors": {
+    }
+  },
+  "m_Shader": {
+    "m_Name": "Light"
+  }
+}
