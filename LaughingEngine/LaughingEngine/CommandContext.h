@@ -140,6 +140,9 @@ inline void GraphicsContext::SetRootSignature(const RootSignature& rootSignature
 		return;
 	m_GraphicsRootSignature = rootSignature.GetRootSignature();
 	m_CommandList->SetGraphicsRootSignature(rootSignature.GetRootSignature());
+
+	m_DynamicViewDescriptorHeap.ParseGraphicsRootSignature(rootSignature);
+	m_DynamicSamplerDescriptorHeap.ParseGraphicsRootSignature(rootSignature);
 }
 
 inline void GraphicsContext::SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY PrimitiveTopology)

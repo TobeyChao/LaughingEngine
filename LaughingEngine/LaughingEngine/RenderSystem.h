@@ -28,7 +28,6 @@ public:
 		Context.SetRootSignature(PSOStorage::GetInstance().DefaultRS);
 		Context.SetPipelineState(PSOStorage::GetInstance().DefaultPSO);
 		Context.SetViewportAndScissorRect(Viewport, Scissor);
-		Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, TextureStorage::GetInstance().TextureHeap.GetDescriptorHeapPointer());
 		Context.SetDynamicConstantBufferView(1, sizeof(PassConstants), MainPassStorage::GetInstance().MainPassCB);
 
 		for (const auto& it : m_EntitiesCache)
@@ -38,6 +37,7 @@ public:
 			DrawRenderItems(*renderer, *transform, Context);
 		}
 
+		Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, TextureStorage::GetInstance().TextureHeap.GetDescriptorHeapPointer());
 		DrawSkybox(Context, Viewport, Scissor);
 		Context.Finish();
 	}
@@ -52,7 +52,13 @@ private:
 		ObjectConstants cb;
 		cb.World = ItemTransform.World;
 
-		Context.SetDescriptorTable(3, TextureStorage::GetInstance().TextureHeap[ItemRenderer.Material->GetTexture("gDiffuseMap").GetIndexInHeap()]);
+		for (auto& [id, ref] : ItemRenderer.Material->Textures)
+		{
+			auto* program = ItemRenderer.Material->ShaderProgram->GetParam(id);
+			assert(program != nullptr);
+			Context.SetDynamicDescriptor(3, program->Index - 10, ref.GetSRV());
+		}
+
 		Context.SetDynamicConstantBufferView(2, sizeof(cb), &cb);
 		const auto* subMesh = ItemRenderer.SubMesh;
 		Context.DrawIndexedInstanced(subMesh->IndexCount, 1, subMesh->StartIndexLocation, subMesh->BaseVertexLocation, 0);
