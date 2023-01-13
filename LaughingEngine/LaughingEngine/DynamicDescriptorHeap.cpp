@@ -158,8 +158,8 @@ uint32_t DynamicDescriptorHeap::DescriptorHandleCache::ComputeStagedSize()
 		StaleParams ^= (1 << RootIndex);
 
 		uint32_t MaxSetHandle = 0;
-		assert(TRUE == _BitScanReverse((unsigned long*)&MaxSetHandle, m_RootDescriptorTable[RootIndex].AssignedHandlesBitMap),
-			"Root entry marked as stale but has no stale descriptors");
+		// "Root entry marked as stale but has no stale descriptors"
+		assert(TRUE == _BitScanReverse((unsigned long*)&MaxSetHandle, m_RootDescriptorTable[RootIndex].AssignedHandlesBitMap));
 
 		NeededSpace += MaxSetHandle + 1;
 	}
@@ -182,8 +182,8 @@ void DynamicDescriptorHeap::DescriptorHandleCache::CopyAndBindStaleTables(D3D12_
 		StaleParams ^= (1 << RootIndex);
 
 		uint32_t MaxSetHandle = 0;
-		assert(TRUE == _BitScanReverse((unsigned long*)&MaxSetHandle, m_RootDescriptorTable[RootIndex].AssignedHandlesBitMap),
-			"Root entry marked as stale but has no stale descriptors");
+		// "Root entry marked as stale but has no stale descriptors"
+		assert(TRUE == _BitScanReverse((unsigned long*)&MaxSetHandle, m_RootDescriptorTable[RootIndex].AssignedHandlesBitMap));
 
 		NeededSpace += MaxSetHandle + 1;
 		TableSize[StaleParamCount] = MaxSetHandle + 1;
@@ -191,8 +191,8 @@ void DynamicDescriptorHeap::DescriptorHandleCache::CopyAndBindStaleTables(D3D12_
 		++StaleParamCount;
 	}
 
-	assert(StaleParamCount <= DescriptorHandleCache::kMaxNumDescriptorTables,
-		"We're only equipped to handle so many descriptor tables");
+	// "We're only equipped to handle so many descriptor tables"
+	assert(StaleParamCount <= DescriptorHandleCache::kMaxNumDescriptorTables);
 
 	m_StaleRootParamsBitMap = 0;
 

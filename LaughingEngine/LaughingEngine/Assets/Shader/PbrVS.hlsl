@@ -2,15 +2,15 @@
 #include "MyBRDF.hlsli"
 #include "TangentHelper.hlsli"
 
-Texture2D gAlbedo : register(t0);;
-Texture2D gNormal : register(t1);;
-Texture2D gMetallic : register(t2);;
-Texture2D gRoughness : register(t3);;
-Texture2D gAO : register(t4);;
+Texture2D gAlbedo : register(t10);;
+Texture2D gNormal : register(t11);;
+Texture2D gMetallic : register(t12);;
+Texture2D gRoughness : register(t13);;
+Texture2D gAO : register(t14);;
 
-TextureCube gIrradiance;
-TextureCube gRadiance;
-Texture2D gLUT;
+TextureCube gIrradiance : register(t15);;
+TextureCube gRadiance : register(t16);;
+Texture2D gLUT : register(t17);;
 
 SamplerState gsamLinerClamp : register(s0);
 SamplerState gsamPointClamp : register(s1);

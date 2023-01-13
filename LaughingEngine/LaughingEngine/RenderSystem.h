@@ -26,9 +26,7 @@ public:
 		Context.ClearDepth(Graphics::g_SceneDepthBuffer);
 
 		Context.SetRootSignature(PSOStorage::GetInstance().DefaultRS);
-		Context.SetPipelineState(PSOStorage::GetInstance().DefaultPSO);
 		Context.SetViewportAndScissorRect(Viewport, Scissor);
-		Context.SetDynamicConstantBufferView(1, sizeof(PassConstants), MainPassStorage::GetInstance().MainPassCB);
 
 		for (const auto& it : m_EntitiesCache)
 		{
@@ -45,6 +43,11 @@ public:
 private:
 	static void DrawRenderItems(const MeshRenderer& ItemRenderer, const Transform& ItemTransform, GraphicsContext& Context)
 	{
+		Context.SetPipelineState(*PSOStorage::GetInstance().PSOMap[ItemRenderer.Material->MaterialObject.m_ShaderObject.m_PSOName]);
+
+		Context.SetRootSignature(PSOStorage::GetInstance().DefaultRS);
+		Context.SetDynamicConstantBufferView(1, sizeof(PassConstants), MainPassStorage::GetInstance().MainPassCB);
+
 		Context.SetVertexBuffer(0, ItemRenderer.Mesh->VertexBufferGPU.VertexBufferView(0));
 		Context.SetIndexBuffer(ItemRenderer.Mesh->IndexBufferGPU.IndexBufferView(0));
 		Context.SetPrimitiveTopology(ItemRenderer.Mesh->PrimitiveType);
@@ -67,7 +70,7 @@ private:
 	static void DrawSkybox(GraphicsContext& Context, const D3D12_VIEWPORT& Viewport, const D3D12_RECT& Scissor)
 	{
 		Context.SetRootSignature(PSOStorage::GetInstance().DefaultRS);
-		Context.SetPipelineState(PSOStorage::GetInstance().SkyPSO);
+		Context.SetPipelineState(*PSOStorage::GetInstance().PSOMap["Sky"]);
 		Context.SetViewportAndScissorRect(Viewport, Scissor);
 		Context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		Context.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, TextureStorage::GetInstance().TextureHeap.GetDescriptorHeapPointer());

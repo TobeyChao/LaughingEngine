@@ -8,14 +8,6 @@ using DirectX::XMFLOAT4X4;
 
 constexpr auto MaxLights = 16;
 
-struct Vertex
-{
-	XMFLOAT3 Position;
-	XMFLOAT2 TexCoord;
-	XMFLOAT3 Normal;
-	XMFLOAT4 Color;
-};
-
 struct Light
 {
 	XMFLOAT3 Strength = { 0.5f, 0.5f, 0.5f };

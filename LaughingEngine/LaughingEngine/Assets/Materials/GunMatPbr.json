@@ -1,0 +1,49 @@
+{
+  "m_Name": "GunMatPbr",
+  "m_Shader": {
+    "m_Name": "Pbr",
+    "m_PSOName": "Pbr"
+  },
+  "m_Properties": {
+    "m_Floats": {},
+    "m_Ints": {},
+    "m_Textures": {
+      "gAlbedo": {
+        "FileID": 0,
+        "GUID": "Assets\\Meshes\\textures\\cerberus_A.png",
+        "Type": 2
+      },
+      "gNormal": {
+        "FileID": 0,
+        "GUID": "Assets\\Meshes\\textures\\cerberus_N.png",
+        "Type": 2
+      },
+      "gMetallic": {
+        "FileID": 0,
+        "GUID": "Assets\\Meshes\\textures\\cerberus_M.png",
+        "Type": 2
+      },
+      "gRoughness": {
+        "FileID": 0,
+        "GUID": "Assets\\Meshes\\textures\\cerberus_R.png",
+        "Type": 2
+      },
+      "gIrradiance": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\outDiffuseHDR.dds",
+        "Type": 2
+      },
+      "gRadiance": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\outSpecularHDR.dds",
+        "Type": 2
+      },
+      "gLUT": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\outBrdf.dds",
+        "Type": 2
+      }
+    },
+    "m_Vectors": {}
+  }
+}

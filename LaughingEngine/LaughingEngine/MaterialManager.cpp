@@ -27,7 +27,7 @@ namespace MaterialManager
 			}
 			file.close();
 			material->MaterialObject = j.get<MaterialObject>();
-			auto& [name] = material->MaterialObject.m_ShaderObject;
+			auto& [name, psoName] = material->MaterialObject.m_ShaderObject;
 			const std::wstring path = Utility::UTF8ToWideString(name);
 			material->ShaderProgram = ShaderManager::GetInstance().GetShader(path);
 

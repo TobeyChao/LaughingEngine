@@ -1,7 +1,8 @@
 {
   "m_Name": "GunMat",
   "m_Shader": {
-    "m_Name": "Light"
+    "m_Name": "Light",
+    "m_PSOName": "Light"
   },
   "m_Properties": {
     "m_Floats": {

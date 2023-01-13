@@ -16,6 +16,7 @@
     }
   },
   "m_Shader": {
-    "m_Name": "Light"
+    "m_Name": "Light",
+    "m_PSOName": "Light"
   }
 }

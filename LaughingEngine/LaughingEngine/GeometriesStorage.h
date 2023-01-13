@@ -14,6 +14,14 @@ public:
 	void Load()
 	{
 		{
+			struct Vertex
+			{
+				XMFLOAT3 Position;
+				XMFLOAT3 Normal;
+				XMFLOAT3 Tangent;
+				XMFLOAT2 TexCoord;
+			};
+
 			Assimp::Importer loader;
 			aiMaterial* material = nullptr;
 			aiString path;
@@ -46,19 +54,12 @@ public:
 						auto& texC = aimesh->mTextureCoords[0][i];
 						subVertices[i].TexCoord = XMFLOAT2{ texC.x, texC.y };
 					}
-					int colorChannelNum = aimesh->GetNumColorChannels();
-					if (colorChannelNum >= 1)
-					{
-						auto& color = aimesh->mColors[0][i];
-						subVertices[i].Color = { color.r, color.g, color.b, color.a };
-					}
-					else
-					{
-						subVertices[i].Color = XMFLOAT4(DirectX::Colors::White);
-					}
+
 					auto& normal = aimesh->mNormals[i];
+					auto& tangent = aimesh->mTangents[i];
 					subVertices[i].Position = { p.x, p.y, p.z };
 					subVertices[i].Normal = { normal.x, normal.y, normal.z };
+					subVertices[i].Tangent = { tangent.x, tangent.y, tangent.z };
 				}
 				std::vector<std::uint16_t> subIndices;
 				for (unsigned k = 0; k < aimesh->mNumFaces; k++)
@@ -103,6 +104,14 @@ public:
 		}
 
 		{
+			struct Vertex
+			{
+				XMFLOAT3 Position;
+				XMFLOAT2 TexCoord;
+				XMFLOAT3 Normal;
+				XMFLOAT4 Color;
+			};
+
 			auto geo = std::make_unique<MeshGeometry>();
 			geo->Name = L"Box";
 

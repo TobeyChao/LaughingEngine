@@ -28,6 +28,7 @@ namespace MaterialSerialization
 	struct ShadersObject
 	{
 		string m_Name;
+		string m_PSOName;
 	};
 
 	struct MaterialObject
@@ -55,7 +56,8 @@ namespace MaterialSerialization
 			{
 				"m_Shader",
 				{
-					{"m_Name", p.m_ShaderObject.m_Name}
+					{"m_Name", p.m_ShaderObject.m_Name},
+					{"m_PSOName", p.m_ShaderObject.m_PSOName}
 				}
 			},
 			{
@@ -89,6 +91,7 @@ namespace MaterialSerialization
 		{
 			const auto& shader = j["m_Shader"];
 			p.m_ShaderObject.m_Name = shader["m_Name"];
+			p.m_ShaderObject.m_PSOName = shader["m_PSOName"];
 		}
 		{
 			const auto& properties = j["m_Properties"];

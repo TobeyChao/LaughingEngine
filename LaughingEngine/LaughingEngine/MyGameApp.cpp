@@ -51,27 +51,6 @@ void MyGameApp::Initialize()
 	{
 		RenderLayer layer = RenderLayer::Geometry;
 		{
-			MeshGeometry* mesh = GeometriesStorage::GetInstance().Geometries[L"Cerberus"].get();
-			for (auto& pair : mesh->DrawArgs)
-			{
-				EntityID id = m_EntityAdmin->CreateEntity<T>();
-
-				MeshRenderer* ItemRenderer = m_EntityAdmin->SetComponentData<MeshRenderer>(id);
-				Transform* ItemTransform = m_EntityAdmin->SetComponentData<Transform>(id);
-
-				SubmeshGeometry* subMesh = &pair.second;
-				XMMATRIX World = XMMatrixScaling(0.02f, 0.02f, 0.02f) * (XMMatrixRotationX(XM_PIDIV2));
-				XMStoreFloat4x4(&ItemTransform->World, XMMatrixTranspose(World));
-				ItemRenderer->Mesh = mesh;
-				ItemRenderer->SubMesh = subMesh;
-				ItemRenderer->RenderLayer = layer;
-				ItemRenderer->Material = MaterialManager::GetMaterial(L"Assets\\Materials\\GunMat.json");
-
-				m_Entities.push_back(id);
-			}
-		}
-
-		{
 			MeshGeometry* mesh = GeometriesStorage::GetInstance().Geometries[L"Box"].get();
 			for (auto& pair : mesh->DrawArgs)
 			{
@@ -91,6 +70,29 @@ void MyGameApp::Initialize()
 				m_Entities.push_back(id);
 			}
 		}
+
+		{
+			MeshGeometry* mesh = GeometriesStorage::GetInstance().Geometries[L"Cerberus"].get();
+			for (auto& pair : mesh->DrawArgs)
+			{
+				EntityID id = m_EntityAdmin->CreateEntity<T>();
+
+				MeshRenderer* ItemRenderer = m_EntityAdmin->SetComponentData<MeshRenderer>(id);
+				Transform* ItemTransform = m_EntityAdmin->SetComponentData<Transform>(id);
+
+				SubmeshGeometry* subMesh = &pair.second;
+				XMMATRIX World = XMMatrixScaling(0.02f, 0.02f, 0.02f) * (XMMatrixRotationX(XM_PIDIV2));
+				XMStoreFloat4x4(&ItemTransform->World, XMMatrixTranspose(World));
+				ItemRenderer->Mesh = mesh;
+				ItemRenderer->SubMesh = subMesh;
+				ItemRenderer->RenderLayer = layer;
+				ItemRenderer->Material = MaterialManager::GetMaterial(L"Assets\\Materials\\GunMatPbr.json");
+
+				m_Entities.push_back(id);
+			}
+		}
+
+
 	}
 }
 
