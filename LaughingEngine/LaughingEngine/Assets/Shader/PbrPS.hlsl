@@ -12,8 +12,8 @@ TextureCube gIrradiance : register(t15);;
 TextureCube gRadiance : register(t16);;
 Texture2D gLUT : register(t17);;
 
-SamplerState gsamLinerClamp : register(s0);
-SamplerState gsamPointClamp : register(s1);
+SamplerState gsamLinerWrap : register(s0);
+SamplerState gsamPointWrap : register(s1);
 
 struct Attributes
 {
@@ -35,15 +35,15 @@ struct Varyings
 float4 frag(Varyings IN) : SV_Target
 {
     // 采样反照率贴图
-    float4 albedo = gAlbedo.Sample(gsamLinerClamp, IN.texcoord);
+    float4 albedo = gAlbedo.Sample(gsamLinerWrap, IN.texcoord);
     // 采样法线贴图
-    float3 normalSample = gNormal.Sample(gsamLinerClamp, IN.texcoord).rgb;
+    float3 normalSample = gNormal.Sample(gsamLinerWrap, IN.texcoord).rgb;
     // 采样金属度贴图
-    float metalness = gMetallic.Sample(gsamLinerClamp, IN.texcoord).r;
+    float metalness = gMetallic.Sample(gsamLinerWrap, IN.texcoord).r;
     // 采样粗糙度贴图
-    float roughness = gRoughness.Sample(gsamLinerClamp, IN.texcoord).r;
+    float roughness = gRoughness.Sample(gsamLinerWrap, IN.texcoord).r;
     // 采样环境光遮蔽贴图
-    float ao = gAO.Sample(gsamLinerClamp, IN.texcoord).r;
+    float ao = gAO.Sample(gsamLinerWrap, IN.texcoord).r;
 
     // 归一化法线、切线
     IN.normalW = normalize(IN.normalW);
@@ -90,17 +90,17 @@ float4 frag(Varyings IN) : SV_Target
         float3 Kd = lerp(float3(1, 1, 1) - Ks, float3(0, 0, 0), metalness);;
 
         // 根据法线采样irradiance贴图
-        float3 irradiance = gIrradiance.Sample(gsamLinerClamp, N).rgb;
+        float3 irradiance = gIrradiance.Sample(gsamLinerWrap, N).rgb;
         float3 diffuse = Kd * irradiance * albedo.rgb;
 
         // 根据视线反方向对法线反射的方位采样radiance贴图
         float3 R = reflect(-V, N);
         float lod = roughness * MAX_REFLECTION_LOD;
-        float3 prefilteredColor = gRadiance.SampleLevel(gsamLinerClamp, R, lod).rgb;
+        float3 prefilteredColor = gRadiance.SampleLevel(gsamLinerWrap, R, lod).rgb;
 
         // 采样LUT BRDF积分贴图
         float2 samplePos = float2(NdotV, roughness);
-        float2 envBRDF = gLUT.Sample(gsamLinerClamp, samplePos).rg;
+        float2 envBRDF = gLUT.Sample(gsamLinerWrap, samplePos).rg;
         float3 specular = prefilteredColor * (Ks * envBRDF.x + envBRDF.y);
 
         ambientLight = (diffuse + specular)/* * ao*/;

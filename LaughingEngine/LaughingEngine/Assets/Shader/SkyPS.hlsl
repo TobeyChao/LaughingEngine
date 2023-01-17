@@ -11,10 +11,10 @@ struct VertextOut
 
 TextureCube<float3> gSky : register(t10);
 
-SamplerState gsamLinerClamp : register(s0);
-SamplerState gsamPointClamp : register(s1);
+SamplerState gsamLinerWrap : register(s0);
+SamplerState gsamPointWrap : register(s1);
 
 float4 main(VertextOut pin) : SV_TARGET
 {
-    return float4(gSky.SampleLevel(gsamLinerClamp, pin.ViewDir, gTextureLevel), 1.0f);
+    return float4(gSky.SampleLevel(gsamLinerWrap, pin.ViewDir, gTextureLevel), 1.0f);
 }

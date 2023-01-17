@@ -2,8 +2,8 @@
 
 Texture2D gDiffuseMap : register(t10);
 
-SamplerState gsamLinerClamp : register(s0);
-SamplerState gsamPointClamp : register(s1);
+SamplerState gsamLinerWrap : register(s0);
+SamplerState gsamPointWrap : register(s1);
 
 struct PixelOut
 {
@@ -16,24 +16,24 @@ struct PixelOut
 
 float4 main(PixelOut pin) : SV_TARGET
 {
-    // »ñÈ¡¹âÔ´
+    // ï¿½ï¿½È¡ï¿½ï¿½Ô´
     Light mainLight = gLights[0];
-    // ¹âÔ´ÑÕÉ«
+    // ï¿½ï¿½Ô´ï¿½ï¿½É«
     float3 lightColor = mainLight.Strength;
-    // ·¨Ïß
+    // ï¿½ï¿½ï¿½ï¿½
     float3 N = normalize(pin.NormalW);
-    // ¹â·½Ïò
+    // ï¿½â·½ï¿½ï¿½
     float3 L = normalize(-mainLight.Direction);
-    // ÊÓµã·½Ïò
+    // ï¿½Óµã·½ï¿½ï¿½
     float3 V = normalize(gEyePosW - pin.PosW);
-    // °ë³ÌÏòÁ¿
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     float3 H = normalize(L + V);
     float NdotL = max(0, dot(N, L));
     float NdotH = max(0, dot(N, H));
     float NdotV = max(0, dot(N, V));
     float LdotH = max(0, dot(H, L));
     
-    float3 albedo = gDiffuseMap.Sample(gsamLinerClamp, pin.TexC).rgb;
+    float3 albedo = gDiffuseMap.Sample(gsamLinerWrap, pin.TexC).rgb;
     float3 diffuse = albedo * gLights[0].Strength * NdotL;
     float3 ambientColor = gAmbientLight.rgb * albedo;
     float spec = pow(NdotH, 32);

@@ -12,8 +12,8 @@ TextureCube gIrradiance : register(t15);;
 TextureCube gRadiance : register(t16);;
 Texture2D gLUT : register(t17);;
 
-SamplerState gsamLinerClamp : register(s0);
-SamplerState gsamPointClamp : register(s1);
+SamplerState gsamLinerWrap : register(s0);
+SamplerState gsamPointWrap : register(s1);
 
 struct Attributes
 {
