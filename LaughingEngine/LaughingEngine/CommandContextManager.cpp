@@ -36,6 +36,7 @@ void ContextManager::ReturnContext(CommandContext* CommandContext)
 void ContextManager::Shutdown()
 {
 	MemoryAllocator::DestroyAll();
+	DynamicDescriptorHeap::DestroyAll();
 	for (uint32_t i = 0; i < 4; i++)
 	{
 		sm_ContextPool[i].clear();
