@@ -1,7 +1,7 @@
 #define MAX_REFLECTION_LOD 10
 #define PI 3.1415926
 
-// 法线分布函数
+// 娉曠嚎鍒嗗竷鍑芥暟
 float TrowbridgeReitzGGX(float3 N, float3 H, float roughness)
 {
     float roughness2 = roughness * roughness;
@@ -29,7 +29,7 @@ float TrowbridgeReitzGGX(float NdotH, float roughness)
     return nom / denom;
 }
 
-// 计算菲涅尔项的F0
+// 璁＄畻鑿叉秴灏旈」鐨凢0
 float3 Fresnel0(float3 color, float metalness)
 {
     float3 F0 = 0.04f;
@@ -37,7 +37,7 @@ float3 Fresnel0(float3 color, float metalness)
     return F0;
 }
 
-// 菲涅尔项
+// 鑿叉秴灏旈」
 float3 FresnelSchlick(float cosTheta, float3 F0)
 {
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
@@ -61,7 +61,7 @@ float3 FresnelSchlickRoughness(float cosTheta, float3 color, float metalness, fl
     return FresnelSchlickRoughness(cosTheta, F0, roughness);
 }
 
-// 几何函数
+// 鍑犱綍鍑芥暟
 float GeometrySchlickGGX(float NdotV, float k)
 {
     float nom = NdotV;

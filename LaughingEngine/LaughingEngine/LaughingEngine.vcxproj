@@ -411,7 +411,10 @@ xcopy $(ProjectDir)Assets $(OutDir)Assets /a /E /F /I /Y /C</Command>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
     </FxCompile>
     <None Include="Assets\Materials\BoxMat.json" />
+    <None Include="Assets\Materials\Example.json" />
     <None Include="Assets\Materials\GunMat.json" />
+    <None Include="Assets\Materials\GunMatPbr.json" />
+    <None Include="Assets\Materials\PlaneMatPbr.json" />
     <None Include="packages.config" />
     <None Include="Assets\Shader\ColorSpaceUtility.hlsli" />
     <FxCompile Include="Assets\Shader\LightPS.hlsl">

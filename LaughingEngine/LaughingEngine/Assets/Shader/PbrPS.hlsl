@@ -103,7 +103,7 @@ float4 frag(Varyings IN) : SV_Target
         float2 envBRDF = gLUT.Sample(gsamLinerWrap, samplePos).rg;
         float3 specular = prefilteredColor * (Ks * envBRDF.x + envBRDF.y);
 
-        ambientLight = (diffuse + specular)/* * ao*/;
+        ambientLight = (diffuse + specular) * ao;
     }
 
     return float4(directLight + ambientLight, 1.0f);

@@ -78,6 +78,9 @@ ID3D12DescriptorHeap* DynamicDescriptorHeap::RequestDescriptorHeap(D3D12_DESCRIP
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> HeapPtr;
 		Graphics::g_Device->CreateDescriptorHeap(&HeapDesc, IID_PPV_ARGS(&HeapPtr));
 		sm_DescriptorHeapPool[idx].emplace_back(HeapPtr);
+//#ifdef _DEBUG
+//		Utility::Printf("CreateDescriptorHeap %p\n", HeapPtr.Get());
+//#endif // _DEBUG
 		return HeapPtr.Get();
 	}
 }

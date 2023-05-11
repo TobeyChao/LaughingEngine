@@ -1,0 +1,54 @@
+{
+  "m_Name": "PlaneMatPbr",
+  "m_Shader": {
+    "m_Name": "Pbr",
+    "m_PSOName": "Pbr"
+  },
+  "m_Properties": {
+    "m_Floats": {},
+    "m_Ints": {},
+    "m_Textures": {
+      "gAlbedo": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\tavern-wood-planks1-ue\\tavern-wood-planks1_albedo.png",
+        "Type": 2
+      },
+      "gNormal": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\tavern-wood-planks1-ue\\tavern-wood-planks1_normal-dx.png",
+        "Type": 2
+      },
+      "gMetallic": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\tavern-wood-planks1-ue\\tavern-wood-planks1_metallic.png",
+        "Type": 2
+      },
+      "gRoughness": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\tavern-wood-planks1-ue\\tavern-wood-planks1_roughness.png",
+        "Type": 2
+      },
+      "gAO": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\tavern-wood-planks1-ue\\tavern-wood-planks1_ao.png",
+        "Type": 2
+      },
+      "gIrradiance": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\outDiffuseHDR.dds",
+        "Type": 2
+      },
+      "gRadiance": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\outSpecularHDR.dds",
+        "Type": 2
+      },
+      "gLUT": {
+        "FileID": 0,
+        "GUID": "Assets\\Textures\\outBrdf.dds",
+        "Type": 2
+      }
+    },
+    "m_Vectors": {}
+  }
+}

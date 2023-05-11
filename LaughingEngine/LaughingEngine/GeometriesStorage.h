@@ -167,6 +167,56 @@ public:
 			geo->DrawArgs[L"default"] = submesh;
 			Geometries[geo->Name] = std::move(geo);
 		}
+
+		{
+			struct Vertex
+			{
+				XMFLOAT3 Position;
+				XMFLOAT3 Normal;
+				XMFLOAT3 Tangent;
+				XMFLOAT2 TexCoord;
+			};
+
+			auto geo = std::make_unique<MeshGeometry>();
+			geo->Name = L"Plane";
+
+			GeometryGenerator geoGen;
+			GeometryGenerator::MeshData model = geoGen.CreateGrid(5.0f, 5.0f, 8, 8);
+
+			std::vector<Vertex> vertices(model.Vertices.size());
+
+			for (size_t i = 0; i < model.Vertices.size(); ++i)
+			{
+				auto& p = model.Vertices[i];
+				vertices[i].Position = { p.Position.x, p.Position.y, p.Position.z };
+				vertices[i].TexCoord = p.TexC;
+				vertices[i].Normal = p.Normal;
+				vertices[i].Tangent = p.TangentU;
+			}
+
+			std::vector<std::uint16_t> indices;
+			indices.insert(indices.end(), std::begin(model.GetIndices16()), std::end(model.GetIndices16()));
+
+			const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+			const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+			ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+			CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+			ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+			CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+			geo->VertexBufferGPU.Create(L"MyGameApp::m_BoxVertexBuffer", sizeof(Vertex), (UINT)vertices.size(), geo->VertexBufferCPU->GetBufferPointer());
+			geo->IndexBufferGPU.Create(L"MyGameApp::m_BoxIndexBuffer", sizeof(sizeof(std::uint16_t)), (UINT)indices.size(), geo->IndexBufferCPU->GetBufferPointer());
+
+			SubmeshGeometry submesh;
+			submesh.IndexCount = (UINT)indices.size();
+			submesh.StartIndexLocation = 0;
+			submesh.BaseVertexLocation = 0;
+
+			geo->DrawArgs[L"default"] = submesh;
+			Geometries[geo->Name] = std::move(geo);
+		}
 	}
 
 	void Shutdown()

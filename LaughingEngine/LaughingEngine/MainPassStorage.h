@@ -53,7 +53,7 @@ public:
 		MainPassCB->DeltaTime = GameTimer::DeltaTime();
 
 		MainPassCB->Lights[0].Direction = { sinf(LightStorage::GetInstance().Theta), -2.0f, cosf(LightStorage::GetInstance().Theta) };
-		MainPassCB->Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
+		MainPassCB->Lights[0].Strength = { 1.f, 0.9568627f, 0.8392157f };
 	}
 	
 	void Shutdown()

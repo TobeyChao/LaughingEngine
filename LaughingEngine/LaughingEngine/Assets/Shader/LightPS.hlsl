@@ -16,17 +16,11 @@ struct PixelOut
 
 float4 main(PixelOut pin) : SV_TARGET
 {
-    // ��ȡ��Դ
     Light mainLight = gLights[0];
-    // ��Դ��ɫ
     float3 lightColor = mainLight.Strength;
-    // ����
     float3 N = normalize(pin.NormalW);
-    // �ⷽ��
     float3 L = normalize(-mainLight.Direction);
-    // �ӵ㷽��
     float3 V = normalize(gEyePosW - pin.PosW);
-    // �������
     float3 H = normalize(L + V);
     float NdotL = max(0, dot(N, L));
     float NdotH = max(0, dot(N, H));

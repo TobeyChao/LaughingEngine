@@ -160,14 +160,12 @@ MemoryHandle MemoryAllocator::Allocate(size_t SizeInBytes, size_t Alignment)
 
 void MemoryAllocator::CleanupUsedPages(uint64_t FenceID)
 {
-	if (!m_CurPage)
+	if (m_CurPage)
 	{
-		return;
+		m_MemoryPagesToReturn.push_back(m_CurPage);
+		m_CurPage = nullptr;
+		m_CurOffset = 0;
 	}
-
-	m_MemoryPagesToReturn.push_back(m_CurPage);
-	m_CurPage = nullptr;
-	m_CurOffset = 0;
 
 	sm_MemoryPageManager[m_Type].ReturnPages(FenceID, m_MemoryPagesToReturn);
 	m_MemoryPagesToReturn.clear();

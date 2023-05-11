@@ -50,26 +50,6 @@ void MyGameApp::Initialize()
 	// Create Entities
 	{
 		RenderLayer layer = RenderLayer::Geometry;
-		{
-			MeshGeometry* mesh = GeometriesStorage::GetInstance().Geometries[L"Box"].get();
-			for (auto& pair : mesh->DrawArgs)
-			{
-				EntityID id = m_EntityAdmin->CreateEntity<T>();
-
-				MeshRenderer* ItemRenderer = m_EntityAdmin->SetComponentData<MeshRenderer>(id);
-				Transform* ItemTransform = m_EntityAdmin->SetComponentData<Transform>(id);
-
-				SubmeshGeometry* subMesh = &pair.second;
-				XMMATRIX World = XMMatrixTranslation(0, 0.0f, 1.2f);
-				XMStoreFloat4x4(&ItemTransform->World, XMMatrixTranspose(World));
-				ItemRenderer->Mesh = mesh;
-				ItemRenderer->SubMesh = subMesh;
-				ItemRenderer->RenderLayer = layer;
-				ItemRenderer->Material = MaterialManager::GetMaterial(L"Assets\\Materials\\BoxMat.json");
-
-				m_Entities.push_back(id);
-			}
-		}
 
 		{
 			MeshGeometry* mesh = GeometriesStorage::GetInstance().Geometries[L"Cerberus"].get();
@@ -92,7 +72,26 @@ void MyGameApp::Initialize()
 			}
 		}
 
+		{
+			MeshGeometry* mesh = GeometriesStorage::GetInstance().Geometries[L"Plane"].get();
+			for (auto& pair : mesh->DrawArgs)
+			{
+				EntityID id = m_EntityAdmin->CreateEntity<T>();
 
+				MeshRenderer* ItemRenderer = m_EntityAdmin->SetComponentData<MeshRenderer>(id);
+				Transform* ItemTransform = m_EntityAdmin->SetComponentData<Transform>(id);
+
+				SubmeshGeometry* subMesh = &pair.second;
+				XMMATRIX World = XMMatrixTranslation(0, -1.0f, 0);
+				XMStoreFloat4x4(&ItemTransform->World, XMMatrixTranspose(World));
+				ItemRenderer->Mesh = mesh;
+				ItemRenderer->SubMesh = subMesh;
+				ItemRenderer->RenderLayer = layer;
+				ItemRenderer->Material = MaterialManager::GetMaterial(L"Assets\\Materials\\blackrock.json");
+
+				m_Entities.push_back(id);
+			}
+		}
 	}
 }
 
@@ -110,6 +109,7 @@ void MyGameApp::Draw()
 
 void MyGameApp::Shutdown()
 {
+	m_EntityAdmin->Shutdown();
 	MaterialManager::Shutdown();
 
 	CameraStorage::GetInstance().Shutdown();

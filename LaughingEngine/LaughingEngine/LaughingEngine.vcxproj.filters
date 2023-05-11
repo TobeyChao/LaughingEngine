@@ -526,6 +526,15 @@
     <None Include="Assets\Materials\BoxMat.json">
       <Filter>Resources\Materials</Filter>
     </None>
+    <None Include="Assets\Materials\GunMatPbr.json">
+      <Filter>Resources\Materials</Filter>
+    </None>
+    <None Include="Assets\Materials\Example.json">
+      <Filter>Resources\Materials</Filter>
+    </None>
+    <None Include="Assets\Materials\PlaneMatPbr.json">
+      <Filter>Resources\Materials</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\ColorPS.hlsl">

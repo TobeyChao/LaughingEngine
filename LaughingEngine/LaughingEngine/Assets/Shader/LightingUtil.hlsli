@@ -23,7 +23,7 @@ struct Light
 float3 SchlickFresnel(float3 R0, float3 normal, float3 worldLightDir)
 {
     float cosIncidentAngle = saturate(dot(worldLightDir, normal));
-    // ¹âµÄ·½ÏòºÍ·¨ÏßµÄ·½ÏòÔ½½Ó½ü90¶È·ÆÄù¶ûÏÖÏó¾ÍÔ½Ã÷ÏÔ
+    // å…‰çš„æ–¹å‘å’Œæ³•çº¿çš„æ–¹å‘è¶Šæ¥è¿‘90åº¦è²æ¶…å°”ç°è±¡å°±è¶Šæ˜æ˜¾
     float f0 = 1.0f - cosIncidentAngle;
     float3 fresnelFactor = R0 + (1.0f - R0) * (f0 * f0 * f0 * f0 * f0);
     return fresnelFactor;
@@ -42,13 +42,13 @@ float3 BlinnPhong(float3 lightStrength, float3 worldLightDir, float3 worldNormal
 
 float3 ComputeDirectionalLight(Light light, Material mat, float3 worldNormal, float3 toEye)
 {
-    // µÆ¹â·½Ïò
+    // ç¯å…‰æ–¹å‘
     float3 worldLightDir = normalize(-light.Direction);
-    // ÀÊ²®ÓàÏÒ¶¨ÂÉ
+    // æœ—ä¼¯ä½™å¼¦å®šå¾‹
     float cosIncidentAngle = saturate(dot(worldLightDir, worldNormal));
-    // ¹âÇ¿
+    // å…‰å¼º
     float3 lightStrength = light.Strength.rgb * cosIncidentAngle;
-    // ¼ÆËãBlinnPhong
+    // è®¡ç®—BlinnPhong
     return BlinnPhong(lightStrength, worldLightDir, worldNormal, toEye, mat);
 }
 

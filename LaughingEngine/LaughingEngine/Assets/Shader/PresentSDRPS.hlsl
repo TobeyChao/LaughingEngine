@@ -4,7 +4,7 @@
 Texture2D<float3> ColorTex : register(t0);
 
 //https://zhuanlan.zhihu.com/p/455189480
-//ÔÚPixelShaderÖĞ£¬SV_POSITIONµÄ xy ×ø±ê±íÊ¾ÆÁÄ»ÖĞµÄÏñËØ×ø±ê¼ÓÉÏ0.5µÄÎ»ÖÃÆ«ÒÆ
+//åœ¨PixelShaderä¸­ï¼ŒSV_POSITIONçš„ xy åæ ‡è¡¨ç¤ºå±å¹•ä¸­çš„åƒç´ åæ ‡åŠ ä¸Š0.5çš„ä½ç½®åç§»
 
 [RootSignature(Present_RootSig)]
 float4 main(float4 posH : SV_POSITION) : SV_TARGET

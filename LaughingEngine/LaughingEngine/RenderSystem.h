@@ -10,6 +10,9 @@
 #include "PSOStorage.h"
 #include "TextureStorage.h"
 
+constexpr uint16_t TexRootIndex = 3;
+constexpr uint16_t TexStartOffset = 10;
+
 // ‰÷»æœµÕ≥
 class RenderSystem final : public System<MeshRenderer, Transform>
 {
@@ -59,7 +62,7 @@ private:
 		{
 			auto* program = ItemRenderer.Material->ShaderProgram->GetParam(id);
 			assert(program != nullptr);
-			Context.SetDynamicDescriptor(3, program->Index - 10, ref.GetSRV());
+			Context.SetDynamicDescriptor(TexRootIndex, program->Index - TexStartOffset, ref.GetSRV());
 		}
 
 		Context.SetDynamicConstantBufferView(2, sizeof(cb), &cb);
@@ -79,4 +82,6 @@ private:
 		Context.SetDescriptorTable(3, TextureStorage::GetInstance().TextureHeap[5]);
 		Context.DrawInstanced(3, 1, 0, 0);
 	}
+
+private:
 };

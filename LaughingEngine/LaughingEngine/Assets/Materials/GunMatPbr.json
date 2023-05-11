@@ -28,6 +28,11 @@
         "GUID": "Assets\\Meshes\\textures\\cerberus_R.png",
         "Type": 2
       },
+      "gAO": {
+        "FileID": 0,
+        "GUID": "Assets\\Meshes\\textures\\cerberus_AO.png",
+        "Type": 2
+      },
       "gIrradiance": {
         "FileID": 0,
         "GUID": "Assets\\Textures\\outDiffuseHDR.dds",
